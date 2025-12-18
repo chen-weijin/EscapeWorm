@@ -174,7 +174,7 @@ class GameScene {
     const canvasHeight = this.canvas.height; // 设计分辨率高度 2340
     
     // UI区域高度
-    const topUIHeight = 120; // 顶部UI高度
+    const topUIHeight = 160; // 顶部UI高度（增加以容纳两行内容）
     const bottomUIHeight = 100; // 底部UI高度
     
     // 游戏区域高度 = 总高度 - 顶部UI - 底部UI
@@ -693,6 +693,10 @@ class GameScene {
       segments: worm.getAllSegments()
     });
 
+    // 保存初始位置（用于碰撞后归位）
+    const originalSegments = JSON.parse(JSON.stringify(worm.getAllSegments()));
+    const originalHeadPos = originalSegments[0];
+
     // 逐步移动（使用平滑动画）
     const moveDuration = 30; // 每步移动时间（速度加快5倍）
     const direction = PathFinder.getDirectionVector(worm.direction);
@@ -704,6 +708,54 @@ class GameScene {
         to: nextPos,
         segmentsBefore: JSON.parse(JSON.stringify(worm.getAllSegments()))
       });
+      
+      // 在移动前实时检查碰撞（因为其他蠕虫的状态可能在移动过程中改变）
+      const willCollide = CollisionDetector.checkCollision(worm, nextPos, this.worms);
+      if (willCollide) {
+        // 检测到碰撞，执行归位逻辑：移动到阻挡位 → 高亮闪动 → 回到初始位
+        console.log(`蠕虫 ${worm.id} 在移动步骤 ${i} 检测到碰撞，执行归位逻辑`);
+        
+        // 1. 移动到阻挡位置
+        worm.startMoveAnimation(nextPos, moveDuration);
+        this.audioManager.playSound('collision');
+        await this.waitForAnimation(worm, moveDuration);
+        worm.completeAnimation();
+        
+        // 2. 高亮闪动一下
+        await new Promise((resolve) => {
+          this.effectManager.createHighlightAnimation(worm, () => {
+            resolve();
+          });
+        });
+        
+        // 3. 回到初始位（反向移动）
+        const currentHeadPos = worm.getHeadPosition();
+        const reverseDirection = {
+          x: -direction.x,
+          y: -direction.y
+        };
+        
+        const backPos = {
+          x: currentHeadPos.x + reverseDirection.x,
+          y: currentHeadPos.y + reverseDirection.y
+        };
+        
+        // 移动到初始位置
+        worm.startMoveAnimation(backPos, moveDuration);
+        await this.waitForAnimation(worm, moveDuration);
+        worm.completeAnimation();
+        
+        // 确保回到精确的初始位置
+        worm.reset();
+        
+        // 减少失败次数
+        this.failCount--;
+        if (this.failCount <= 0) {
+          this.gameOver();
+        }
+        
+        return; // 停止移动，不继续逃脱
+      }
       
       // 开始移动动画
       worm.startMoveAnimation(nextPos, moveDuration);
@@ -729,6 +781,54 @@ class GameScene {
         x: headPos.x + direction.x,
         y: headPos.y + direction.y
       };
+      
+      // 在移动前实时检查碰撞（因为其他蠕虫的状态可能在移动过程中改变）
+      const willCollide = CollisionDetector.checkCollision(worm, nextPos, this.worms);
+      if (willCollide) {
+        // 检测到碰撞，执行归位逻辑：移动到阻挡位 → 高亮闪动 → 回到初始位
+        console.log(`蠕虫 ${worm.id} 在离开视口过程中检测到碰撞，执行归位逻辑`);
+        
+        // 1. 移动到阻挡位置
+        worm.startMoveAnimation(nextPos, moveDuration);
+        this.audioManager.playSound('collision');
+        await this.waitForAnimation(worm, moveDuration);
+        worm.completeAnimation();
+        
+        // 2. 高亮闪动一下
+        await new Promise((resolve) => {
+          this.effectManager.createHighlightAnimation(worm, () => {
+            resolve();
+          });
+        });
+        
+        // 3. 回到初始位（反向移动）
+        const currentHeadPos = worm.getHeadPosition();
+        const reverseDirection = {
+          x: -direction.x,
+          y: -direction.y
+        };
+        
+        const backPos = {
+          x: currentHeadPos.x + reverseDirection.x,
+          y: currentHeadPos.y + reverseDirection.y
+        };
+        
+        // 移动到初始位置
+        worm.startMoveAnimation(backPos, moveDuration);
+        await this.waitForAnimation(worm, moveDuration);
+        worm.completeAnimation();
+        
+        // 确保回到精确的初始位置
+        worm.reset();
+        
+        // 减少失败次数
+        this.failCount--;
+        if (this.failCount <= 0) {
+          this.gameOver();
+        }
+        
+        return; // 停止移动
+      }
       
       worm.startMoveAnimation(nextPos, moveDuration);
       await this.waitForAnimation(worm, moveDuration);
@@ -976,8 +1076,11 @@ class GameScene {
       if (worm.id === excludeWorm.id || worm.hasEscaped()) {
         continue;
       }
-      // 不再跳过正在移动的蠕虫，所有蠕虫都参与碰撞检测
-      // 这样可以避免蠕虫"穿透"其他正在移动的蠕虫
+      // 跳过正在移动的蠕虫（移动中的蠕虫可以被穿透）
+      // 只有静止的蠕虫才作为障碍物
+      if (worm.isAnimating) {
+        continue;
+      }
       // 包括所有段（头部和身体段），因为头部也应该阻挡其他蠕虫
       const allSegments = worm.getAllSegments();
       obstacles.push(...allSegments);
@@ -1113,7 +1216,7 @@ class GameScene {
   renderTopUI() {
     const ctx = this.ctx;
     const width = this.canvas.width;   // 1080
-    const topBarHeight = 120; // 顶部栏高度
+    const topBarHeight = 160; // 顶部栏高度（增加高度以容纳两行内容）
 
     // 背景
     ctx.fillStyle = '#E3F2FD';
@@ -1127,34 +1230,39 @@ class GameScene {
     ctx.lineTo(width, topBarHeight);
     ctx.stroke();
 
+    // 第一行：关卡名称和设置按钮
+    const firstLineY = 50; // 第一行垂直位置
+    
     // 关卡名称
     ctx.fillStyle = '#1976D2';
     ctx.font = 'bold 48px Arial';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
-    ctx.fillText(`关卡${this.currentLevelId}`, 40, topBarHeight / 2);
-
-    // 失败次数（红心）
-    const heartSize = 48;
-    const heartSpacing = 60;
-    const totalHeartsWidth = 3 * heartSpacing;
-    const heartStartX = width / 2 - totalHeartsWidth / 2;
-    for (let i = 0; i < 3; i++) {
-      const x = heartStartX + i * heartSpacing;
-      const y = topBarHeight / 2;
-      ctx.fillStyle = i < this.failCount ? '#F44336' : '#CCCCCC';
-      ctx.font = `${heartSize}px Arial`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('♥', x, y);
-    }
+    ctx.fillText(`关卡${this.currentLevelId}`, 40, firstLineY);
 
     // 设置按钮
     ctx.fillStyle = '#666666';
     ctx.font = '48px Arial';
     ctx.textAlign = 'right';
     ctx.textBaseline = 'middle';
-    ctx.fillText('⚙', width - 40, topBarHeight / 2);
+    ctx.fillText('⚙', width - 40, firstLineY);
+
+    // 第二行：失败次数（红心）
+    const secondLineY = 110; // 第二行垂直位置
+    const heartSize = 48;
+    const heartSpacing = 60;
+    const totalHeartsWidth = 3 * heartSpacing;
+    const heartStartX = width / 2 - totalHeartsWidth / 2;
+    
+    for (let i = 0; i < 3; i++) {
+      const x = heartStartX + i * heartSpacing;
+      const y = secondLineY;
+      ctx.fillStyle = i < this.failCount ? '#F44336' : '#CCCCCC';
+      ctx.font = `${heartSize}px Arial`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('♥', x, y);
+    }
     
     // 重置textBaseline
     ctx.textBaseline = 'alphabetic';
