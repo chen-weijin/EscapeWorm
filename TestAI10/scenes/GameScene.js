@@ -28,11 +28,7 @@ class GameScene {
     this.offsetY = 0;
     this.zoom = 1.0;
     
-    // 移动动画
-    this.movingWorm = null;
-    this.movePath = [];
-    this.moveStep = 0;
-    this.isMoving = false;
+    // 移动动画（支持多条蠕虫同时移动，不再使用全局状态）
   }
 
   /**
@@ -45,9 +41,6 @@ class GameScene {
     this.isGameOver = false;
     this.isVictory = false;
     this.worms = [];
-    this.movingWorm = null;
-    this.movePath = [];
-    this.isMoving = false;
     this.matrix = null; // 初始化为null，表示还未加载完成
     this.escapePoints = [];
 
@@ -124,7 +117,7 @@ class GameScene {
    * @param {number} y - 点击Y坐标
    */
   handleClick(x, y) {
-    if (this.isGameOver || this.isVictory || this.isMoving) {
+    if (this.isGameOver || this.isVictory) {
       return;
     }
 
@@ -136,6 +129,11 @@ class GameScene {
     // 使用屏幕坐标直接查找蠕虫（更准确，考虑视觉范围）
     const clickedWorm = this.findWormAtScreenPosition(x, y);
     if (!clickedWorm || clickedWorm.hasEscaped()) {
+      return;
+    }
+
+    // 检查该蠕虫是否正在移动，如果是则忽略点击
+    if (clickedWorm.isAnimating) {
       return;
     }
 
@@ -245,11 +243,6 @@ class GameScene {
    * @param {Array} path - 逃脱路径
    */
   async moveWormToEscape(worm, path) {
-    this.isMoving = true;
-    this.movingWorm = worm;
-    this.movePath = path;
-    this.moveStep = 0;
-
     // 调试：输出路径信息
     console.log('蠕虫逃脱路径调试:', {
       wormId: worm.id,
@@ -293,10 +286,6 @@ class GameScene {
       worm.color
     );
 
-    this.isMoving = false;
-    this.movingWorm = null;
-    this.movePath = [];
-
     // 检查是否胜利
     this.checkVictory();
   }
@@ -310,9 +299,6 @@ class GameScene {
   async moveWormToObstacleAndBack(worm, pathToObstacle) {
     // 保存初始位置
     const originalSegments = JSON.parse(JSON.stringify(worm.getAllSegments()));
-    
-    this.isMoving = true;
-    this.movingWorm = worm;
     
     // 1. 蠕动到阻挡位（沿着路径移动）
     // 如果路径为空，说明已经在障碍物旁边，只移动一步
@@ -386,9 +372,6 @@ class GameScene {
     
     // 确保精确回到初始位置
     worm.reset();
-    
-    this.isMoving = false;
-    this.movingWorm = null;
 
     // 减少失败次数
     this.failCount--;
@@ -447,8 +430,6 @@ class GameScene {
       const originalSegments = JSON.parse(JSON.stringify(worm.getAllSegments()));
       
       // 1. 蠕动到阻挡位（使用动画）
-      this.isMoving = true;
-      this.movingWorm = worm;
       
       // 移动到阻挡位置
       const moveDuration = 150;
@@ -488,9 +469,6 @@ class GameScene {
       
       // 确保回到精确的初始位置
       worm.reset();
-      
-      this.isMoving = false;
-      this.movingWorm = null;
 
       // 减少失败次数
       this.failCount--;
@@ -518,6 +496,10 @@ class GameScene {
     const obstacles = [];
     for (const worm of this.worms) {
       if (worm.id === excludeWorm.id || worm.hasEscaped()) {
+        continue;
+      }
+      // 跳过正在移动的蠕虫（移动中的蠕虫不参与碰撞检测）
+      if (worm.isAnimating) {
         continue;
       }
       // 包括所有段（头部和身体段），因为头部也应该阻挡其他蠕虫
