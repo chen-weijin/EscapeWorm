@@ -19,6 +19,7 @@ class Worm {
     this.color = config.color;
     this.isEscaped = false;
     this.isHighlighted = false; // 是否高亮（碰撞警示）
+    this.isEscaping = false; // 是否正在逃脱过程中（一旦开始逃脱，在整个过程中都不参与阻挡）
     
     // 动画相关
     this.previousSegments = JSON.parse(JSON.stringify(config.segments)); // 动画起始位置
@@ -268,6 +269,7 @@ class Worm {
     this.isEscaped = false;
     this.isHighlighted = false;
     this.isAnimating = false;
+    this.isEscaping = false; // 重置逃脱状态
     this.animationProgress = 1.0;
   }
 

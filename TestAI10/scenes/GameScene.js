@@ -693,6 +693,9 @@ class GameScene {
       segments: worm.getAllSegments()
     });
 
+    // 标记蠕虫正在逃脱（在整个逃脱过程中不参与阻挡）
+    worm.isEscaping = true;
+
     // 保存初始位置（用于碰撞后归位）
     const originalSegments = JSON.parse(JSON.stringify(worm.getAllSegments()));
     const originalHeadPos = originalSegments[0];
@@ -746,7 +749,7 @@ class GameScene {
         worm.completeAnimation();
         
         // 确保回到精确的初始位置
-        worm.reset();
+        worm.reset(); // reset 方法会重置 isEscaping
         
         // 减少失败次数
         this.failCount--;
@@ -838,6 +841,7 @@ class GameScene {
     }
 
     // 蠕虫已完全离开视口，标记为逃脱
+    worm.isEscaping = false; // 逃脱完成，重置逃脱状态
     worm.markEscaped();
     this.audioManager.playSound('escape');
     const lastHeadPos = worm.getHeadPosition();
@@ -988,6 +992,7 @@ class GameScene {
       }
       
       // 蠕虫已完全离开视口，标记为逃脱
+      worm.isEscaping = false; // 逃脱完成，重置逃脱状态
       worm.markEscaped();
       this.audioManager.playSound('escape');
       this.effectManager.createEscapeEffect(
@@ -1074,6 +1079,10 @@ class GameScene {
     const obstacles = [];
     for (const worm of this.worms) {
       if (worm.id === excludeWorm.id || worm.hasEscaped()) {
+        continue;
+      }
+      // 跳过正在逃脱的蠕虫（一旦开始逃脱，在整个过程中都不参与阻挡）
+      if (worm.isEscaping) {
         continue;
       }
       // 跳过正在移动的蠕虫（移动中的蠕虫可以被穿透）

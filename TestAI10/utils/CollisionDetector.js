@@ -24,6 +24,11 @@ class CollisionDetector {
         continue;
       }
 
+      // 跳过正在逃脱的蠕虫（一旦开始逃脱，在整个过程中都不参与阻挡）
+      if (otherWorm.isEscaping) {
+        continue;
+      }
+
       // 跳过正在移动的蠕虫（移动中的蠕虫可以被穿透）
       // 只有静止的蠕虫才作为障碍物
       if (otherWorm.isAnimating) {
