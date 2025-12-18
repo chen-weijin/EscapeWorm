@@ -21,6 +21,7 @@ class GameScene {
     this.isGameOver = false;
     this.isVictory = false;
     this.currentLevelId = null;
+    this.isWormsAppearing = false; // 蠕虫是否正在显示中
     
     // 渲染相关
     this.cellSize = 30;
@@ -150,16 +151,55 @@ class GameScene {
       // 创建蠕虫对象
       for (const wormConfig of levelData.worms) {
         const worm = new Worm(wormConfig);
+        worm.setVisibleSegmentCount(0); // 初始时全部隐藏
         this.worms.push(worm);
       }
 
       // 计算渲染参数
       this.calculateRenderParams();
+      
+      // 逐个显示蠕虫（从尾到头）
+      await this.animateWormsAppearance();
     } catch (error) {
       console.error('初始化游戏场景失败:', error);
       this.matrix = null;
       throw error; // 重新抛出错误，让上层处理
     }
+  }
+
+  /**
+   * 动画显示蠕虫（从尾到头逐个显示）
+   */
+  async animateWormsAppearance() {
+    this.isWormsAppearing = true; // 标记正在显示中
+    
+    const segmentInterval = 5; // 每个段显示的时间间隔（毫秒，加快到最快）
+    
+    // 找到所有蠕虫的最大段数
+    let maxSegments = 0;
+    for (const worm of this.worms) {
+      maxSegments = Math.max(maxSegments, worm.segments.length);
+    }
+    
+    // 从尾到头逐个显示每个段
+    for (let segmentIndex = 1; segmentIndex <= maxSegments; segmentIndex++) {
+      // 更新所有蠕虫的可见段数量
+      for (const worm of this.worms) {
+        if (segmentIndex <= worm.segments.length) {
+          worm.setVisibleSegmentCount(segmentIndex);
+        }
+      }
+      
+      // 等待间隔时间
+      await this.wait(segmentInterval);
+    }
+    
+    // 确保所有蠕虫都完全显示
+    for (const worm of this.worms) {
+      worm.setVisibleSegmentCount(worm.segments.length);
+    }
+    
+    this.isWormsAppearing = false; // 标记显示完成
   }
 
   /**
@@ -276,6 +316,11 @@ class GameScene {
    */
   handleClick(x, y) {
     if (this.isGameOver || this.isVictory) {
+      return;
+    }
+    
+    // 如果蠕虫正在显示中，禁止点击
+    if (this.isWormsAppearing) {
       return;
     }
 
@@ -701,7 +746,7 @@ class GameScene {
     const originalHeadPos = originalSegments[0];
 
     // 逐步移动（使用平滑动画）
-    const moveDuration = 30; // 每步移动时间（速度加快5倍）
+    const moveDuration = 8; // 每步移动时间（速度加快20倍：5倍*4倍）
     const direction = PathFinder.getDirectionVector(worm.direction);
     
     for (let i = 0; i < path.length; i++) {
@@ -721,6 +766,12 @@ class GameScene {
         // 1. 移动到阻挡位置
         worm.startMoveAnimation(nextPos, moveDuration);
         this.audioManager.playSound('collision');
+        // 添加震动效果（加强）
+        if (typeof wx !== 'undefined' && wx.vibrateShort) {
+          wx.vibrateShort({
+            type: 'heavy' // 高强度震动
+          });
+        }
         await this.waitForAnimation(worm, moveDuration);
         worm.completeAnimation();
         
@@ -794,6 +845,12 @@ class GameScene {
         // 1. 移动到阻挡位置
         worm.startMoveAnimation(nextPos, moveDuration);
         this.audioManager.playSound('collision');
+        // 添加震动效果（加强）
+        if (typeof wx !== 'undefined' && wx.vibrateShort) {
+          wx.vibrateShort({
+            type: 'heavy' // 高强度震动
+          });
+        }
         await this.waitForAnimation(worm, moveDuration);
         worm.completeAnimation();
         
@@ -869,7 +926,7 @@ class GameScene {
     const direction = PathFinder.getDirectionVector(worm.direction);
     const headPos = worm.getHeadPosition();
     
-    const moveDuration = 25; // 移动动画时间（速度加快5倍）
+    const moveDuration = 6; // 移动动画时间（速度加快20倍：5倍*4倍）
     if (pathToObstacle.length === 0) {
       // 直接移动一步到阻挡位
       const nextPos = {
@@ -899,6 +956,12 @@ class GameScene {
     }
     
     this.audioManager.playSound('collision');
+    // 添加震动效果（加强）
+    if (typeof wx !== 'undefined' && wx.vibrateShort) {
+      wx.vibrateShort({
+        type: 'heavy' // 高强度震动
+      });
+    }
     
     // 2. 高亮闪动一下
     await new Promise((resolve) => {
@@ -974,7 +1037,7 @@ class GameScene {
     if (!CollisionDetector.isInBounds(nextPos, this.matrix)) {
       // 超出边界，继续移动直到离开视口
       const direction = PathFinder.getDirectionVector(worm.direction);
-      const moveDuration = 30;
+      const moveDuration = 8;
       
       // 移动到边界外
       worm.moveTo(nextPos);
@@ -1015,9 +1078,15 @@ class GameScene {
       // 1. 蠕动到阻挡位（使用动画）
       
       // 移动到阻挡位置
-      const moveDuration = 25;
+      const moveDuration = 6;
       worm.startMoveAnimation(nextPos, moveDuration);
       this.audioManager.playSound('collision');
+      // 添加震动效果（加强）
+      if (typeof wx !== 'undefined' && wx.vibrateShort) {
+        wx.vibrateShort({
+          type: 'heavy' // 高强度震动
+        });
+      }
       await this.waitForAnimation(worm, moveDuration);
       worm.completeAnimation();
       
@@ -1062,7 +1131,7 @@ class GameScene {
       // 不会碰撞：正常移动一步（使用动画）
       // 注意：这种情况理论上不应该发生，因为已经判定为"不可逃脱"
       // 但为了代码健壮性，还是处理这种情况
-      const moveDuration = 30;
+      const moveDuration = 8;
       worm.startMoveAnimation(nextPos, moveDuration);
       this.audioManager.playSound('move');
       await this.waitForAnimation(worm, moveDuration);
@@ -1368,7 +1437,15 @@ class GameScene {
   renderWorm(worm) {
     const ctx = this.ctx;
     // 使用插值后的段位置实现平滑移动
-    const segments = worm.getInterpolatedSegments();
+    const allSegments = worm.getInterpolatedSegments();
+    // 获取可见的段数量（用于逐个显示效果）
+    const visibleSegmentCount = worm.visibleSegmentCount !== undefined 
+      ? worm.visibleSegmentCount 
+      : allSegments.length;
+    // 只渲染可见的段（从尾到头）
+    const segments = visibleSegmentCount >= allSegments.length 
+      ? allSegments 
+      : allSegments.slice(-visibleSegmentCount);
 
     // 高亮效果
     if (worm.isHighlighted) {

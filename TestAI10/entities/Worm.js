@@ -21,11 +21,14 @@ class Worm {
     this.isHighlighted = false; // 是否高亮（碰撞警示）
     this.isEscaping = false; // 是否正在逃脱过程中（一旦开始逃脱，在整个过程中都不参与阻挡）
     
+    // 显示相关（用于逐个显示效果）
+    this.visibleSegmentCount = 0; // 当前可见的段数量（从尾到头逐个显示）
+    
     // 动画相关
     this.previousSegments = JSON.parse(JSON.stringify(config.segments)); // 动画起始位置
     this.animationProgress = 1.0; // 动画进度 0-1
     this.isAnimating = false; // 是否正在动画
-    this.animationDuration = 40; // 动画持续时间（毫秒，速度加快5倍）
+    this.animationDuration = 10; // 动画持续时间（毫秒，速度加快20倍：5倍*4倍）
     this.animationStartTime = 0; // 动画开始时间
     
     // 优先使用配置的direction，如果没有配置或配置无效，则根据segments自动计算
@@ -271,6 +274,27 @@ class Worm {
     this.isAnimating = false;
     this.isEscaping = false; // 重置逃脱状态
     this.animationProgress = 1.0;
+    this.visibleSegmentCount = this.segments.length; // 重置为全部可见
+  }
+  
+  /**
+   * 设置可见段数量（用于逐个显示效果）
+   * @param {number} count - 可见段数量（从尾到头）
+   */
+  setVisibleSegmentCount(count) {
+    this.visibleSegmentCount = Math.max(0, Math.min(count, this.segments.length));
+  }
+  
+  /**
+   * 获取可见的段（用于渲染）
+   * @returns {Array} 可见的段数组
+   */
+  getVisibleSegments() {
+    if (this.visibleSegmentCount >= this.segments.length) {
+      return this.segments;
+    }
+    // 从尾到头显示，返回最后 visibleSegmentCount 个段
+    return this.segments.slice(-this.visibleSegmentCount);
   }
 
   /**
