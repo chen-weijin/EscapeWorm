@@ -16,6 +16,8 @@ class PathFinder {
     const headPos = worm.getHeadPosition();
     const direction = this.getDirectionVector(worm.direction);
     const wormLength = worm.getLength();
+    // 创建蠕虫段的副本，用于模拟移动
+    let simulatedSegments = JSON.parse(JSON.stringify(worm.getAllSegments()));
     
     // 蠕虫只能沿着当前方向前进，不能拐弯
     // 检查从当前位置沿着当前方向是否能到达边界
@@ -45,11 +47,38 @@ class PathFinder {
         return { canEscape: true, path: path };
       }
 
-      // 检查是否是障碍物
-      const isObstacle = obstacles.some(obs => obs.x === nextX && obs.y === nextY);
-      if (isObstacle) {
+      // 检查头部位置是否是障碍物
+      const isHeadObstacle = obstacles.some(obs => obs.x === nextX && obs.y === nextY);
+      if (isHeadObstacle) {
         // 遇到障碍物，无法逃脱，返回到障碍物前一步的路径
         // 返回 { canEscape: false, pathToObstacle: path } 格式
+        return { canEscape: false, pathToObstacle: path };
+      }
+
+      // 检查蠕虫的身体段在移动后是否会与障碍物碰撞
+      // 当头部移动到(nextX, nextY)时，身体段会跟随移动
+      // segments[i+1]会移动到segments[i]的位置
+      let bodyCollision = false;
+      for (let i = 0; i < simulatedSegments.length - 1; i++) {
+        // 身体段会移动到前一个段的位置
+        const nextSegmentPos = {
+          x: simulatedSegments[i].x,
+          y: simulatedSegments[i].y
+        };
+        
+        // 检查这个身体段的新位置是否是障碍物
+        const isBodyObstacle = obstacles.some(obs => 
+          obs.x === nextSegmentPos.x && obs.y === nextSegmentPos.y
+        );
+        
+        if (isBodyObstacle) {
+          bodyCollision = true;
+          break;
+        }
+      }
+      
+      if (bodyCollision) {
+        // 身体段会与障碍物碰撞，无法逃脱
         return { canEscape: false, pathToObstacle: path };
       }
 
@@ -65,6 +94,14 @@ class PathFinder {
       path.push({ x: nextX, y: nextY });
       currentX = nextX;
       currentY = nextY;
+      
+      // 更新模拟的蠕虫段位置（模拟移动，用于下一次检查）
+      // 身体段移动到前一个段的位置
+      for (let i = simulatedSegments.length - 1; i > 0; i--) {
+        simulatedSegments[i] = { ...simulatedSegments[i - 1] };
+      }
+      // 头部移动到新位置
+      simulatedSegments[0] = { x: nextX, y: nextY };
 
       // 防止无限循环（理论上不应该发生）
       if (path.length > matrix.width * matrix.height) {

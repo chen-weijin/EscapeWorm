@@ -140,7 +140,7 @@ class GameScene {
   }
 
   /**
-   * 计算渲染参数
+   * 计算渲染参数（适配设计分辨率1080x2340）
    */
   calculateRenderParams() {
     if (!this.matrix) {
@@ -149,22 +149,33 @@ class GameScene {
     
     const canvasWidth = this.canvas.width; // 设计分辨率宽度 1080
     const canvasHeight = this.canvas.height; // 设计分辨率高度 2340
-    const gameAreaHeight = canvasHeight - 120; // 减去UI高度（顶部70 + 底部50）
+    
+    // UI区域高度
+    const topUIHeight = 120; // 顶部UI高度
+    const bottomUIHeight = 100; // 底部UI高度
+    
+    // 游戏区域高度 = 总高度 - 顶部UI - 底部UI
+    const gameAreaHeight = canvasHeight - topUIHeight - bottomUIHeight;
+    
+    // 左右边距：各50像素
+    const horizontalMargin = 100; // 左右各50，总共100
+    // 上下边距：各30像素
+    const verticalMargin = 60; // 上下各30，总共60
     
     // 基准格子数（15*19）
     const baseWidth = 15;
     const baseHeight = 19;
     
     // 计算基准格子大小（15*19时正好能显示下，不需要缩放）
-    // 留出边距：左右各20，上下各20（顶部UI下方20，底部UI上方20）
-    const baseMaxCellSizeX = (canvasWidth - 40) / baseWidth;
-    const baseMaxCellSizeY = (gameAreaHeight - 40) / baseHeight;
+    // 留出边距：左右各50，上下各30
+    const baseMaxCellSizeX = (canvasWidth - horizontalMargin) / baseWidth;
+    const baseMaxCellSizeY = (gameAreaHeight - verticalMargin) / baseHeight;
     this.baseCellSize = Math.min(baseMaxCellSizeX, baseMaxCellSizeY);
     
     // 计算当前格子数能完整显示的最大格子大小
     // 确保无论格子数多少，都能完整显示在视口内
-    const currentMaxCellSizeX = (canvasWidth - 40) / this.matrix.width;
-    const currentMaxCellSizeY = (gameAreaHeight - 40) / this.matrix.height;
+    const currentMaxCellSizeX = (canvasWidth - horizontalMargin) / this.matrix.width;
+    const currentMaxCellSizeY = (gameAreaHeight - verticalMargin) / this.matrix.height;
     const currentMaxCellSize = Math.min(currentMaxCellSizeX, currentMaxCellSizeY);
     
     // 计算游戏核心区域的缩放比例
@@ -176,12 +187,27 @@ class GameScene {
     // 这样游戏核心坐标系是固定的，通过缩放来适配不同格子数
     this.cellSize = this.baseCellSize;
     
-    // 计算游戏核心区域的偏移量（居中）
-    // 游戏核心区域的实际显示大小 = 格子数 * 基准格子大小 * 缩放比例
+    // 计算游戏核心区域的实际显示大小
     const gameCoreDisplayWidth = this.matrix.width * this.cellSize * this.gameCoreScale;
     const gameCoreDisplayHeight = this.matrix.height * this.cellSize * this.gameCoreScale;
-    this.gameCoreOffsetX = (canvasWidth - gameCoreDisplayWidth) / 2;
-    this.gameCoreOffsetY = 80 + (gameAreaHeight - gameCoreDisplayHeight) / 2;
+    
+    // 计算游戏核心区域的偏移量（居中显示，左右各留50像素边距）
+    // 可用宽度 = 总宽度 - 左右边距（各50像素）
+    const availableWidth = canvasWidth - horizontalMargin;
+    
+    // 如果实际显示宽度小于可用宽度，居中显示
+    // 如果实际显示宽度大于可用宽度，需要进一步缩小（这种情况理论上不应该发生，因为已经计算了缩放）
+    if (gameCoreDisplayWidth <= availableWidth) {
+      // 居中显示，左右各留50像素
+      this.gameCoreOffsetX = 50 + (availableWidth - gameCoreDisplayWidth) / 2;
+    } else {
+      // 如果还是超出，强制缩小（这种情况理论上不应该发生）
+      this.gameCoreOffsetX = 50;
+    }
+    
+    // 垂直居中：在游戏区域内居中（顶部UI下方）
+    const availableHeight = gameAreaHeight - verticalMargin;
+    this.gameCoreOffsetY = topUIHeight + 30 + (availableHeight - gameCoreDisplayHeight) / 2;
     
     // 游戏核心区域内的偏移量（用于居中显示）
     this.offsetX = 0;
@@ -671,10 +697,8 @@ class GameScene {
       if (worm.id === excludeWorm.id || worm.hasEscaped()) {
         continue;
       }
-      // 跳过正在移动的蠕虫（移动中的蠕虫不参与碰撞检测）
-      if (worm.isAnimating) {
-        continue;
-      }
+      // 不再跳过正在移动的蠕虫，所有蠕虫都参与碰撞检测
+      // 这样可以避免蠕虫"穿透"其他正在移动的蠕虫
       // 包括所有段（头部和身体段），因为头部也应该阻挡其他蠕虫
       const allSegments = worm.getAllSegments();
       obstacles.push(...allSegments);
@@ -805,38 +829,56 @@ class GameScene {
   }
 
   /**
-   * 渲染顶部UI
+   * 渲染顶部UI（适配设计分辨率1080x2340）
    */
   renderTopUI() {
     const ctx = this.ctx;
-    const width = this.canvas.width;
+    const width = this.canvas.width;   // 1080
+    const topBarHeight = 120; // 顶部栏高度
 
     // 背景
     ctx.fillStyle = '#E3F2FD';
-    ctx.fillRect(0, 0, width, 70);
+    ctx.fillRect(0, 0, width, topBarHeight);
+    
+    // 底部边框线
+    ctx.strokeStyle = '#BBDEFB';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, topBarHeight);
+    ctx.lineTo(width, topBarHeight);
+    ctx.stroke();
 
     // 关卡名称
     ctx.fillStyle = '#1976D2';
-    ctx.font = 'bold 24px Arial';
+    ctx.font = 'bold 48px Arial';
     ctx.textAlign = 'left';
-    ctx.fillText(`关卡${this.currentLevelId}`, 20, 45);
+    ctx.textBaseline = 'middle';
+    ctx.fillText(`关卡${this.currentLevelId}`, 40, topBarHeight / 2);
 
     // 失败次数（红心）
-    const heartSize = 20;
-    const heartX = width / 2 - (this.failCount * heartSize) / 2;
+    const heartSize = 48;
+    const heartSpacing = 60;
+    const totalHeartsWidth = 3 * heartSpacing;
+    const heartStartX = width / 2 - totalHeartsWidth / 2;
     for (let i = 0; i < 3; i++) {
-      const x = heartX + i * heartSize;
-      const y = 25;
+      const x = heartStartX + i * heartSpacing;
+      const y = topBarHeight / 2;
       ctx.fillStyle = i < this.failCount ? '#F44336' : '#CCCCCC';
       ctx.font = `${heartSize}px Arial`;
-      ctx.fillText('♥', x, y + heartSize);
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('♥', x, y);
     }
 
     // 设置按钮
     ctx.fillStyle = '#666666';
-    ctx.font = '20px Arial';
+    ctx.font = '48px Arial';
     ctx.textAlign = 'right';
-    ctx.fillText('⚙', width - 20, 45);
+    ctx.textBaseline = 'middle';
+    ctx.fillText('⚙', width - 40, topBarHeight / 2);
+    
+    // 重置textBaseline
+    ctx.textBaseline = 'alphabetic';
   }
 
   /**
@@ -1167,19 +1209,28 @@ class GameScene {
    */
   renderBottomUI() {
     const ctx = this.ctx;
-    const width = this.canvas.width;
-    const height = this.canvas.height;
+    const width = this.canvas.width;   // 1080
+    const height = this.canvas.height; // 2340
+    const bottomBarHeight = 100; // 底部栏高度
 
     // 背景
     ctx.fillStyle = '#E3F2FD';
-    ctx.fillRect(0, height - 50, width, 50);
+    ctx.fillRect(0, height - bottomBarHeight, width, bottomBarHeight);
+    
+    // 顶部边框线
+    ctx.strokeStyle = '#BBDEFB';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, height - bottomBarHeight);
+    ctx.lineTo(width, height - bottomBarHeight);
+    ctx.stroke();
 
-    // 缩放滑块
+    // 缩放滑块（适配设计分辨率）
     const sliderX = width / 2;
-    const sliderY = height - 25;
-    const sliderWidth = 200;
-    const sliderHeight = 4;
-    const handleSize = 20;
+    const sliderY = height - bottomBarHeight / 2;
+    const sliderWidth = 400;
+    const sliderHeight = 8;
+    const handleSize = 40;
 
     // 滑块轨道
     ctx.fillStyle = '#BBDEFB';
@@ -1194,16 +1245,20 @@ class GameScene {
 
     // 减号按钮
     ctx.fillStyle = '#666666';
-    ctx.font = '24px Arial';
+    ctx.font = '48px Arial';
     ctx.textAlign = 'center';
-    ctx.fillText('−', sliderX - sliderWidth / 2 - 30, sliderY + 8);
+    ctx.textBaseline = 'middle';
+    ctx.fillText('−', sliderX - sliderWidth / 2 - 60, sliderY);
 
     // 加号按钮
-    ctx.fillText('+', sliderX + sliderWidth / 2 + 30, sliderY + 8);
+    ctx.fillText('+', sliderX + sliderWidth / 2 + 60, sliderY);
+    
+    // 重置textBaseline
+    ctx.textBaseline = 'alphabetic';
   }
 
   /**
-   * 渲染游戏结束遮罩
+   * 渲染游戏结束遮罩（适配设计分辨率）
    */
   renderGameOverOverlay() {
     const ctx = this.ctx;
@@ -1214,12 +1269,21 @@ class GameScene {
     ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
     ctx.fillRect(0, 0, width, height);
 
-    // 文字
+    // 文字（适配设计分辨率）
     ctx.fillStyle = '#FFFFFF';
-    ctx.font = 'bold 48px Arial';
+    ctx.font = 'bold 96px Arial';
     ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
     const text = this.isVictory ? '胜利！' : '失败';
     ctx.fillText(text, width / 2, height / 2);
+    
+    // 提示文字
+    ctx.font = '48px Arial';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+    ctx.fillText('即将返回...', width / 2, height / 2 + 100);
+    
+    // 重置textBaseline
+    ctx.textBaseline = 'alphabetic';
   }
 
   /**

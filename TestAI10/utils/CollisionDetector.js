@@ -24,10 +24,8 @@ class CollisionDetector {
         continue;
       }
 
-      // 跳过正在移动的蠕虫（移动中的蠕虫不参与碰撞检测）
-      if (otherWorm.isAnimating) {
-        continue;
-      }
+      // 不再跳过正在移动的蠕虫，所有蠕虫都参与碰撞检测
+      // 这样可以避免蠕虫"穿透"其他正在移动的蠕虫
 
       // 获取其他蠕虫的所有段（包括头部和身体段）
       const allSegments = otherWorm.getAllSegments();

@@ -35,8 +35,8 @@ class MenuScene {
    */
   render() {
     const ctx = this.ctx;
-    const width = this.canvas.width;
-    const height = this.canvas.height;
+    const width = this.canvas.width;   // 1080
+    const height = this.canvas.height; // 2340
 
     // 清空画布
     ctx.clearRect(0, 0, width, height);
@@ -45,20 +45,22 @@ class MenuScene {
     ctx.fillStyle = '#E8EAF6';
     ctx.fillRect(0, 0, width, height);
 
-    // 绘制标题
+    // 绘制标题（适配设计分辨率）
     ctx.fillStyle = '#3F51B5';
-    ctx.font = 'bold 48px Arial';
+    ctx.font = 'bold 72px Arial';
     ctx.textAlign = 'center';
-    ctx.fillText('蠕虫逃脱', width / 2, 80);
+    ctx.fillText('蠕虫逃脱', width / 2, 200);
 
-    // 绘制关卡网格
+    // 绘制关卡网格（适配设计分辨率）
     const cols = 3;
     const rows = Math.ceil(this.levels.length / cols);
-    const cellWidth = width / cols;
-    const cellHeight = (height - 200) / rows;
-    const cellSize = Math.min(cellWidth, cellHeight) * 0.8;
+    const gridWidth = width - 120; // 左右各留60像素边距
+    const gridHeight = height - 500; // 上面留300（标题区），下面留200
+    const cellWidth = gridWidth / cols;
+    const cellHeight = gridHeight / rows;
+    const cellSize = Math.min(cellWidth, cellHeight) * 0.85;
     const startX = (width - cols * cellSize) / 2;
-    const startY = 150;
+    const startY = 350; // 标题下方开始
 
     for (let i = 0; i < this.levels.length; i++) {
       const level = this.levels[i];
@@ -67,6 +69,12 @@ class MenuScene {
       const x = startX + col * cellSize + cellSize / 2;
       const y = startY + row * cellSize + cellSize / 2;
 
+      // 绘制关卡按钮阴影
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.beginPath();
+      ctx.arc(x + 4, y + 4, cellSize / 2 - 20, 0, Math.PI * 2);
+      ctx.fill();
+
       // 绘制关卡按钮
       if (level.unlocked) {
         ctx.fillStyle = level.completed ? '#4CAF50' : '#2196F3';
@@ -74,35 +82,45 @@ class MenuScene {
         ctx.fillStyle = '#CCCCCC';
       }
       ctx.beginPath();
-      ctx.arc(x, y, cellSize / 2 - 10, 0, Math.PI * 2);
+      ctx.arc(x, y, cellSize / 2 - 20, 0, Math.PI * 2);
       ctx.fill();
+
+      // 绘制关卡按钮边框
+      ctx.strokeStyle = level.unlocked ? (level.completed ? '#388E3C' : '#1976D2') : '#999999';
+      ctx.lineWidth = 4;
+      ctx.stroke();
 
       // 绘制关卡编号
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = 'bold 32px Arial';
+      ctx.font = 'bold 56px Arial';
       ctx.textAlign = 'center';
-      ctx.fillText(level.id, x, y + 10);
+      ctx.textBaseline = 'middle';
+      ctx.fillText(level.id, x, y);
 
       // 绘制完成标记
       if (level.completed) {
         ctx.fillStyle = '#FFD700';
-        ctx.font = '24px Arial';
+        ctx.font = '40px Arial';
         ctx.fillText('✓', x + cellSize / 3, y - cellSize / 3);
       }
 
       // 绘制锁定标记
       if (!level.unlocked) {
         ctx.fillStyle = '#666666';
-        ctx.font = '24px Arial';
+        ctx.font = '48px Arial';
+        ctx.textBaseline = 'middle';
         ctx.fillText('🔒', x, y);
       }
     }
+    
+    // 重置textBaseline
+    ctx.textBaseline = 'alphabetic';
   }
 
   /**
    * 处理点击事件
-   * @param {number} x - 点击X坐标
-   * @param {number} y - 点击Y坐标
+   * @param {number} x - 点击X坐标（设计分辨率坐标）
+   * @param {number} y - 点击Y坐标（设计分辨率坐标）
    */
   handleClick(x, y) {
     console.log('MenuScene handleClick:', { x, y, levelsCount: this.levels.length, canvasSize: { w: this.canvas.width, h: this.canvas.height } });
@@ -113,14 +131,16 @@ class MenuScene {
     }
 
     const cols = 3;
-    const width = this.canvas.width;
-    const height = this.canvas.height;
-    const cellWidth = width / cols;
+    const width = this.canvas.width;   // 1080
+    const height = this.canvas.height; // 2340
     const rows = Math.ceil(this.levels.length / cols);
-    const cellHeight = (height - 200) / rows;
-    const cellSize = Math.min(cellWidth, cellHeight) * 0.8;
+    const gridWidth = width - 120; // 左右各留60像素边距
+    const gridHeight = height - 500; // 上面留300（标题区），下面留200
+    const cellWidth = gridWidth / cols;
+    const cellHeight = gridHeight / rows;
+    const cellSize = Math.min(cellWidth, cellHeight) * 0.85;
     const startX = (width - cols * cellSize) / 2;
-    const startY = 150;
+    const startY = 350; // 标题下方开始
 
     console.log('关卡布局信息:', { cols, rows, cellSize, startX, startY });
 
@@ -131,7 +151,7 @@ class MenuScene {
       const levelX = startX + col * cellSize + cellSize / 2;
       const levelY = startY + row * cellSize + cellSize / 2;
       const distance = Math.sqrt((x - levelX) ** 2 + (y - levelY) ** 2);
-      const radius = cellSize / 2 - 10;
+      const radius = cellSize / 2 - 20;
 
       console.log(`关卡${level.id}:`, { 
         levelX, 
