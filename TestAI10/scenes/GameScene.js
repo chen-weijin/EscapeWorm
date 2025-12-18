@@ -239,14 +239,15 @@ class GameScene {
 
   /**
    * 世界坐标转屏幕坐标（在游戏核心坐标系中）
-   * @param {number} x - 世界X坐标
-   * @param {number} y - 世界Y坐标
+   * @param {number} x - 世界X坐标（网格坐标）
+   * @param {number} y - 世界Y坐标（网格坐标）
    * @returns {Object} 屏幕坐标 {x, y}（在游戏核心坐标系中）
+   * 注意：返回的是单元格中心的位置，这样蠕虫会绘制在单元格中心
    */
   worldToScreen(x, y) {
     return {
-      x: this.offsetX + x * this.cellSize,
-      y: this.offsetY + y * this.cellSize
+      x: this.offsetX + (x + 0.5) * this.cellSize,
+      y: this.offsetY + (y + 0.5) * this.cellSize
     };
   }
 
@@ -1185,8 +1186,12 @@ class GameScene {
     ctx.scale(this.gameCoreScale, this.gameCoreScale);
 
     // 绘制网格
+    // 注意：网格应该在游戏核心坐标系中绘制，从 (0, 0) 开始
+    // 网格的绘制范围应该是 this.matrix.width * this.cellSize 和 this.matrix.height * this.cellSize
     ctx.strokeStyle = '#E0E0E0';
     ctx.lineWidth = 1;
+    
+    // 绘制垂直网格线
     for (let x = 0; x <= this.matrix.width; x++) {
       const screenX = this.offsetX + x * this.cellSize;
       const startY = this.offsetY;
@@ -1196,6 +1201,8 @@ class GameScene {
       ctx.lineTo(screenX, endY);
       ctx.stroke();
     }
+    
+    // 绘制水平网格线
     for (let y = 0; y <= this.matrix.height; y++) {
       const screenY = this.offsetY + y * this.cellSize;
       const startX = this.offsetX;
