@@ -253,7 +253,7 @@ class GameScene {
     });
 
     // 逐步移动（使用平滑动画）
-    const moveDuration = 200; // 每步移动时间
+    const moveDuration = 150; // 每步移动时间（速度增加一倍）
     for (let i = 0; i < path.length; i++) {
       const nextPos = path[i];
       console.log(`移动步骤 ${i}:`, {
@@ -266,8 +266,8 @@ class GameScene {
       worm.startMoveAnimation(nextPos, moveDuration);
       this.audioManager.playSound('move');
       
-      // 等待动画完成
-      await this.wait(moveDuration + 20); // 稍微多等一点确保动画完成
+      // 等待动画完成（使用更精确的等待方式）
+      await this.waitForAnimation(worm, moveDuration);
       
       // 确保动画已完成
       worm.completeAnimation();
@@ -305,7 +305,7 @@ class GameScene {
     const direction = PathFinder.getDirectionVector(worm.direction);
     const headPos = worm.getHeadPosition();
     
-    const moveDuration = 150; // 移动动画时间
+    const moveDuration = 125; // 移动动画时间（速度增加一倍）
     if (pathToObstacle.length === 0) {
       // 直接移动一步到阻挡位
       const nextPos = {
@@ -313,14 +313,14 @@ class GameScene {
         y: headPos.y + direction.y
       };
       worm.startMoveAnimation(nextPos, moveDuration);
-      await this.wait(moveDuration + 20);
+      await this.waitForAnimation(worm, moveDuration);
       worm.completeAnimation();
     } else {
       // 沿着路径移动到阻挡位置（最后一步+再前进一步到障碍物）
       for (let i = 0; i < pathToObstacle.length; i++) {
         const nextPos = pathToObstacle[i];
         worm.startMoveAnimation(nextPos, moveDuration);
-        await this.wait(moveDuration + 20);
+        await this.waitForAnimation(worm, moveDuration);
         worm.completeAnimation();
       }
       // 再移动一步到阻挡位置
@@ -330,7 +330,7 @@ class GameScene {
         y: lastPos.y + direction.y
       };
       worm.startMoveAnimation(obstaclePos, moveDuration);
-      await this.wait(moveDuration + 20);
+      await this.waitForAnimation(worm, moveDuration);
       worm.completeAnimation();
     }
     
@@ -366,7 +366,7 @@ class GameScene {
     for (let i = 0; i < returnPath.length; i++) {
       const pos = returnPath[i];
       worm.startMoveAnimation(pos, moveDuration);
-      await this.wait(moveDuration + 20);
+      await this.waitForAnimation(worm, moveDuration);
       worm.completeAnimation();
     }
     
@@ -432,10 +432,10 @@ class GameScene {
       // 1. 蠕动到阻挡位（使用动画）
       
       // 移动到阻挡位置
-      const moveDuration = 150;
+      const moveDuration = 125;
       worm.startMoveAnimation(nextPos, moveDuration);
       this.audioManager.playSound('collision');
-      await this.wait(moveDuration + 20);
+      await this.waitForAnimation(worm, moveDuration);
       worm.completeAnimation();
       
       // 2. 高亮闪动一下
@@ -464,7 +464,7 @@ class GameScene {
       
       // 移动到初始位置
       worm.startMoveAnimation(backPos, moveDuration);
-      await this.wait(moveDuration + 20);
+      await this.waitForAnimation(worm, moveDuration);
       worm.completeAnimation();
       
       // 确保回到精确的初始位置
@@ -479,10 +479,10 @@ class GameScene {
       // 不会碰撞：正常移动一步（使用动画）
       // 注意：这种情况理论上不应该发生，因为已经判定为"不可逃脱"
       // 但为了代码健壮性，还是处理这种情况
-      const moveDuration = 200;
+      const moveDuration = 150;
       worm.startMoveAnimation(nextPos, moveDuration);
       this.audioManager.playSound('move');
-      await this.wait(moveDuration + 20);
+      await this.waitForAnimation(worm, moveDuration);
       worm.completeAnimation();
     }
   }
@@ -562,6 +562,20 @@ class GameScene {
    */
   wait(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  /**
+   * 等待动画完成（更精确的等待方式，确保动画流畅）
+   * @param {Worm} worm - 蠕虫对象
+   * @param {number} maxDuration - 最大等待时间（毫秒）
+   * @returns {Promise}
+   */
+  async waitForAnimation(worm, maxDuration) {
+    const startTime = Date.now();
+    // 每帧检查动画是否完成，最多等待maxDuration + 缓冲时间
+    while (worm.isAnimating && (Date.now() - startTime) < maxDuration + 50) {
+      await this.wait(16); // 等待一帧（约60fps），确保动画更新流畅
+    }
   }
 
   /**

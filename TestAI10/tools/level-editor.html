@@ -51,17 +51,17 @@
             display: flex;
             flex-direction: column;
             background: #fafafa;
-            padding: 20px;
-            overflow: auto;
-            align-items: center;
-            justify-content: center;
+            padding: 0;
+            overflow: hidden;
+            position: relative;
         }
 
         #editorCanvas {
+            width: 100%;
+            height: 100%;
             background: white;
-            border: 2px solid #ddd;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             cursor: crosshair;
+            display: block;
         }
 
         .section {
@@ -228,6 +228,15 @@
             background: #616161;
         }
 
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn:disabled:hover {
+            background: inherit;
+        }
+
         .mode-selector {
             display: flex;
             gap: 10px;
@@ -270,6 +279,43 @@
         .hidden {
             display: none;
         }
+
+        .zoom-controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .zoom-btn {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #3F51B5;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            font-weight: bold;
+            color: #3F51B5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .zoom-btn:hover {
+            background: #E3F2FD;
+            transform: scale(1.1);
+        }
+
+        .zoom-btn:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
 <body>
@@ -302,6 +348,7 @@
                     <div class="mode-btn" id="modeDrag">拖拽模式</div>
                 </div>
                 <div class="info-text" id="modeHint">点击网格添加蠕虫段</div>
+                <button class="btn btn-secondary" id="panModeBtn" style="margin-top: 10px;">拖动地图模式</button>
             </div>
 
             <!-- 蠕虫列表 -->
@@ -333,6 +380,15 @@
                 <button class="btn btn-danger" id="deleteWormBtn">删除当前蠕虫</button>
             </div>
 
+            <!-- 操作历史 -->
+            <div class="section">
+                <div class="section-title">操作历史</div>
+                <div class="form-row">
+                    <button class="btn btn-secondary" id="undoBtn" style="flex: 1;">撤销 (Ctrl+Z)</button>
+                    <button class="btn btn-secondary" id="redoBtn" style="flex: 1;">重做 (Ctrl+Y)</button>
+                </div>
+            </div>
+
             <!-- 文件操作 -->
             <div class="section">
                 <div class="section-title">文件操作</div>
@@ -350,6 +406,10 @@
 
         <div class="canvas-container">
             <canvas id="editorCanvas"></canvas>
+            <div class="zoom-controls">
+                <button class="zoom-btn" id="zoomInBtn" title="放大">+</button>
+                <button class="zoom-btn" id="zoomOutBtn" title="缩小">−</button>
+            </div>
         </div>
     </div>
 
@@ -374,10 +434,28 @@
                 this.dragStartPos = null;
                 this.nextWormId = 1;
                 
+                // 地图拖动状态
+                this.isPanning = false; // 是否正在拖动地图
+                this.panMode = false; // 是否处于拖动地图模式
+                this.panStartX = 0; // 拖动开始时的屏幕X坐标
+                this.panStartY = 0; // 拖动开始时的屏幕Y坐标
+                this.panOffsetX = 0; // 地图偏移X（累加值）
+                this.panOffsetY = 0; // 地图偏移Y（累加值）
+                this.isSpacePressed = false; // 空格键是否按下
+                
+                // 操作历史（撤销/重做）
+                this.history = []; // 历史记录栈
+                this.historyIndex = -1; // 当前历史索引
+                this.maxHistorySize = 50; // 最大历史记录数
+                
                 // 渲染参数
                 this.cellSize = 40;
                 this.offsetX = 0;
                 this.offsetY = 0;
+                this.zoom = 1.2; // 缩放比例（初始放大20%）
+                this.minZoom = 0.5; // 最小缩放
+                this.maxZoom = 3.0; // 最大缩放
+                this.zoomStep = 0.1; // 每次缩放步长
                 
                 this.init();
             }
@@ -386,35 +464,44 @@
                 this.setupCanvas();
                 this.setupEventListeners();
                 this.calculateRenderParams();
+                this.updateHistoryButtons();
                 this.render();
             }
 
             setupCanvas() {
                 const container = this.canvas.parentElement;
                 const updateCanvasSize = () => {
-                    const maxWidth = container.clientWidth - 40;
-                    const maxHeight = container.clientHeight - 40;
-                    const size = Math.min(maxWidth, maxHeight, 800);
-                    this.canvas.width = size;
-                    this.canvas.height = size;
+                    // 使用整个容器的大小
+                    this.canvas.width = container.clientWidth;
+                    this.canvas.height = container.clientHeight;
                     this.calculateRenderParams();
                     this.render();
                 };
                 
                 updateCanvasSize();
                 window.addEventListener('resize', updateCanvasSize);
+                
+                // 使用 ResizeObserver 监听容器大小变化
+                if (window.ResizeObserver) {
+                    const resizeObserver = new ResizeObserver(() => {
+                        updateCanvasSize();
+                    });
+                    resizeObserver.observe(container);
+                }
             }
 
             setupEventListeners() {
                 // 关卡大小
                 document.getElementById('matrixWidth').addEventListener('input', (e) => {
                     this.levelData.matrix.width = parseInt(e.target.value) || 8;
+                    this.resetPan(); // 重置地图位置
                     this.calculateRenderParams();
                     this.render();
                 });
                 
                 document.getElementById('matrixHeight').addEventListener('input', (e) => {
                     this.levelData.matrix.height = parseInt(e.target.value) || 8;
+                    this.resetPan(); // 重置地图位置
                     this.calculateRenderParams();
                     this.render();
                 });
@@ -426,6 +513,11 @@
                 
                 document.getElementById('modeDrag').addEventListener('click', () => {
                     this.setEditMode('drag');
+                });
+
+                // 拖动地图模式按钮
+                document.getElementById('panModeBtn').addEventListener('click', () => {
+                    this.togglePanMode();
                 });
 
                 // 蠕虫管理
@@ -476,12 +568,98 @@
                     this.exportJSON();
                 });
 
+                // 撤销/重做
+                document.getElementById('undoBtn').addEventListener('click', () => {
+                    this.undo();
+                });
+
+                document.getElementById('redoBtn').addEventListener('click', () => {
+                    this.redo();
+                });
+
+                // 键盘快捷键
+                document.addEventListener('keydown', (e) => {
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.undo();
+                    } else if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
+                        e.preventDefault();
+                        this.redo();
+                    }
+                });
+
+                // 缩放控制
+                document.getElementById('zoomInBtn').addEventListener('click', () => {
+                    this.zoomIn();
+                });
+
+                document.getElementById('zoomOutBtn').addEventListener('click', () => {
+                    this.zoomOut();
+                });
+
+                // 鼠标滚轮缩放
+                this.canvas.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    if (e.deltaY < 0) {
+                        this.zoomIn();
+                    } else {
+                        this.zoomOut();
+                    }
+                });
+
+                // 键盘事件（用于空格键拖动）
+                document.addEventListener('keydown', (e) => {
+                    // 只在画布区域或没有焦点元素时处理空格键
+                    if (e.code === 'Space' && !e.repeat) {
+                        // 如果焦点在输入框等元素上，不处理
+                        const activeElement = document.activeElement;
+                        if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+                            return;
+                        }
+                        e.preventDefault();
+                        this.isSpacePressed = true;
+                        this.canvas.style.cursor = 'grab';
+                    }
+                });
+
+                document.addEventListener('keyup', (e) => {
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                        this.isSpacePressed = false;
+                        if (!this.isPanning) {
+                            this.canvas.style.cursor = 'crosshair';
+                        } else {
+                            this.canvas.style.cursor = 'grabbing';
+                        }
+                    }
+                });
+
                 // Canvas事件
                 this.canvas.addEventListener('mousedown', (e) => this.handleMouseDown(e));
                 this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
                 this.canvas.addEventListener('mouseup', (e) => this.handleMouseUp(e));
                 this.canvas.addEventListener('mouseleave', () => {
                     this.isDragging = false;
+                    this.isPanning = false;
+                    this.canvas.style.cursor = 'crosshair';
+                });
+
+                // 防止中键和右键的默认行为
+                this.canvas.addEventListener('mousedown', (e) => {
+                    if (e.button === 1 || e.button === 2) { // 中键或右键
+                        e.preventDefault();
+                    }
+                });
+
+                this.canvas.addEventListener('contextmenu', (e) => {
+                    e.preventDefault(); // 禁用右键菜单
+                });
+
+                // 防止中键滚动
+                this.canvas.addEventListener('auxclick', (e) => {
+                    if (e.button === 1) {
+                        e.preventDefault();
+                    }
                 });
 
                 // 更新关卡ID
@@ -494,8 +672,29 @@
                 this.editMode = mode;
                 document.getElementById('modeClick').classList.toggle('active', mode === 'click');
                 document.getElementById('modeDrag').classList.toggle('active', mode === 'drag');
-                document.getElementById('modeHint').textContent = 
-                    mode === 'click' ? '点击网格添加蠕虫段' : '拖拽绘制蠕虫路径';
+                const hint = mode === 'click' ? '点击网格添加蠕虫段' : '拖拽绘制蠕虫路径';
+                document.getElementById('modeHint').textContent = hint + ' | 拖动地图: 空格+鼠标 或 鼠标中键';
+            }
+
+            /**
+             * 切换拖动地图模式
+             */
+            togglePanMode() {
+                this.panMode = !this.panMode;
+                const btn = document.getElementById('panModeBtn');
+                if (this.panMode) {
+                    btn.textContent = '退出拖动模式';
+                    btn.classList.add('btn-primary');
+                    btn.classList.remove('btn-secondary');
+                    this.canvas.style.cursor = 'grab';
+                    this.showStatus('拖动地图模式已启用，点击并拖动地图', 'info');
+                } else {
+                    btn.textContent = '拖动地图模式';
+                    btn.classList.remove('btn-primary');
+                    btn.classList.add('btn-secondary');
+                    this.canvas.style.cursor = 'crosshair';
+                    this.showStatus('拖动地图模式已关闭', 'info');
+                }
             }
 
             calculateRenderParams() {
@@ -503,16 +702,53 @@
                 const canvasHeight = this.canvas.height;
                 const matrix = this.levelData.matrix;
                 
-                // 计算合适的格子大小
-                const maxCellSizeX = (canvasWidth - 40) / matrix.width;
-                const maxCellSizeY = (canvasHeight - 40) / matrix.height;
-                this.cellSize = Math.min(maxCellSizeX, maxCellSizeY, 50);
+                // 计算基础格子大小（使用整个canvas区域，不留边距）
+                const maxCellSizeX = canvasWidth / matrix.width;
+                const maxCellSizeY = canvasHeight / matrix.height;
+                const baseCellSize = Math.min(maxCellSizeX, maxCellSizeY);
                 
-                // 计算偏移量（居中）
+                // 应用缩放
+                this.cellSize = baseCellSize * this.zoom;
+                
+                // 计算偏移量（居中 + 拖动偏移）
                 const totalWidth = matrix.width * this.cellSize;
                 const totalHeight = matrix.height * this.cellSize;
-                this.offsetX = (canvasWidth - totalWidth) / 2;
-                this.offsetY = (canvasHeight - totalHeight) / 2;
+                this.offsetX = (canvasWidth - totalWidth) / 2 + this.panOffsetX;
+                this.offsetY = (canvasHeight - totalHeight) / 2 + this.panOffsetY;
+            }
+
+            /**
+             * 放大
+             */
+            zoomIn() {
+                if (this.zoom < this.maxZoom) {
+                    this.zoom = Math.min(this.zoom + this.zoomStep, this.maxZoom);
+                    this.calculateRenderParams();
+                    this.render();
+                    this.showStatus(`缩放: ${Math.round(this.zoom * 100)}%`, 'info');
+                }
+            }
+
+            /**
+             * 缩小
+             */
+            zoomOut() {
+                if (this.zoom > this.minZoom) {
+                    this.zoom = Math.max(this.zoom - this.zoomStep, this.minZoom);
+                    this.calculateRenderParams();
+                    this.render();
+                    this.showStatus(`缩放: ${Math.round(this.zoom * 100)}%`, 'info');
+                }
+            }
+
+            /**
+             * 重置地图位置（居中）
+             */
+            resetPan() {
+                this.panOffsetX = 0;
+                this.panOffsetY = 0;
+                this.calculateRenderParams();
+                this.render();
             }
 
             screenToWorld(screenX, screenY) {
@@ -533,10 +769,14 @@
                 return pos.x >= 0 && pos.x < width && pos.y >= 0 && pos.y < height;
             }
 
-            isPositionOccupied(pos, excludeWormId = null) {
+            isPositionOccupied(pos, excludeWormId = null, excludeSegmentIndex = null) {
                 for (const worm of this.levelData.worms) {
-                    if (worm.id === excludeWormId) continue;
-                    for (const segment of worm.segments) {
+                    for (let i = 0; i < worm.segments.length; i++) {
+                        const segment = worm.segments[i];
+                        // 跳过排除的蠕虫和排除的段（用于编辑当前蠕虫时）
+                        if (worm.id === excludeWormId && i === excludeSegmentIndex) {
+                            continue;
+                        }
                         if (segment.x === pos.x && segment.y === pos.y) {
                             return true;
                         }
@@ -546,6 +786,37 @@
             }
 
             handleMouseDown(e) {
+                // 拖动地图模式：直接开始拖动
+                if (this.panMode && e.button === 0) {
+                    e.preventDefault();
+                    this.startPanning(e);
+                    return;
+                }
+
+                // 鼠标中键：直接开始拖动地图
+                if (e.button === 1) {
+                    e.preventDefault();
+                    this.startPanning(e);
+                    return;
+                }
+
+                // 按住空格键 + 鼠标左键：开始拖动地图
+                if (this.isSpacePressed && e.button === 0) {
+                    e.preventDefault();
+                    this.startPanning(e);
+                    return;
+                }
+
+                // 如果正在拖动地图，不处理其他操作
+                if (this.isPanning) {
+                    return;
+                }
+
+                // 只处理左键点击
+                if (e.button !== 0) {
+                    return;
+                }
+
                 const rect = this.canvas.getBoundingClientRect();
                 const screenX = e.clientX - rect.left;
                 const screenY = e.clientY - rect.top;
@@ -563,6 +834,13 @@
             }
 
             handleMouseMove(e) {
+                // 处理地图拖动
+                if (this.isPanning) {
+                    this.handlePanning(e);
+                    return;
+                }
+
+                // 处理蠕虫拖拽绘制
                 if (!this.isDragging || this.editMode !== 'drag') return;
 
                 const rect = this.canvas.getBoundingClientRect();
@@ -576,8 +854,70 @@
             }
 
             handleMouseUp(e) {
+                // 结束地图拖动
+                if (this.isPanning) {
+                    this.stopPanning();
+                }
+
+                // 结束蠕虫拖拽
                 if (this.editMode === 'drag') {
                     this.isDragging = false;
+                }
+            }
+
+            /**
+             * 开始拖动地图
+             */
+            startPanning(e) {
+                this.isPanning = true;
+                const rect = this.canvas.getBoundingClientRect();
+                this.panStartX = e.clientX - rect.left;
+                this.panStartY = e.clientY - rect.top;
+                this.canvas.style.cursor = 'grabbing';
+                // 阻止默认行为
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            /**
+             * 处理地图拖动
+             */
+            handlePanning(e) {
+                if (!this.isPanning) return;
+                
+                const rect = this.canvas.getBoundingClientRect();
+                const currentX = e.clientX - rect.left;
+                const currentY = e.clientY - rect.top;
+                
+                // 计算拖动距离
+                const deltaX = currentX - this.panStartX;
+                const deltaY = currentY - this.panStartY;
+                
+                // 更新偏移量
+                this.panOffsetX += deltaX;
+                this.panOffsetY += deltaY;
+                
+                // 更新起始位置
+                this.panStartX = currentX;
+                this.panStartY = currentY;
+                
+                // 重新计算渲染参数并渲染
+                this.calculateRenderParams();
+                this.render();
+                
+                // 阻止默认行为
+                e.preventDefault();
+            }
+
+            /**
+             * 停止拖动地图
+             */
+            stopPanning() {
+                this.isPanning = false;
+                if (!this.isSpacePressed) {
+                    this.canvas.style.cursor = 'crosshair';
+                } else {
+                    this.canvas.style.cursor = 'grab';
                 }
             }
 
@@ -590,14 +930,19 @@
                 const worm = this.getWormById(this.currentWormId);
                 if (!worm) return;
 
-                // 检查位置是否被占用
-                if (this.isPositionOccupied(pos, worm.id)) {
+                // 检查位置是否被占用（包括当前蠕虫的其他段）
+                if (this.isPositionOccupied(pos, null, null)) {
                     this.showStatus('该位置已被占用', 'error');
                     return;
                 }
 
                 // 如果是第一个段，直接添加
                 if (worm.segments.length === 0) {
+                    this.addToHistory('addSegment', {
+                        wormId: worm.id,
+                        segment: { ...pos },
+                        index: 0
+                    });
                     worm.segments.push({ ...pos });
                 } else {
                     // 检查是否与最后一个段相邻
@@ -606,6 +951,11 @@
                     const dy = Math.abs(pos.y - lastSegment.y);
                     
                     if ((dx === 1 && dy === 0) || (dx === 0 && dy === 1)) {
+                        this.addToHistory('addSegment', {
+                            wormId: worm.id,
+                            segment: { ...pos },
+                            index: worm.segments.length
+                        });
                         worm.segments.push({ ...pos });
                     } else {
                         this.showStatus('新段必须与最后一个段相邻', 'error');
@@ -624,6 +974,15 @@
                     this.addWorm();
                     const worm = this.getWormById(this.currentWormId);
                     if (worm) {
+                        // 检查起始位置是否被占用
+                        if (this.isPositionOccupied(this.dragStartPos, null, null)) {
+                            return;
+                        }
+                        this.addToHistory('addSegment', {
+                            wormId: worm.id,
+                            segment: { ...this.dragStartPos },
+                            index: 0
+                        });
                         worm.segments.push({ ...this.dragStartPos });
                     }
                 }
@@ -631,8 +990,8 @@
                 const worm = this.getWormById(this.currentWormId);
                 if (!worm) return;
 
-                // 检查位置是否被占用
-                if (this.isPositionOccupied(pos, worm.id)) {
+                // 检查位置是否被占用（包括当前蠕虫的其他段）
+                if (this.isPositionOccupied(pos, null, null)) {
                     return;
                 }
 
@@ -650,11 +1009,21 @@
                     const dy = Math.abs(pos.y - lastSegment.y);
                     
                     if ((dx === 1 && dy === 0) || (dx === 0 && dy === 1)) {
+                        this.addToHistory('addSegment', {
+                            wormId: worm.id,
+                            segment: { ...pos },
+                            index: worm.segments.length
+                        });
                         worm.segments.push({ ...pos });
                     } else {
                         return;
                     }
                 } else {
+                    this.addToHistory('addSegment', {
+                        wormId: worm.id,
+                        segment: { ...pos },
+                        index: 0
+                    });
                     worm.segments.push({ ...pos });
                 }
 
@@ -669,6 +1038,7 @@
                     color: '#FF5733'
                 };
                 
+                this.addToHistory('addWorm', { worm: JSON.parse(JSON.stringify(newWorm)) });
                 this.levelData.worms.push(newWorm);
                 this.currentWormId = newWorm.id;
                 this.updateWormList();
@@ -680,6 +1050,13 @@
                 if (!this.currentWormId) {
                     this.showStatus('请先选择一个蠕虫', 'error');
                     return;
+                }
+
+                const worm = this.getWormById(this.currentWormId);
+                if (worm) {
+                    this.addToHistory('deleteWorm', { 
+                        worm: JSON.parse(JSON.stringify(worm)) 
+                    });
                 }
 
                 this.levelData.worms = this.levelData.worms.filter(
@@ -708,6 +1085,13 @@
                 
                 const worm = this.getWormById(this.currentWormId);
                 if (worm) {
+                    const oldValue = worm[property];
+                    this.addToHistory('updateProperty', {
+                        wormId: worm.id,
+                        property: property,
+                        oldValue: oldValue,
+                        newValue: value
+                    });
                     worm[property] = value;
                     this.updateWormList();
                     this.render();
@@ -740,6 +1124,10 @@
                     deleteBtn.textContent = '删除';
                     deleteBtn.onclick = (e) => {
                         e.stopPropagation();
+                        // 添加到历史记录
+                        this.addToHistory('deleteWorm', { 
+                            worm: JSON.parse(JSON.stringify(worm)) 
+                        });
                         this.levelData.worms = this.levelData.worms.filter(w => w.id !== worm.id);
                         if (this.currentWormId === worm.id) {
                             this.currentWormId = null;
@@ -1005,9 +1393,15 @@
                         this.nextWormId = maxId + 1;
                         
                         this.currentWormId = null;
+                        // 重置历史记录
+                        this.history = [];
+                        this.historyIndex = -1;
+                        // 重置地图位置
+                        this.resetPan();
                         this.calculateRenderParams();
                         this.updateWormList();
                         this.updateCurrentWormUI();
+                        this.updateHistoryButtons();
                         this.render();
                         
                         this.showStatus('关卡加载成功', 'success');
@@ -1119,6 +1513,152 @@
                 statusBar.textContent = message;
                 statusBar.style.color = type === 'error' ? '#f44336' : 
                                        type === 'success' ? '#4CAF50' : '#666';
+            }
+
+            /**
+             * 添加到历史记录
+             */
+            addToHistory(action, data) {
+                // 如果当前不在历史栈的末尾，删除后面的记录
+                if (this.historyIndex < this.history.length - 1) {
+                    this.history = this.history.slice(0, this.historyIndex + 1);
+                }
+
+                // 添加新记录
+                this.history.push({
+                    action: action,
+                    data: JSON.parse(JSON.stringify(data)),
+                    timestamp: Date.now()
+                });
+
+                // 限制历史记录数量
+                if (this.history.length > this.maxHistorySize) {
+                    this.history.shift();
+                } else {
+                    this.historyIndex++;
+                }
+
+                this.updateHistoryButtons();
+            }
+
+            /**
+             * 撤销操作
+             */
+            undo() {
+                if (this.historyIndex < 0) {
+                    this.showStatus('没有可撤销的操作', 'info');
+                    return;
+                }
+
+                const record = this.history[this.historyIndex];
+                this.applyHistoryRecord(record, true);
+                this.historyIndex--;
+                this.updateHistoryButtons();
+                this.updateWormList();
+                this.updateCurrentWormUI();
+                this.render();
+                this.showStatus('已撤销', 'success');
+            }
+
+            /**
+             * 重做操作
+             */
+            redo() {
+                if (this.historyIndex >= this.history.length - 1) {
+                    this.showStatus('没有可重做的操作', 'info');
+                    return;
+                }
+
+                this.historyIndex++;
+                const record = this.history[this.historyIndex];
+                this.applyHistoryRecord(record, false);
+                this.updateHistoryButtons();
+                this.updateWormList();
+                this.updateCurrentWormUI();
+                this.render();
+                this.showStatus('已重做', 'success');
+            }
+
+            /**
+             * 应用历史记录
+             */
+            applyHistoryRecord(record, isUndo) {
+                const { action, data } = record;
+
+                switch (action) {
+                    case 'addSegment':
+                        if (isUndo) {
+                            // 撤销：删除段
+                            const worm = this.getWormById(data.wormId);
+                            if (worm && worm.segments.length > data.index) {
+                                worm.segments.splice(data.index, 1);
+                            }
+                        } else {
+                            // 重做：添加段
+                            const worm = this.getWormById(data.wormId);
+                            if (worm) {
+                                worm.segments.splice(data.index, 0, { ...data.segment });
+                            }
+                        }
+                        break;
+
+                    case 'addWorm':
+                        if (isUndo) {
+                            // 撤销：删除蠕虫
+                            this.levelData.worms = this.levelData.worms.filter(
+                                w => w.id !== data.worm.id
+                            );
+                            if (this.currentWormId === data.worm.id) {
+                                this.currentWormId = null;
+                            }
+                        } else {
+                            // 重做：添加蠕虫
+                            this.levelData.worms.push(JSON.parse(JSON.stringify(data.worm)));
+                        }
+                        break;
+
+                    case 'deleteWorm':
+                        if (isUndo) {
+                            // 撤销：恢复蠕虫
+                            this.levelData.worms.push(JSON.parse(JSON.stringify(data.worm)));
+                        } else {
+                            // 重做：删除蠕虫
+                            this.levelData.worms = this.levelData.worms.filter(
+                                w => w.id !== data.worm.id
+                            );
+                            if (this.currentWormId === data.worm.id) {
+                                this.currentWormId = null;
+                            }
+                        }
+                        break;
+
+                    case 'updateProperty':
+                        if (isUndo) {
+                            // 撤销：恢复旧值
+                            const worm = this.getWormById(data.wormId);
+                            if (worm) {
+                                worm[data.property] = data.oldValue;
+                            }
+                        } else {
+                            // 重做：应用新值
+                            const worm = this.getWormById(data.wormId);
+                            if (worm) {
+                                worm[data.property] = data.newValue;
+                            }
+                        }
+                        break;
+                }
+            }
+
+            /**
+             * 更新历史按钮状态
+             */
+            updateHistoryButtons() {
+                const undoBtn = document.getElementById('undoBtn');
+                const redoBtn = document.getElementById('redoBtn');
+                
+                undoBtn.disabled = this.historyIndex < 0;
+                redoBtn.disabled = this.historyIndex >= this.history.length - 1;
             }
         }
 

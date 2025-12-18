@@ -147,8 +147,11 @@ class Worm {
       return this.segments;
     }
     
-    // 使用缓动函数让移动更自然（ease-out）
-    const easedProgress = 1 - Math.pow(1 - progress, 3);
+    // 使用平滑的缓动函数（ease-in-out cubic）让移动更自然顺滑
+    // ease-in-out cubic: 开始和结束时慢，中间快
+    const easedProgress = progress < 0.5
+      ? 4 * progress * progress * progress
+      : 1 - Math.pow(-2 * progress + 2, 3) / 2;
     
     // 插值每个段的位置
     const interpolated = [];
