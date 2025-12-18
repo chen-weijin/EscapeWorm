@@ -34,6 +34,21 @@ class GameScene {
     this.gameCoreOffsetX = 0; // 游戏核心区域的X偏移
     this.gameCoreOffsetY = 0; // 游戏核心区域的Y偏移
     
+    // 触摸手势相关
+    this.touches = []; // 当前触摸点数组（设计分辨率坐标）
+    this.isPanning = false; // 是否正在拖动地图
+    this.panStartX = 0; // 拖动开始时的X坐标
+    this.panStartY = 0; // 拖动开始时的Y坐标
+    this.panOffsetX = 0; // 地图拖动偏移X（累加值）
+    this.panOffsetY = 0; // 地图拖动偏移Y（累加值）
+    this.initialZoom = 1.0; // 缩放开始时的zoom值
+    this.initialDistance = 0; // 双指初始距离
+    this.minZoom = 0.5; // 最小缩放
+    this.maxZoom = 3.0; // 最大缩放
+    
+    // 滑块拖动状态
+    this.isDraggingSlider = false; // 是否正在拖动滑块
+    
     // 蠕虫图片资源
     this.wormHeadImage = null;
     this.wormBodyImage = null;
@@ -114,6 +129,14 @@ class GameScene {
     this.worms = [];
     this.matrix = null; // 初始化为null，表示还未加载完成
     this.escapePoints = [];
+    
+    // 重置触摸手势状态
+    this.touches = [];
+    this.isPanning = false;
+    this.isDraggingSlider = false;
+    this.panOffsetX = 0;
+    this.panOffsetY = 0;
+    this.zoom = 1.0;
 
     try {
       // 加载蠕虫图片资源
@@ -176,12 +199,12 @@ class GameScene {
     // 这样游戏核心坐标系是固定的，通过缩放来适配不同格子数
     this.cellSize = this.baseCellSize;
     
-    // 计算游戏核心区域的偏移量（居中）
+    // 计算游戏核心区域的偏移量（居中 + 拖动偏移）
     // 游戏核心区域的实际显示大小 = 格子数 * 基准格子大小 * 缩放比例
     const gameCoreDisplayWidth = this.matrix.width * this.cellSize * this.gameCoreScale;
     const gameCoreDisplayHeight = this.matrix.height * this.cellSize * this.gameCoreScale;
-    this.gameCoreOffsetX = (canvasWidth - gameCoreDisplayWidth) / 2;
-    this.gameCoreOffsetY = 80 + (gameAreaHeight - gameCoreDisplayHeight) / 2;
+    this.gameCoreOffsetX = (canvasWidth - gameCoreDisplayWidth) / 2 + this.panOffsetX;
+    this.gameCoreOffsetY = 80 + (gameAreaHeight - gameCoreDisplayHeight) / 2 + this.panOffsetY;
     
     // 游戏核心区域内的偏移量（用于居中显示）
     this.offsetX = 0;
@@ -221,11 +244,21 @@ class GameScene {
 
   /**
    * 处理点击事件
-   * @param {number} x - 点击X坐标
-   * @param {number} y - 点击Y坐标
+   * @param {number} x - 点击X坐标（设计分辨率坐标）
+   * @param {number} y - 点击Y坐标（设计分辨率坐标）
    */
   handleClick(x, y) {
     if (this.isGameOver || this.isVictory) {
+      return;
+    }
+
+    // 如果正在拖动地图，不处理点击
+    if (this.isPanning) {
+      return;
+    }
+
+    // 检查是否点击了底部滑块
+    if (this.checkSliderClick(x, y)) {
       return;
     }
 
@@ -247,6 +280,250 @@ class GameScene {
 
     // 处理蠕虫移动
     this.handleWormClick(clickedWorm);
+  }
+
+  /**
+   * 处理触摸开始事件
+   * @param {Array} touches - 触摸点数组（设计分辨率坐标）
+   */
+  handleTouchStart(touches) {
+    if (this.isGameOver || this.isVictory) {
+      return;
+    }
+
+    this.touches = touches.map(t => ({
+      id: t.identifier || t.id || 0,
+      x: t.x,
+      y: t.y
+    }));
+
+    if (this.touches.length === 1) {
+      // 单指：检查是否点击了滑块
+      const touch = this.touches[0];
+      if (this.checkSliderClick(touch.x, touch.y)) {
+        // 点击了滑块，开始拖动
+        this.isDraggingSlider = true;
+        return;
+      }
+      
+      // 记录起始位置，等待移动事件判断是拖动还是点击
+      this.isPanning = false;
+      this.panStartX = this.touches[0].x;
+      this.panStartY = this.touches[0].y;
+    } else if (this.touches.length === 2) {
+      // 双指：准备缩放
+      this.isPanning = false;
+      this.isDraggingSlider = false; // 双指时停止滑块拖动
+      this.initialZoom = this.zoom;
+      this.initialDistance = this.getTouchDistance(this.touches[0], this.touches[1]);
+    }
+  }
+
+  /**
+   * 处理触摸移动事件
+   * @param {Array} touches - 触摸点数组（设计分辨率坐标）
+   */
+  handleTouchMove(touches) {
+    if (this.isGameOver || this.isVictory) {
+      return;
+    }
+
+    const currentTouches = touches.map(t => ({
+      id: t.identifier || t.id || 0,
+      x: t.x,
+      y: t.y
+    }));
+
+    // 如果正在拖动滑块，优先处理滑块拖动
+    if (this.isDraggingSlider && currentTouches.length === 1) {
+      this.handleSliderDrag(currentTouches[0].x);
+      this.touches = currentTouches;
+      return;
+    }
+
+    if (currentTouches.length === 1 && this.touches.length >= 1) {
+      // 单指拖动地图
+      const touch = currentTouches[0];
+      const deltaX = touch.x - this.panStartX;
+      const deltaY = touch.y - this.panStartY;
+      
+      // 如果移动距离超过阈值，认为是拖动而不是点击
+      const moveDistance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+      if (moveDistance > 5) { // 5像素阈值
+        this.isPanning = true;
+        this.panOffsetX += deltaX;
+        this.panOffsetY += deltaY;
+        
+        this.panStartX = touch.x;
+        this.panStartY = touch.y;
+        
+        this.calculateRenderParams();
+      }
+    } else if (currentTouches.length === 2 && this.touches.length >= 2) {
+      // 双指缩放
+      this.isPanning = false;
+      this.isDraggingSlider = false; // 双指时停止滑块拖动
+      const currentDistance = this.getTouchDistance(currentTouches[0], currentTouches[1]);
+      if (this.initialDistance > 0) {
+        const scale = currentDistance / this.initialDistance;
+        this.zoom = Math.max(this.minZoom, Math.min(this.maxZoom, this.initialZoom * scale));
+        this.calculateRenderParams();
+      }
+    }
+
+    this.touches = currentTouches;
+  }
+
+  /**
+   * 处理触摸结束事件
+   * @param {Array} touches - 剩余的触摸点数组（设计分辨率坐标）
+   */
+  handleTouchEnd(touches) {
+    // 停止滑块拖动
+    if (this.isDraggingSlider) {
+      this.stopSliderDrag();
+    }
+
+    const remainingTouches = (touches || []).map(t => ({
+      id: t.identifier || t.id || 0,
+      x: t.x,
+      y: t.y
+    }));
+
+    if (remainingTouches.length === 0) {
+      // 所有触摸点都释放了
+      const wasPanning = this.isPanning;
+      this.isPanning = false;
+      this.touches = [];
+      
+      // 如果之前没有拖动（只是点击），且触摸点移动距离很小，触发点击事件
+      if (!wasPanning && this.touches.length === 0) {
+        // 点击事件会在handleTouchStart中处理（单点触摸）
+        // 这里不需要额外处理
+      }
+    } else if (remainingTouches.length === 1 && this.touches.length >= 2) {
+      // 从双指变为单指，切换到拖动模式
+      this.isPanning = false;
+      this.panStartX = remainingTouches[0].x;
+      this.panStartY = remainingTouches[0].y;
+      this.touches = remainingTouches;
+    } else {
+      this.touches = remainingTouches;
+    }
+  }
+
+  /**
+   * 计算两个触摸点之间的距离
+   * @param {Object} touch1 - 触摸点1
+   * @param {Object} touch2 - 触摸点2
+   * @returns {number} 距离
+   */
+  getTouchDistance(touch1, touch2) {
+    const dx = touch2.x - touch1.x;
+    const dy = touch2.y - touch1.y;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  /**
+   * 检查是否点击了底部滑块
+   * @param {number} x - 屏幕X坐标（设计分辨率坐标）
+   * @param {number} y - 屏幕Y坐标（设计分辨率坐标）
+   * @returns {boolean}
+   */
+  checkSliderClick(x, y) {
+    const width = this.canvas.width;
+    const height = this.canvas.height;
+    const sliderX = width / 2;
+    const sliderY = height - 25;
+    const sliderWidth = 200;
+    const sliderHeight = 4;
+    const handleSize = 20;
+    const buttonSize = 30;
+
+    // 检查是否点击了减号按钮
+    const minusX = sliderX - sliderWidth / 2 - 30;
+    if (x >= minusX - buttonSize / 2 && x <= minusX + buttonSize / 2 &&
+        y >= sliderY - buttonSize / 2 && y <= sliderY + buttonSize / 2) {
+      this.zoomOut();
+      return true;
+    }
+
+    // 检查是否点击了加号按钮
+    const plusX = sliderX + sliderWidth / 2 + 30;
+    if (x >= plusX - buttonSize / 2 && x <= plusX + buttonSize / 2 &&
+        y >= sliderY - buttonSize / 2 && y <= sliderY + buttonSize / 2) {
+      this.zoomIn();
+      return true;
+    }
+
+    // 检查是否点击了滑块轨道或手柄
+    const sliderLeft = sliderX - sliderWidth / 2;
+    const sliderRight = sliderX + sliderWidth / 2;
+    const sliderTop = sliderY - Math.max(handleSize / 2, 15);
+    const sliderBottom = sliderY + Math.max(handleSize / 2, 15);
+
+    if (x >= sliderLeft && x <= sliderRight && y >= sliderTop && y <= sliderBottom) {
+      // 点击了滑块区域，开始拖动
+      this.isDraggingSlider = true;
+      this.updateZoomFromSliderX(x);
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * 根据滑块X坐标更新缩放值
+   * @param {number} sliderX - 滑块X坐标（设计分辨率坐标）
+   */
+  updateZoomFromSliderX(sliderX) {
+    const width = this.canvas.width;
+    const sliderCenterX = width / 2;
+    const sliderWidth = 200;
+    const sliderLeft = sliderCenterX - sliderWidth / 2;
+    const sliderRight = sliderCenterX + sliderWidth / 2;
+
+    // 计算滑块位置比例 (0 到 1)
+    let ratio = (sliderX - sliderLeft) / sliderWidth;
+    ratio = Math.max(0, Math.min(1, ratio));
+
+    // 将比例转换为缩放值
+    const zoomRange = this.maxZoom - this.minZoom;
+    this.zoom = this.minZoom + ratio * zoomRange;
+    this.calculateRenderParams();
+  }
+
+  /**
+   * 放大
+   */
+  zoomIn() {
+    const step = 0.1;
+    this.setZoom(this.zoom + step);
+  }
+
+  /**
+   * 缩小
+   */
+  zoomOut() {
+    const step = 0.1;
+    this.setZoom(this.zoom - step);
+  }
+
+  /**
+   * 处理滑块拖动
+   * @param {number} x - 当前X坐标（设计分辨率坐标）
+   */
+  handleSliderDrag(x) {
+    if (this.isDraggingSlider) {
+      this.updateZoomFromSliderX(x);
+    }
+  }
+
+  /**
+   * 停止滑块拖动
+   */
+  stopSliderDrag() {
+    this.isDraggingSlider = false;
   }
 
   /**
@@ -756,7 +1033,7 @@ class GameScene {
    * @param {number} zoom - 缩放比例
    */
   setZoom(zoom) {
-    this.zoom = Math.max(0.5, Math.min(2.0, zoom));
+    this.zoom = Math.max(this.minZoom, Math.min(this.maxZoom, zoom));
     this.calculateRenderParams();
   }
 
@@ -1181,25 +1458,43 @@ class GameScene {
     const sliderHeight = 4;
     const handleSize = 20;
 
-    // 滑块轨道
+    // 滑块轨道背景
     ctx.fillStyle = '#BBDEFB';
     ctx.fillRect(sliderX - sliderWidth / 2, sliderY - sliderHeight / 2, sliderWidth, sliderHeight);
 
+    // 计算滑块手柄位置（根据当前zoom值）
+    const zoomRange = this.maxZoom - this.minZoom;
+    const zoomRatio = (this.zoom - this.minZoom) / zoomRange; // 0 到 1
+    const handleX = sliderX - sliderWidth / 2 + zoomRatio * sliderWidth;
+
+    // 绘制已填充部分（滑块左侧，黑色）
+    if (zoomRatio > 0) {
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(sliderX - sliderWidth / 2, sliderY - sliderHeight / 2, zoomRatio * sliderWidth, sliderHeight);
+    }
+
     // 滑块手柄
-    const handleX = sliderX - sliderWidth / 2 + (this.zoom - 0.5) / 1.5 * sliderWidth;
     ctx.fillStyle = '#1976D2';
     ctx.beginPath();
     ctx.arc(handleX, sliderY, handleSize / 2, 0, Math.PI * 2);
     ctx.fill();
+    
+    // 手柄边框
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.lineWidth = 2;
+    ctx.stroke();
 
     // 减号按钮
+    const minusX = sliderX - sliderWidth / 2 - 30;
     ctx.fillStyle = '#666666';
-    ctx.font = '24px Arial';
+    ctx.font = 'bold 24px Arial';
     ctx.textAlign = 'center';
-    ctx.fillText('−', sliderX - sliderWidth / 2 - 30, sliderY + 8);
+    ctx.textBaseline = 'middle';
+    ctx.fillText('−', minusX, sliderY);
 
     // 加号按钮
-    ctx.fillText('+', sliderX + sliderWidth / 2 + 30, sliderY + 8);
+    const plusX = sliderX + sliderWidth / 2 + 30;
+    ctx.fillText('+', plusX, sliderY);
   }
 
   /**

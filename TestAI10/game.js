@@ -40,6 +40,9 @@ class Game {
     // 游戏循环
     this.lastTime = 0;
     this.animationFrameId = null;
+    
+    // 触摸手势相关
+    this.lastTouchStart = null;
   }
 
   /**
@@ -90,32 +93,106 @@ class Game {
     // 触摸开始（微信小游戏触摸事件）
     wx.onTouchStart((e) => {
       if (e.touches && e.touches.length > 0) {
-        const touch = e.touches[0];
-        // 微信小游戏触摸坐标通常是实际屏幕坐标
-        // 需要转换到设计分辨率坐标
-        const screenX = touch.clientX || touch.x;
-        const screenY = touch.clientY || touch.y;
+        // 转换所有触摸点到设计分辨率坐标
+        const designTouches = e.touches.map(t => ({
+          identifier: t.identifier || t.id || 0,
+          id: t.identifier || t.id || 0,
+          x: (t.clientX || t.x) / this.scale,
+          y: (t.clientY || t.y) / this.scale
+        }));
+
+        // 如果是GameScene，使用手势处理
+        if (this.currentScene && this.currentScene.constructor.name === 'GameScene') {
+          if (this.currentScene.handleTouchStart) {
+            this.currentScene.handleTouchStart(designTouches);
+          }
+          
+          // 如果是单点触摸且没有拖动，作为点击处理
+          if (designTouches.length === 1 && !this.currentScene.isPanning) {
+            // 延迟处理点击，等待移动事件判断是否是拖动
+            this.lastTouchStart = {
+              x: designTouches[0].x,
+              y: designTouches[0].y,
+              time: Date.now()
+            };
+          }
+          return;
+        }
         
-        // 转换到设计分辨率坐标
-        // 微信小游戏的触摸坐标是相对于实际屏幕的，需要除以缩放比例
-        const designX = screenX / this.scale;
-        const designY = screenY / this.scale;
-        
-        console.log('触摸事件:', { 
-          screenX, screenY,
-          designX, designY,
-          designWidth: this.designWidth,
-          designHeight: this.designHeight,
-          scale: this.scale,
-          currentScene: this.currentScene?.constructor?.name 
-        });
-        
+        // 其他场景，直接作为点击处理
+        const touch = designTouches[0];
         if (this.currentScene && this.currentScene.handleClick) {
-          this.currentScene.handleClick(designX, designY);
+          this.currentScene.handleClick(touch.x, touch.y);
         } else {
           console.warn('当前场景没有handleClick方法或场景为空');
         }
       }
+    });
+
+    // 触摸移动
+    wx.onTouchMove((e) => {
+      if (e.touches && e.touches.length > 0) {
+        // 转换所有触摸点到设计分辨率坐标
+        const designTouches = e.touches.map(t => ({
+          identifier: t.identifier || t.id || 0,
+          id: t.identifier || t.id || 0,
+          x: (t.clientX || t.x) / this.scale,
+          y: (t.clientY || t.y) / this.scale
+        }));
+
+        // 如果是GameScene，使用手势处理
+        if (this.currentScene && this.currentScene.constructor.name === 'GameScene') {
+          if (this.currentScene.handleTouchMove) {
+            this.currentScene.handleTouchMove(designTouches);
+          }
+        }
+      }
+    });
+
+    // 触摸结束
+    wx.onTouchEnd((e) => {
+      // 转换剩余触摸点到设计分辨率坐标
+      const designTouches = (e.touches || []).map(t => ({
+        identifier: t.identifier || t.id || 0,
+        id: t.identifier || t.id || 0,
+        x: (t.clientX || t.x) / this.scale,
+        y: (t.clientY || t.y) / this.scale
+      }));
+
+      if (this.currentScene && this.currentScene.constructor.name === 'GameScene') {
+        if (this.currentScene.handleTouchEnd) {
+          this.currentScene.handleTouchEnd(designTouches);
+        }
+        
+        // 如果触摸结束且没有拖动，且是单点触摸，触发点击事件
+        if (designTouches.length === 0 && this.lastTouchStart && !this.currentScene.isPanning) {
+          const changedTouch = e.changedTouches[0];
+          if (changedTouch) {
+            const designX = (changedTouch.clientX || changedTouch.x) / this.scale;
+            const designY = (changedTouch.clientY || changedTouch.y) / this.scale;
+            // 检查移动距离，如果很小则认为是点击
+            const moveDistance = Math.sqrt(
+              Math.pow(designX - this.lastTouchStart.x, 2) + 
+              Math.pow(designY - this.lastTouchStart.y, 2)
+            );
+            if (moveDistance < 10) { // 10像素阈值
+              this.currentScene.handleClick(designX, designY);
+            }
+          }
+        }
+        this.lastTouchStart = null;
+      }
+    });
+
+    // 触摸取消
+    wx.onTouchCancel((e) => {
+      if (this.currentScene && this.currentScene.constructor.name === 'GameScene') {
+        // 触摸取消时重置状态
+        if (this.currentScene.handleTouchEnd) {
+          this.currentScene.handleTouchEnd([]);
+        }
+      }
+      this.lastTouchStart = null;
     });
 
     // 窗口大小改变
