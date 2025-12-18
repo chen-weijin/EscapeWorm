@@ -27,11 +27,51 @@ class Worm {
     this.animationDuration = 200; // 动画持续时间（毫秒）
     this.animationStartTime = 0; // 动画开始时间
     
-    // 根据segments的实际顺序自动判断direction
+    // 优先使用配置的direction，如果没有配置或配置无效，则根据segments自动计算
     // segments[0]是头部，segments[1]是第一个身体段
     // 从segments[0]到segments[1]的方向是身体的方向
     // 但蠕虫的朝向（direction）应该是头部的朝向，即与身体方向相反
-    if (this.segments.length >= 2) {
+    if (config.direction && ['up', 'down', 'left', 'right'].includes(config.direction)) {
+      // 使用配置的direction
+      this.direction = config.direction;
+      
+      // 如果segments长度足够，验证配置的direction是否与segments一致
+      if (this.segments.length >= 2) {
+        const first = this.segments[0];  // 头部
+        const second = this.segments[1]; // 第一个身体段
+        const dx = second.x - first.x;
+        const dy = second.y - first.y;
+        
+        // 根据segments的实际方向判断身体方向
+        let bodyDirection = null;
+        if (dx > 0) {
+          bodyDirection = 'right';
+        } else if (dx < 0) {
+          bodyDirection = 'left';
+        } else if (dy > 0) {
+          bodyDirection = 'down';
+        } else if (dy < 0) {
+          bodyDirection = 'up';
+        }
+        
+        // 蠕虫的朝向（direction）应该是头部的朝向，即与身体方向相反
+        const oppositeDirection = {
+          'right': 'left',
+          'left': 'right',
+          'up': 'down',
+          'down': 'up'
+        };
+        
+        const calculatedDirection = oppositeDirection[bodyDirection];
+        
+        // 如果配置的direction与segments计算出的方向不一致，输出警告
+        // 但仍然使用配置的direction（因为配置优先）
+        if (calculatedDirection && calculatedDirection !== this.direction) {
+          console.warn(`蠕虫 ${this.id} 配置的朝向(${this.direction})与segments计算出的朝向(${calculatedDirection})不一致，将使用配置的朝向`);
+        }
+      }
+    } else if (this.segments.length >= 2) {
+      // 没有配置或配置无效，根据segments自动计算
       const first = this.segments[0];  // 头部
       const second = this.segments[1]; // 第一个身体段
       const dx = second.x - first.x;
@@ -57,14 +97,11 @@ class Worm {
         'down': 'up'
       };
       
-      this.direction = oppositeDirection[bodyDirection] || config.direction;
-      
-      // 如果自动计算的方向与配置不一致，输出警告
-      if (this.direction !== config.direction) {
-        console.log(`蠕虫 ${this.id} 根据segments自动计算方向: ${this.direction} (配置为: ${config.direction})`);
-      }
+      this.direction = oppositeDirection[bodyDirection] || 'right'; // 默认向右
+      console.log(`蠕虫 ${this.id} 未配置direction，根据segments自动计算方向: ${this.direction}`);
     } else {
-      this.direction = config.direction;
+      // segments不足，使用配置的direction或默认值
+      this.direction = config.direction || 'right';
     }
   }
 
