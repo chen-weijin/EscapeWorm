@@ -15,6 +15,17 @@ class Game {
     this.ctx = null;
     this.currentScene = null;
     
+    // 设计分辨率
+    this.designWidth = 1080;
+    this.designHeight = 2340;
+    
+    // 实际屏幕尺寸和缩放比例
+    this.screenWidth = 0;
+    this.screenHeight = 0;
+    this.scaleX = 1;
+    this.scaleY = 1;
+    this.scale = 1;
+    
     // 管理器
     this.levelManager = new LevelManager();
     this.storageManager = new StorageManager();
@@ -38,9 +49,18 @@ class Game {
     // 获取Canvas（微信小游戏使用系统Canvas）
     const systemInfo = wx.getSystemInfoSync();
     this.canvas = wx.createCanvas();
-    this.canvas.width = systemInfo.windowWidth;
-    this.canvas.height = systemInfo.windowHeight;
+    
+    // 设置Canvas为设计分辨率
+    this.canvas.width = this.designWidth;
+    this.canvas.height = this.designHeight;
     this.ctx = this.canvas.getContext('2d');
+    
+    // 计算实际屏幕尺寸和缩放比例
+    this.screenWidth = systemInfo.windowWidth;
+    this.screenHeight = systemInfo.windowHeight;
+    this.scaleX = this.screenWidth / this.designWidth;
+    this.scaleY = this.screenHeight / this.designHeight;
+    this.scale = Math.min(this.scaleX, this.scaleY); // 使用较小的缩放比例保持宽高比
 
     // 初始化特效管理器
     this.effectManager = new EffectManager(this.canvas);
@@ -71,14 +91,27 @@ class Game {
     wx.onTouchStart((e) => {
       if (e.touches && e.touches.length > 0) {
         const touch = e.touches[0];
-        // 微信小游戏触摸坐标直接使用 clientX 和 clientY
-        const x = touch.clientX || touch.x;
-        const y = touch.clientY || touch.y;
+        // 微信小游戏触摸坐标通常是实际屏幕坐标
+        // 需要转换到设计分辨率坐标
+        const screenX = touch.clientX || touch.x;
+        const screenY = touch.clientY || touch.y;
         
-        console.log('触摸事件:', { x, y, touch, currentScene: this.currentScene?.constructor?.name });
+        // 转换到设计分辨率坐标
+        // 微信小游戏的触摸坐标是相对于实际屏幕的，需要除以缩放比例
+        const designX = screenX / this.scale;
+        const designY = screenY / this.scale;
+        
+        console.log('触摸事件:', { 
+          screenX, screenY,
+          designX, designY,
+          designWidth: this.designWidth,
+          designHeight: this.designHeight,
+          scale: this.scale,
+          currentScene: this.currentScene?.constructor?.name 
+        });
         
         if (this.currentScene && this.currentScene.handleClick) {
-          this.currentScene.handleClick(x, y);
+          this.currentScene.handleClick(designX, designY);
         } else {
           console.warn('当前场景没有handleClick方法或场景为空');
         }
@@ -88,8 +121,14 @@ class Game {
     // 窗口大小改变
     wx.onWindowResize(() => {
       const systemInfo = wx.getSystemInfoSync();
-      this.canvas.width = systemInfo.windowWidth;
-      this.canvas.height = systemInfo.windowHeight;
+      // 更新实际屏幕尺寸和缩放比例
+      this.screenWidth = systemInfo.windowWidth;
+      this.screenHeight = systemInfo.windowHeight;
+      this.scaleX = this.screenWidth / this.designWidth;
+      this.scaleY = this.screenHeight / this.designHeight;
+      this.scale = Math.min(this.scaleX, this.scaleY);
+      
+      // Canvas保持设计分辨率，通过缩放适配
       if (this.currentScene && this.currentScene.calculateRenderParams) {
         this.currentScene.calculateRenderParams();
       }

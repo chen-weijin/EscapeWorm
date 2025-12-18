@@ -24,7 +24,7 @@ class Worm {
     this.previousSegments = JSON.parse(JSON.stringify(config.segments)); // 动画起始位置
     this.animationProgress = 1.0; // 动画进度 0-1
     this.isAnimating = false; // 是否正在动画
-    this.animationDuration = 200; // 动画持续时间（毫秒）
+    this.animationDuration = 40; // 动画持续时间（毫秒，速度加快5倍）
     this.animationStartTime = 0; // 动画开始时间
     
     // 优先使用配置的direction，如果没有配置或配置无效，则根据segments自动计算
@@ -147,12 +147,7 @@ class Worm {
       return this.segments;
     }
     
-    // 使用平滑的缓动函数（ease-in-out cubic）让移动更自然顺滑
-    // ease-in-out cubic: 开始和结束时慢，中间快
-    const easedProgress = progress < 0.5
-      ? 4 * progress * progress * progress
-      : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-    
+    // 使用线性插值，去掉顿挫感
     // 插值每个段的位置
     const interpolated = [];
     for (let i = 0; i < this.segments.length; i++) {
@@ -160,8 +155,8 @@ class Worm {
       const currSeg = this.segments[i];
       
       interpolated.push({
-        x: prevSeg.x + (currSeg.x - prevSeg.x) * easedProgress,
-        y: prevSeg.y + (currSeg.y - prevSeg.y) * easedProgress
+        x: prevSeg.x + (currSeg.x - prevSeg.x) * progress,
+        y: prevSeg.y + (currSeg.y - prevSeg.y) * progress
       });
     }
     
@@ -173,7 +168,7 @@ class Worm {
    * @param {Object} newHeadPosition - 新的头部位置 {x, y}
    * @param {number} duration - 动画持续时间（毫秒），默认200ms
    */
-  startMoveAnimation(newHeadPosition, duration = 200) {
+  startMoveAnimation(newHeadPosition, duration = 40) {
     if (this.isEscaped) {
       return;
     }

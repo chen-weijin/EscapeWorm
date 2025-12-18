@@ -28,7 +28,78 @@ class GameScene {
     this.offsetY = 0;
     this.zoom = 1.0;
     
+    // 游戏核心区域相关（父节点）
+    this.gameCoreScale = 1.0; // 游戏核心区域的缩放比例
+    this.baseCellSize = 0; // 基准格子大小（15*19时的cellSize）
+    this.gameCoreOffsetX = 0; // 游戏核心区域的X偏移
+    this.gameCoreOffsetY = 0; // 游戏核心区域的Y偏移
+    
+    // 蠕虫图片资源
+    this.wormHeadImage = null;
+    this.wormBodyImage = null;
+    this.wormTailImage = null;
+    this.imagesLoaded = false;
+    
     // 移动动画（支持多条蠕虫同时移动，不再使用全局状态）
+  }
+
+  /**
+   * 加载蠕虫图片资源
+   */
+  async loadWormImages() {
+    if (this.imagesLoaded) {
+      return; // 图片已加载
+    }
+
+    return new Promise((resolve, reject) => {
+      let loadedCount = 0;
+      const totalImages = 3;
+      const images = {};
+
+      const checkAllLoaded = () => {
+        loadedCount++;
+        if (loadedCount === totalImages) {
+          this.wormHeadImage = images.head;
+          this.wormBodyImage = images.body;
+          this.wormTailImage = images.tail;
+          this.imagesLoaded = true;
+          resolve();
+        }
+      };
+
+      const handleError = (type) => {
+        console.error(`加载蠕虫${type}图片失败`);
+        // 即使加载失败也继续，使用默认绘制方式
+        checkAllLoaded();
+      };
+
+      // 加载头部图片
+      const headImg = wx.createImage();
+      headImg.onload = () => {
+        images.head = headImg;
+        checkAllLoaded();
+      };
+      headImg.onerror = () => handleError('头部');
+      headImg.src = 'image/worm_head.png';
+
+      // 加载身体图片
+      const bodyImg = wx.createImage();
+      bodyImg.onload = () => {
+        images.body = bodyImg;
+        checkAllLoaded();
+      };
+      bodyImg.onerror = () => handleError('身体');
+      bodyImg.src = 'image/worm_body.png';
+
+      // 加载尾巴图片
+      const tailImg = wx.createImage();
+      tailImg.onload = () => {
+        images.tail = tailImg;
+        checkAllLoaded();
+      };
+      tailImg.onerror = () => handleError('尾巴');
+      tailImg.src = 'image/worm_tail.png';
+    });
   }
 
   /**
@@ -45,6 +116,9 @@ class GameScene {
     this.escapePoints = [];
 
     try {
+      // 加载蠕虫图片资源
+      await this.loadWormImages();
+
       // 加载关卡数据
       const levelData = await this.levelManager.loadLevel(levelId);
       this.matrix = levelData.matrix;
@@ -69,27 +143,56 @@ class GameScene {
    * 计算渲染参数
    */
   calculateRenderParams() {
-    const canvasWidth = this.canvas.width;
-    const canvasHeight = this.canvas.height;
-    const gameAreaHeight = canvasHeight - 120; // 减去UI高度
+    if (!this.matrix) {
+      return;
+    }
     
-    // 计算合适的格子大小
-    const maxCellSizeX = (canvasWidth - 40) / this.matrix.width;
-    const maxCellSizeY = (gameAreaHeight - 40) / this.matrix.height;
-    this.cellSize = Math.min(maxCellSizeX, maxCellSizeY) * this.zoom;
+    const canvasWidth = this.canvas.width; // 设计分辨率宽度 1080
+    const canvasHeight = this.canvas.height; // 设计分辨率高度 2340
+    const gameAreaHeight = canvasHeight - 120; // 减去UI高度（顶部70 + 底部50）
     
-    // 计算偏移量（居中）
-    const totalWidth = this.matrix.width * this.cellSize;
-    const totalHeight = this.matrix.height * this.cellSize;
-    this.offsetX = (canvasWidth - totalWidth) / 2;
-    this.offsetY = 80 + (gameAreaHeight - totalHeight) / 2;
+    // 基准格子数（15*19）
+    const baseWidth = 15;
+    const baseHeight = 19;
+    
+    // 计算基准格子大小（15*19时正好能显示下，不需要缩放）
+    // 留出边距：左右各20，上下各20（顶部UI下方20，底部UI上方20）
+    const baseMaxCellSizeX = (canvasWidth - 40) / baseWidth;
+    const baseMaxCellSizeY = (gameAreaHeight - 40) / baseHeight;
+    this.baseCellSize = Math.min(baseMaxCellSizeX, baseMaxCellSizeY);
+    
+    // 计算当前格子数能完整显示的最大格子大小
+    // 确保无论格子数多少，都能完整显示在视口内
+    const currentMaxCellSizeX = (canvasWidth - 40) / this.matrix.width;
+    const currentMaxCellSizeY = (gameAreaHeight - 40) / this.matrix.height;
+    const currentMaxCellSize = Math.min(currentMaxCellSizeX, currentMaxCellSizeY);
+    
+    // 计算游戏核心区域的缩放比例
+    // 缩放比例 = 当前最大格子大小 / 基准格子大小
+    // 15*19时缩放比例为1.0，格子数更多时缩小（<1.0），格子数更少时不放大（限制最大为1.0）
+    this.gameCoreScale = Math.min(currentMaxCellSize / this.baseCellSize, 1.0) * this.zoom;
+    
+    // 使用基准格子大小作为实际格子大小（在游戏核心坐标系中）
+    // 这样游戏核心坐标系是固定的，通过缩放来适配不同格子数
+    this.cellSize = this.baseCellSize;
+    
+    // 计算游戏核心区域的偏移量（居中）
+    // 游戏核心区域的实际显示大小 = 格子数 * 基准格子大小 * 缩放比例
+    const gameCoreDisplayWidth = this.matrix.width * this.cellSize * this.gameCoreScale;
+    const gameCoreDisplayHeight = this.matrix.height * this.cellSize * this.gameCoreScale;
+    this.gameCoreOffsetX = (canvasWidth - gameCoreDisplayWidth) / 2;
+    this.gameCoreOffsetY = 80 + (gameAreaHeight - gameCoreDisplayHeight) / 2;
+    
+    // 游戏核心区域内的偏移量（用于居中显示）
+    this.offsetX = 0;
+    this.offsetY = 0;
   }
 
   /**
-   * 世界坐标转屏幕坐标
+   * 世界坐标转屏幕坐标（在游戏核心坐标系中）
    * @param {number} x - 世界X坐标
    * @param {number} y - 世界Y坐标
-   * @returns {Object} 屏幕坐标 {x, y}
+   * @returns {Object} 屏幕坐标 {x, y}（在游戏核心坐标系中）
    */
   worldToScreen(x, y) {
     return {
@@ -99,15 +202,20 @@ class GameScene {
   }
 
   /**
-   * 屏幕坐标转世界坐标
-   * @param {number} x - 屏幕X坐标
-   * @param {number} y - 屏幕Y坐标
+   * 屏幕坐标转世界坐标（考虑游戏核心区域的缩放和偏移）
+   * @param {number} x - 屏幕X坐标（设计分辨率坐标系）
+   * @param {number} y - 屏幕Y坐标（设计分辨率坐标系）
    * @returns {Object} 世界坐标 {x, y}
    */
   screenToWorld(x, y) {
+    // 先转换到游戏核心坐标系
+    const gameCoreX = (x - this.gameCoreOffsetX) / this.gameCoreScale;
+    const gameCoreY = (y - this.gameCoreOffsetY) / this.gameCoreScale;
+    
+    // 再转换到世界坐标
     return {
-      x: Math.floor((x - this.offsetX) / this.cellSize),
-      y: Math.floor((y - this.offsetY) / this.cellSize)
+      x: Math.floor((gameCoreX - this.offsetX) / this.cellSize),
+      y: Math.floor((gameCoreY - this.offsetY) / this.cellSize)
     };
   }
 
@@ -182,11 +290,15 @@ class GameScene {
   
   /**
    * 查找点击位置附近的蠕虫（使用屏幕坐标，更准确）
-   * @param {number} screenX - 屏幕X坐标
-   * @param {number} screenY - 屏幕Y坐标
+   * @param {number} screenX - 屏幕X坐标（设计分辨率坐标系）
+   * @param {number} screenY - 屏幕Y坐标（设计分辨率坐标系）
    * @returns {Worm|null}
    */
   findWormAtScreenPosition(screenX, screenY) {
+    // 将设计分辨率坐标转换为游戏核心坐标系坐标
+    const gameCoreX = (screenX - this.gameCoreOffsetX) / this.gameCoreScale;
+    const gameCoreY = (screenY - this.gameCoreOffsetY) / this.gameCoreScale;
+    
     const segmentRadius = this.cellSize * 0.4;
     const clickRadius = segmentRadius * 1.5; // 扩大点击范围，提高点击成功率
     
@@ -195,10 +307,11 @@ class GameScene {
 
       const segments = worm.getAllSegments();
       for (const segment of segments) {
-        const screenPos = this.worldToScreen(segment.x, segment.y);
+        // worldToScreen 返回的是游戏核心坐标系坐标
+        const gameCorePos = this.worldToScreen(segment.x, segment.y);
         const distance = Math.sqrt(
-          Math.pow(screenX - screenPos.x, 2) + 
-          Math.pow(screenY - screenPos.y, 2)
+          Math.pow(gameCoreX - gameCorePos.x, 2) + 
+          Math.pow(gameCoreY - gameCorePos.y, 2)
         );
         
         if (distance <= clickRadius) {
@@ -238,6 +351,29 @@ class GameScene {
   }
 
   /**
+   * 检查蠕虫是否完全在视口外
+   * @param {Worm} worm - 蠕虫对象
+   * @returns {boolean} 是否在视口外
+   */
+  isWormOutsideViewport(worm) {
+    const segments = worm.getInterpolatedSegments();
+    const segmentRadius = this.cellSize * 0.4;
+    const margin = segmentRadius * 2; // 增加一些边距，确保完全离开视口
+    
+    for (const segment of segments) {
+      const screenPos = this.worldToScreen(segment.x, segment.y);
+      // 检查是否在视口内（包括边距）
+      if (screenPos.x + margin >= 0 && 
+          screenPos.x - margin < this.canvas.width &&
+          screenPos.y + margin >= 0 && 
+          screenPos.y - margin < this.canvas.height) {
+        return false; // 至少有一个段在视口内
+      }
+    }
+    return true; // 所有段都在视口外
+  }
+
+  /**
    * 移动蠕虫逃脱
    * @param {Worm} worm - 蠕虫对象
    * @param {Array} path - 逃脱路径
@@ -253,7 +389,9 @@ class GameScene {
     });
 
     // 逐步移动（使用平滑动画）
-    const moveDuration = 150; // 每步移动时间（速度增加一倍）
+    const moveDuration = 30; // 每步移动时间（速度加快5倍）
+    const direction = PathFinder.getDirectionVector(worm.direction);
+    
     for (let i = 0; i < path.length; i++) {
       const nextPos = path[i];
       console.log(`移动步骤 ${i}:`, {
@@ -278,11 +416,28 @@ class GameScene {
       });
     }
 
-    // 蠕虫逃脱
+    // 继续移动直到蠕虫完全离开视口
+    let headPos = worm.getHeadPosition();
+    while (!this.isWormOutsideViewport(worm)) {
+      // 继续向逃脱方向移动
+      const nextPos = {
+        x: headPos.x + direction.x,
+        y: headPos.y + direction.y
+      };
+      
+      worm.startMoveAnimation(nextPos, moveDuration);
+      await this.waitForAnimation(worm, moveDuration);
+      worm.completeAnimation();
+      
+      headPos = worm.getHeadPosition();
+    }
+
+    // 蠕虫已完全离开视口，标记为逃脱
     worm.markEscaped();
     this.audioManager.playSound('escape');
+    const lastHeadPos = worm.getHeadPosition();
     this.effectManager.createEscapeEffect(
-      this.worldToScreen(worm.getHeadPosition().x, worm.getHeadPosition().y),
+      this.worldToScreen(lastHeadPos.x, lastHeadPos.y),
       worm.color
     );
 
@@ -305,7 +460,7 @@ class GameScene {
     const direction = PathFinder.getDirectionVector(worm.direction);
     const headPos = worm.getHeadPosition();
     
-    const moveDuration = 125; // 移动动画时间（速度增加一倍）
+    const moveDuration = 25; // 移动动画时间（速度加快5倍）
     if (pathToObstacle.length === 0) {
       // 直接移动一步到阻挡位
       const nextPos = {
@@ -408,12 +563,30 @@ class GameScene {
 
     // 检查边界
     if (!CollisionDetector.isInBounds(nextPos, this.matrix)) {
-      // 超出边界，直接逃脱（这种情况理论上不应该发生，因为已经判定为不可逃脱）
+      // 超出边界，继续移动直到离开视口
+      const direction = PathFinder.getDirectionVector(worm.direction);
+      const moveDuration = 30;
+      
+      // 移动到边界外
       worm.moveTo(nextPos);
+      
+      // 继续移动直到完全离开视口
+      let currentPos = nextPos;
+      while (!this.isWormOutsideViewport(worm)) {
+        currentPos = {
+          x: currentPos.x + direction.x,
+          y: currentPos.y + direction.y
+        };
+        worm.startMoveAnimation(currentPos, moveDuration);
+        await this.waitForAnimation(worm, moveDuration);
+        worm.completeAnimation();
+      }
+      
+      // 蠕虫已完全离开视口，标记为逃脱
       worm.markEscaped();
       this.audioManager.playSound('escape');
       this.effectManager.createEscapeEffect(
-        this.worldToScreen(nextPos.x, nextPos.y),
+        this.worldToScreen(worm.getHeadPosition().x, worm.getHeadPosition().y),
         worm.color
       );
       this.checkVictory();
@@ -432,7 +605,7 @@ class GameScene {
       // 1. 蠕动到阻挡位（使用动画）
       
       // 移动到阻挡位置
-      const moveDuration = 125;
+      const moveDuration = 25;
       worm.startMoveAnimation(nextPos, moveDuration);
       this.audioManager.playSound('collision');
       await this.waitForAnimation(worm, moveDuration);
@@ -479,7 +652,7 @@ class GameScene {
       // 不会碰撞：正常移动一步（使用动画）
       // 注意：这种情况理论上不应该发生，因为已经判定为"不可逃脱"
       // 但为了代码健壮性，还是处理这种情况
-      const moveDuration = 150;
+      const moveDuration = 30;
       worm.startMoveAnimation(nextPos, moveDuration);
       this.audioManager.playSound('move');
       await this.waitForAnimation(worm, moveDuration);
@@ -682,6 +855,15 @@ class GameScene {
       return;
     }
 
+    // 保存画布状态
+    ctx.save();
+    
+    // 应用游戏核心区域的变换（父节点）
+    // 1. 平移到游戏核心区域位置
+    ctx.translate(this.gameCoreOffsetX, this.gameCoreOffsetY);
+    // 2. 应用缩放
+    ctx.scale(this.gameCoreScale, this.gameCoreScale);
+
     // 绘制网格
     ctx.strokeStyle = '#E0E0E0';
     ctx.lineWidth = 1;
@@ -704,19 +886,34 @@ class GameScene {
       ctx.stroke();
     }
 
-    // 绘制逃脱点
-    ctx.fillStyle = '#4CAF50';
-    for (const point of this.escapePoints) {
-      const screenPos = this.worldToScreen(point.x, point.y);
-      ctx.beginPath();
-      ctx.arc(screenPos.x, screenPos.y, this.cellSize * 0.3, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
     // 绘制蠕虫
     for (const worm of this.worms) {
       if (worm.hasEscaped()) continue;
       this.renderWorm(worm);
+    }
+    
+    // 恢复画布状态（结束游戏核心区域的变换）
+    ctx.restore();
+  }
+
+  /**
+   * 获取方向对应的旋转角度（弧度）
+   * @param {string} direction - 方向 (up/down/left/right)
+   * @returns {number} 旋转角度（弧度）
+   */
+  getDirectionAngle(direction) {
+    // 假设图片默认朝向是right
+    switch (direction) {
+      case 'right':
+        return 0;
+      case 'left':
+        return Math.PI;
+      case 'up':
+        return -Math.PI / 2;
+      case 'down':
+        return Math.PI / 2;
+      default:
+        return 0;
     }
   }
 
@@ -728,7 +925,6 @@ class GameScene {
     const ctx = this.ctx;
     // 使用插值后的段位置实现平滑移动
     const segments = worm.getInterpolatedSegments();
-    const segmentRadius = this.cellSize * 0.4;
 
     // 高亮效果
     if (worm.isHighlighted) {
@@ -738,86 +934,228 @@ class GameScene {
       ctx.shadowBlur = 0;
     }
 
-    // 先绘制身体连接线（让蠕虫看起来更连贯）
-    if (segments.length > 1) {
-      ctx.strokeStyle = worm.color;
-      ctx.lineWidth = segmentRadius * 1.6;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.beginPath();
-      
-      const firstPos = this.worldToScreen(segments[0].x, segments[0].y);
-      ctx.moveTo(firstPos.x, firstPos.y);
-      
-      for (let i = 1; i < segments.length; i++) {
-        const pos = this.worldToScreen(segments[i].x, segments[i].y);
-        ctx.lineTo(pos.x, pos.y);
+    // 如果图片已加载，使用图片绘制
+    if (this.imagesLoaded && this.wormHeadImage && this.wormBodyImage && this.wormTailImage) {
+      // 计算尾巴方向（从尾巴指向倒数第二个段）
+      let tailDirection = null;
+      if (segments.length >= 2) {
+        const tail = segments[segments.length - 1];
+        const prevSegment = segments[segments.length - 2];
+        const dx = prevSegment.x - tail.x;
+        const dy = prevSegment.y - tail.y;
+        
+        // 计算方向角度
+        if (dx > 0) {
+          tailDirection = 'right';
+        } else if (dx < 0) {
+          tailDirection = 'left';
+        } else if (dy > 0) {
+          tailDirection = 'down';
+        } else if (dy < 0) {
+          tailDirection = 'up';
+        }
       }
-      ctx.stroke();
-    }
-
-    // 绘制身体段圆形
-    // segments[0] 应该是头部，segments[segments.length-1] 是尾部
-    for (let i = 0; i < segments.length; i++) {
-      const segment = segments[i];
-      const screenPos = this.worldToScreen(segment.x, segment.y);
-      const isHead = i === 0; // 第一个元素是头部
-
-      // 身体段颜色
-      ctx.fillStyle = worm.color;
-      ctx.beginPath();
-      ctx.arc(screenPos.x, screenPos.y, segmentRadius, 0, Math.PI * 2);
-      ctx.fill();
-
-      // 头部眼睛（根据方向调整眼睛位置）
-      if (isHead) {
-        ctx.fillStyle = '#FFFFFF';
-        const eyeSize = segmentRadius * 0.35;
-        const eyeOffset = segmentRadius * 0.35;
+      
+      // 图层顺序：从下到上绘制（尾、身N、...、身2、身1、头），这样头部在最上层
+      // 按照索引从后往前的顺序绘制：length-1, length-2, ..., 1, 0
+      
+      // 先绘制尾巴（最下层）
+      if (segments.length > 1) {
+        const tailIndex = segments.length - 1;
+        const tailSegment = segments[tailIndex];
+        const screenPos = this.worldToScreen(tailSegment.x, tailSegment.y);
         
-        // 根据蠕虫朝向调整眼睛位置
-        let eyeX1, eyeY1, eyeX2, eyeY2;
-        const dir = worm.direction;
+        ctx.save();
+        ctx.translate(screenPos.x, screenPos.y);
         
-        if (dir === 'left') {
-          eyeX1 = screenPos.x - eyeOffset;
-          eyeY1 = screenPos.y - eyeOffset;
-          eyeX2 = screenPos.x - eyeOffset;
-          eyeY2 = screenPos.y + eyeOffset;
-        } else if (dir === 'right') {
-          eyeX1 = screenPos.x + eyeOffset;
-          eyeY1 = screenPos.y - eyeOffset;
-          eyeX2 = screenPos.x + eyeOffset;
-          eyeY2 = screenPos.y + eyeOffset;
-        } else if (dir === 'up') {
-          eyeX1 = screenPos.x - eyeOffset;
-          eyeY1 = screenPos.y - eyeOffset;
-          eyeX2 = screenPos.x + eyeOffset;
-          eyeY2 = screenPos.y - eyeOffset;
-        } else { // down
-          eyeX1 = screenPos.x - eyeOffset;
-          eyeY1 = screenPos.y + eyeOffset;
-          eyeX2 = screenPos.x + eyeOffset;
-          eyeY2 = screenPos.y + eyeOffset;
+        // 计算尾巴旋转角度
+        let tailRotation = 0;
+        if (tailDirection) {
+          tailRotation = this.getDirectionAngle(tailDirection);
+        } else {
+          // 如果没有方向，使用与头部相反的方向
+          const headAngle = this.getDirectionAngle(worm.direction);
+          tailRotation = headAngle + Math.PI;
         }
         
-        // 绘制白色眼睛背景
-        ctx.beginPath();
-        ctx.arc(eyeX1, eyeY1, eyeSize, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(eyeX2, eyeY2, eyeSize, 0, Math.PI * 2);
-        ctx.fill();
+        if (tailRotation !== 0) {
+          ctx.rotate(tailRotation);
+        }
         
-        // 绘制黑色眼珠
-        ctx.fillStyle = '#000000';
-        const pupilSize = eyeSize * 0.5;
+        const imgWidth = this.wormTailImage.width || this.wormTailImage.naturalWidth || 30;
+        const imgHeight = this.wormTailImage.height || this.wormTailImage.naturalHeight || 30;
+        ctx.drawImage(this.wormTailImage, -imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight);
+        
+        // 根据蠕虫颜色给图片上色
+        if (worm.color) {
+          try {
+            ctx.globalCompositeOperation = 'color';
+          } catch (e) {
+            ctx.globalCompositeOperation = 'multiply';
+          }
+          ctx.fillStyle = worm.color;
+          ctx.fillRect(-imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight);
+          ctx.globalCompositeOperation = 'source-over';
+        }
+        
+        ctx.restore();
+      }
+      
+      // 再绘制身体段（从后往前：身N、身N-1、...、身2、身1）
+      for (let i = segments.length - 2; i >= 1; i--) {
+        const segment = segments[i];
+        const screenPos = this.worldToScreen(segment.x, segment.y);
+        
+        ctx.save();
+        ctx.translate(screenPos.x, screenPos.y);
+        
+        // 计算身体段的朝向（从当前段指向前一个段，即更靠近头部的段）
+        let bodyDirection = null;
+        if (i > 0) {
+          const prevSegment = segments[i - 1]; // 前一个段（更靠近头部）
+          const dx = prevSegment.x - segment.x;
+          const dy = prevSegment.y - segment.y;
+          
+          // 计算方向
+          if (dx > 0) {
+            bodyDirection = 'right';
+          } else if (dx < 0) {
+            bodyDirection = 'left';
+          } else if (dy > 0) {
+            bodyDirection = 'down';
+          } else if (dy < 0) {
+            bodyDirection = 'up';
+          }
+        }
+        
+        // 计算身体段旋转角度
+        let rotation = 0;
+        if (bodyDirection) {
+          rotation = this.getDirectionAngle(bodyDirection);
+        } else {
+          // 如果没有方向，使用头部方向作为默认值
+          rotation = this.getDirectionAngle(worm.direction);
+        }
+        
+        if (rotation !== 0) {
+          ctx.rotate(rotation);
+        }
+        
+        const imgWidth = this.wormBodyImage.width || this.wormBodyImage.naturalWidth || 30;
+        const imgHeight = this.wormBodyImage.height || this.wormBodyImage.naturalHeight || 30;
+        ctx.drawImage(this.wormBodyImage, -imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight);
+        
+        // 根据蠕虫颜色给图片上色
+        if (worm.color) {
+          try {
+            ctx.globalCompositeOperation = 'color';
+          } catch (e) {
+            ctx.globalCompositeOperation = 'multiply';
+          }
+          ctx.fillStyle = worm.color;
+          ctx.fillRect(-imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight);
+          ctx.globalCompositeOperation = 'source-over';
+        }
+        
+        ctx.restore();
+      }
+      
+      // 最后绘制头部（最上层）
+      if (segments.length > 0) {
+        const headSegment = segments[0];
+        const screenPos = this.worldToScreen(headSegment.x, headSegment.y);
+        
+        ctx.save();
+        ctx.translate(screenPos.x, screenPos.y);
+        
+        // 头部根据方向旋转
+        const rotation = this.getDirectionAngle(worm.direction);
+        if (rotation !== 0) {
+          ctx.rotate(rotation);
+        }
+        
+        const imgWidth = this.wormHeadImage.width || this.wormHeadImage.naturalWidth || 30;
+        const imgHeight = this.wormHeadImage.height || this.wormHeadImage.naturalHeight || 30;
+        ctx.drawImage(this.wormHeadImage, -imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight);
+        
+        // 根据蠕虫颜色给图片上色
+        if (worm.color) {
+          try {
+            ctx.globalCompositeOperation = 'color';
+          } catch (e) {
+            ctx.globalCompositeOperation = 'multiply';
+          }
+          ctx.fillStyle = worm.color;
+          ctx.fillRect(-imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight);
+          ctx.globalCompositeOperation = 'source-over';
+        }
+        
+        ctx.restore();
+      }
+    } else {
+      // 图片未加载，使用圆形绘制作为降级方案
+      const segmentRadius = this.cellSize * 0.4;
+      for (let i = 0; i < segments.length; i++) {
+        const segment = segments[i];
+        const screenPos = this.worldToScreen(segment.x, segment.y);
+        const isHead = i === 0;
+
+        // 身体段颜色
+        ctx.fillStyle = worm.color;
         ctx.beginPath();
-        ctx.arc(eyeX1, eyeY1, pupilSize, 0, Math.PI * 2);
+        ctx.arc(screenPos.x, screenPos.y, segmentRadius, 0, Math.PI * 2);
         ctx.fill();
-        ctx.beginPath();
-        ctx.arc(eyeX2, eyeY2, pupilSize, 0, Math.PI * 2);
-        ctx.fill();
+
+        // 头部眼睛（根据方向调整眼睛位置）
+        if (isHead) {
+          ctx.fillStyle = '#FFFFFF';
+          const eyeSize = segmentRadius * 0.35;
+          const eyeOffset = segmentRadius * 0.35;
+          
+          // 根据蠕虫朝向调整眼睛位置
+          let eyeX1, eyeY1, eyeX2, eyeY2;
+          const dir = worm.direction;
+          
+          if (dir === 'left') {
+            eyeX1 = screenPos.x - eyeOffset;
+            eyeY1 = screenPos.y - eyeOffset;
+            eyeX2 = screenPos.x - eyeOffset;
+            eyeY2 = screenPos.y + eyeOffset;
+          } else if (dir === 'right') {
+            eyeX1 = screenPos.x + eyeOffset;
+            eyeY1 = screenPos.y - eyeOffset;
+            eyeX2 = screenPos.x + eyeOffset;
+            eyeY2 = screenPos.y + eyeOffset;
+          } else if (dir === 'up') {
+            eyeX1 = screenPos.x - eyeOffset;
+            eyeY1 = screenPos.y - eyeOffset;
+            eyeX2 = screenPos.x + eyeOffset;
+            eyeY2 = screenPos.y - eyeOffset;
+          } else { // down
+            eyeX1 = screenPos.x - eyeOffset;
+            eyeY1 = screenPos.y + eyeOffset;
+            eyeX2 = screenPos.x + eyeOffset;
+            eyeY2 = screenPos.y + eyeOffset;
+          }
+          
+          // 绘制白色眼睛背景
+          ctx.beginPath();
+          ctx.arc(eyeX1, eyeY1, eyeSize, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(eyeX2, eyeY2, eyeSize, 0, Math.PI * 2);
+          ctx.fill();
+          
+          // 绘制黑色眼珠
+          ctx.fillStyle = '#000000';
+          const pupilSize = eyeSize * 0.5;
+          ctx.beginPath();
+          ctx.arc(eyeX1, eyeY1, pupilSize, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(eyeX2, eyeY2, pupilSize, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
     }
 
