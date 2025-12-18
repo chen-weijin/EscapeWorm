@@ -26,6 +26,9 @@ class Game {
     this.scaleY = 1;
     this.scale = 1;
     
+    // 安全区域信息
+    this.safeArea = null;
+    
     // 管理器
     this.levelManager = new LevelManager();
     this.storageManager = new StorageManager();
@@ -52,6 +55,16 @@ class Game {
     // 获取Canvas（微信小游戏使用系统Canvas）
     const systemInfo = wx.getSystemInfoSync();
     this.canvas = wx.createCanvas();
+    
+    // 获取安全区域信息
+    this.safeArea = systemInfo.safeArea || {
+      left: 0,
+      right: systemInfo.windowWidth,
+      top: 0,
+      bottom: systemInfo.windowHeight,
+      width: systemInfo.windowWidth,
+      height: systemInfo.windowHeight
+    };
     
     // 设置Canvas为设计分辨率
     this.canvas.width = this.designWidth;

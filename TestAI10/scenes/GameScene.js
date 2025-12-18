@@ -213,12 +213,22 @@ class GameScene {
     const canvasWidth = this.canvas.width; // 设计分辨率宽度 1080
     const canvasHeight = this.canvas.height; // 设计分辨率高度 2340
     
-    // UI区域高度
-    const topUIHeight = 160; // 顶部UI高度（增加以容纳两行内容）
-    const bottomUIHeight = 100; // 底部UI高度
+    // 获取安全区域信息（转换为设计分辨率坐标）
+    let safeAreaTop = 0;
+    let safeAreaBottom = canvasHeight;
+    if (this.game.safeArea) {
+      const safeArea = this.game.safeArea;
+      const scale = this.game.scale;
+      safeAreaTop = safeArea.top / scale;
+      safeAreaBottom = safeArea.bottom / scale;
+    }
     
-    // 游戏区域高度 = 总高度 - 顶部UI - 底部UI
-    const gameAreaHeight = canvasHeight - topUIHeight - bottomUIHeight;
+    // UI区域高度（显示在安全区域外）
+    const topUIHeight = 120; // 顶部UI高度（增加以容纳UI元素）
+    const bottomUIHeight = 120; // 底部UI高度（增加以容纳UI元素）
+    
+    // 游戏区域高度 = 安全区域高度（游戏内容在安全区域内）
+    const gameAreaHeight = safeAreaBottom - safeAreaTop;
     
     // 左右边距：各50像素
     const horizontalMargin = 100; // 左右各50，总共100
@@ -268,9 +278,9 @@ class GameScene {
        this.gameCoreOffsetX = 50 + this.panOffsetX;
      }
      
-     // 垂直居中：在游戏区域内居中（顶部UI下方）+ 拖动偏移
+     // 垂直居中：在安全区域内居中 + 拖动偏移
      const availableHeight = gameAreaHeight - verticalMargin;
-     this.gameCoreOffsetY = topUIHeight + 30 + (availableHeight - gameCoreDisplayHeight) / 2 + this.panOffsetY;
+     this.gameCoreOffsetY = safeAreaTop + 30 + (availableHeight - gameCoreDisplayHeight) / 2 + this.panOffsetY;
     
     // 游戏核心区域内的偏移量（用于居中显示）
     this.offsetX = 0;
@@ -505,9 +515,23 @@ class GameScene {
   checkSliderClick(x, y) {
     const width = this.canvas.width;
     const height = this.canvas.height;
-    const bottomBarHeight = 100;
+    
+    // 获取安全区域信息（转换为设计分辨率坐标）
+    let safeAreaBottom = height;
+    if (this.game.safeArea) {
+      const safeArea = this.game.safeArea;
+      const scale = this.game.scale;
+      safeAreaBottom = safeArea.bottom / scale;
+    }
+    
+    const minBottomBarHeight = 120; // 最小底部栏高度
+    // 底部UI在安全区域外（从safeAreaBottom到height）
+    const bottomBarY = safeAreaBottom;
+    const bgHeight = safeAreaBottom < height ? (height - safeAreaBottom) : minBottomBarHeight;
+    
     const sliderX = width / 2;
-    const sliderY = height - bottomBarHeight / 2;
+    // 在底部背景区域的中心位置
+    const sliderY = bottomBarY + bgHeight / 2;
     const sliderWidth = 400;
     const sliderHeight = 8;
     const handleSize = 40;
@@ -608,8 +632,24 @@ class GameScene {
   checkUIButtonClick(x, y) {
     const canvasWidth = this.canvas.width;
     
-    // 检查设置按钮（右上角）
-    if (x > canvasWidth - 50 && x < canvasWidth - 10 && y > 10 && y < 50) {
+    // 获取安全区域信息（转换为设计分辨率坐标）
+    let safeAreaTop = 0;
+    if (this.game.safeArea) {
+      const safeArea = this.game.safeArea;
+      const scale = this.game.scale;
+      safeAreaTop = safeArea.top / scale;
+    }
+    
+    const minTopBarHeight = 120; // 最小顶部栏高度
+    // 顶部UI在安全区域外（从0到safeAreaTop）
+    const bgHeight = safeAreaTop > 0 ? safeAreaTop+minTopBarHeight : minTopBarHeight;
+    
+    // 检查设置按钮（右上角，必须完全在安全区域外，y < safeAreaTop）
+    const settingsButtonX = canvasWidth - 40;
+    const settingsButtonY = bgHeight / 3; // 与渲染时保持一致
+    const buttonSize = 48;
+    if (x > settingsButtonX - buttonSize / 2 && x < settingsButtonX + buttonSize / 2 &&
+        y > settingsButtonY - buttonSize / 2 && y < settingsButtonY + buttonSize / 2) {
       // TODO: 打开设置菜单
       return true;
     }
@@ -1255,7 +1295,17 @@ class GameScene {
     // 清空画布
     ctx.clearRect(0, 0, width, height);
 
-    // 绘制背景
+    // 获取安全区域信息（转换为设计分辨率坐标）
+    let safeAreaTop = 0;
+    let safeAreaBottom = height;
+    if (this.game.safeArea) {
+      const safeArea = this.game.safeArea;
+      const scale = this.game.scale;
+      safeAreaTop = safeArea.top / scale;
+      safeAreaBottom = safeArea.bottom / scale;
+    }
+
+    // 绘制背景（全屏）
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, width, height);
 
@@ -1268,14 +1318,29 @@ class GameScene {
       return;
     }
 
-    // 绘制顶部UI
-    this.renderTopUI();
+    // 绘制顶部UI（在安全区域上方）
+    this.renderTopUI(safeAreaTop);
 
-    // 绘制游戏区域
+    // 绘制游戏区域（在安全区域内，应用裁剪）
+    ctx.save();
+    if (this.game.safeArea) {
+      const safeArea = this.game.safeArea;
+      const scale = this.game.scale;
+      const safeLeft = safeArea.left / scale;
+      const safeTop = safeArea.top / scale;
+      const safeWidth = safeArea.width / scale;
+      const safeHeight = safeArea.bottom / scale - safeArea.top / scale;
+      
+      // 设置裁剪区域（只裁剪游戏内容区域）
+      ctx.beginPath();
+      ctx.rect(safeLeft, safeTop, safeWidth, safeHeight);
+      ctx.clip();
+    }
     this.renderGameArea();
+    ctx.restore();
 
-    // 绘制底部UI
-    this.renderBottomUI();
+    // 绘制底部UI（在安全区域下方）
+    this.renderBottomUI(safeAreaBottom);
 
     // 绘制特效
     this.effectManager.update((x, y) => {
@@ -1290,26 +1355,37 @@ class GameScene {
 
   /**
    * 渲染顶部UI（适配设计分辨率1080x2340）
+   * @param {number} safeAreaTop - 安全区域顶部位置（设计分辨率坐标）
    */
-  renderTopUI() {
+  renderTopUI(safeAreaTop = 0) {
     const ctx = this.ctx;
     const width = this.canvas.width;   // 1080
-    const topBarHeight = 160; // 顶部栏高度（增加高度以容纳两行内容）
+    const minTopBarHeight = 120; // 最小顶部栏高度（确保UI元素有足够空间）
+    
+    // 顶部UI显示在安全区域外
+    // 顶部UI显示在安全区域外（从0到safeAreaTop）
+    // 背景只绘制到safeAreaTop，确保不进入安全区域
+    const topBarY = 0;
+    const bgHeight = safeAreaTop > 0 ? safeAreaTop+minTopBarHeight : minTopBarHeight;
 
     // 背景
     ctx.fillStyle = '#E3F2FD';
-    ctx.fillRect(0, 0, width, topBarHeight);
+    ctx.fillRect(0, topBarY, width, bgHeight);
     
-    // 底部边框线
-    ctx.strokeStyle = '#BBDEFB';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(0, topBarHeight);
-    ctx.lineTo(width, topBarHeight);
-    ctx.stroke();
+    // 底部边框线（在安全区域顶部边界）
+    if (bgHeight > 0) {
+      ctx.strokeStyle = '#BBDEFB';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, bgHeight);
+      ctx.lineTo(width, bgHeight);
+      ctx.stroke();
+    }
 
-    // 第一行：关卡名称和设置按钮
-    const firstLineY = 50; // 第一行垂直位置
+    // UI元素必须完全在安全区域外（y < safeAreaTop）
+    // 根据背景高度动态计算位置，确保两行都能正确显示
+    // 第一行：关卡名称和设置按钮（在背景区域的 1/3 位置）
+    const firstLineY = bgHeight > 0 ? bgHeight / 3 : 50;
     
     // 关卡名称
     ctx.fillStyle = '#1976D2';
@@ -1325,8 +1401,8 @@ class GameScene {
     ctx.textBaseline = 'middle';
     ctx.fillText('⚙', width - 40, firstLineY);
 
-    // 第二行：失败次数（红心）
-    const secondLineY = 110; // 第二行垂直位置
+    // 第二行：失败次数（红心）（在背景区域的 2/3 位置）
+    const secondLineY = bgHeight > 0 ? bgHeight * 2 / 3 : 110;
     const heartSize = 48;
     const heartSpacing = 60;
     const totalHeartsWidth = 3 * heartSpacing;
@@ -1685,28 +1761,37 @@ class GameScene {
 
   /**
    * 渲染底部UI
+   * @param {number} safeAreaBottom - 安全区域底部位置（设计分辨率坐标）
    */
-  renderBottomUI() {
+  renderBottomUI(safeAreaBottom = 2340) {
     const ctx = this.ctx;
     const width = this.canvas.width;   // 1080
     const height = this.canvas.height; // 2340
-    const bottomBarHeight = 100; // 底部栏高度
-
-    // 背景
-    ctx.fillStyle = '#E3F2FD';
-    ctx.fillRect(0, height - bottomBarHeight, width, bottomBarHeight);
+    const minBottomBarHeight = 120; // 最小底部栏高度（确保UI元素有足够空间）
     
-    // 顶部边框线
-    ctx.strokeStyle = '#BBDEFB';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(0, height - bottomBarHeight);
-    ctx.lineTo(width, height - bottomBarHeight);
-    ctx.stroke();
+    // 底部UI显示在安全区域外（从safeAreaBottom到height）
+    const bottomBarY = safeAreaBottom;
+    // 背景高度：从safeAreaBottom到height
+    const bgHeight = safeAreaBottom < height ? (height - safeAreaBottom) : minBottomBarHeight;
 
-    // 缩放滑块（适配设计分辨率）
+    // 背景（从safeAreaBottom开始，确保不进入安全区域）
+    ctx.fillStyle = '#E3F2FD';
+    ctx.fillRect(0, bottomBarY, width, bgHeight);
+    
+    // 顶部边框线（在安全区域底部边界）
+    if (bgHeight > 0) {
+      ctx.strokeStyle = '#BBDEFB';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, bottomBarY);
+      ctx.lineTo(width, bottomBarY);
+      ctx.stroke();
+    }
+
+    // 缩放滑块（适配设计分辨率，必须完全在安全区域外，y > safeAreaBottom）
     const sliderX = width / 2;
-    const sliderY = height - bottomBarHeight / 2;
+    // 在底部背景区域的中心位置
+    const sliderY = bottomBarY + bgHeight / 2;
     const sliderWidth = 400;
     const sliderHeight = 8;
     const handleSize = 40;
