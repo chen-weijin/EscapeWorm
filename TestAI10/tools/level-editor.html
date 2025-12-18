@@ -377,6 +377,7 @@
                         <option value="right">向右 (→)</option>
                     </select>
                 </div>
+                <button class="btn btn-secondary" id="deleteLastSegmentBtn">删除最后一节</button>
                 <button class="btn btn-danger" id="deleteWormBtn">删除当前蠕虫</button>
             </div>
 
@@ -527,6 +528,10 @@
 
                 document.getElementById('deleteWormBtn').addEventListener('click', () => {
                     this.deleteCurrentWorm();
+                });
+
+                document.getElementById('deleteLastSegmentBtn').addEventListener('click', () => {
+                    this.deleteLastSegment();
                 });
 
                 // 蠕虫属性
@@ -1069,6 +1074,42 @@
                 this.render();
             }
 
+            /**
+             * 删除选中蠕虫的最后一节
+             */
+            deleteLastSegment() {
+                if (!this.currentWormId) {
+                    this.showStatus('请先选择一个蠕虫', 'error');
+                    return;
+                }
+
+                const worm = this.getWormById(this.currentWormId);
+                if (!worm) {
+                    this.showStatus('蠕虫不存在', 'error');
+                    return;
+                }
+
+                if (worm.segments.length <= 1) {
+                    this.showStatus('蠕虫至少需要保留一节（头部）', 'error');
+                    return;
+                }
+
+                // 保存被删除的段到历史记录
+                const lastSegment = worm.segments[worm.segments.length - 1];
+                this.addToHistory('deleteSegment', {
+                    wormId: worm.id,
+                    segment: JSON.parse(JSON.stringify(lastSegment)),
+                    index: worm.segments.length - 1
+                });
+
+                // 删除最后一节
+                worm.segments.pop();
+
+                this.updateWormList();
+                this.render();
+                this.showStatus('已删除最后一节', 'success');
+            }
+
             getWormById(id) {
                 return this.levelData.worms.find(w => w.id === id);
             }
@@ -1236,6 +1277,9 @@
                 
                 if (worm.segments.length === 0) return;
                 
+                // 检查是否被选中
+                const isSelected = worm.id === this.currentWormId;
+                
                 // 绘制身体段
                 worm.segments.forEach((segment, index) => {
                     const screenPos = this.worldToScreen(segment.x, segment.y);
@@ -1259,6 +1303,18 @@
                         this.cellSize - 4,
                         this.cellSize - 4
                     );
+                    
+                    // 如果被选中，绘制黑色边框
+                    if (isSelected) {
+                        ctx.strokeStyle = '#000000';
+                        ctx.lineWidth = 3;
+                        ctx.strokeRect(
+                            screenPos.x,
+                            screenPos.y,
+                            this.cellSize,
+                            this.cellSize
+                        );
+                    }
                     
                     // 绘制头部（眼睛）
                     if (isHead) {
@@ -1644,6 +1700,22 @@
                             const worm = this.getWormById(data.wormId);
                             if (worm) {
                                 worm[data.property] = data.newValue;
+                            }
+                        }
+                        break;
+
+                    case 'deleteSegment':
+                        if (isUndo) {
+                            // 撤销：恢复被删除的段
+                            const worm = this.getWormById(data.wormId);
+                            if (worm) {
+                                worm.segments.splice(data.index, 0, { ...data.segment });
+                            }
+                        } else {
+                            // 重做：删除段
+                            const worm = this.getWormById(data.wormId);
+                            if (worm && worm.segments.length > data.index) {
+                                worm.segments.splice(data.index, 1);
                             }
                         }
                         break;
