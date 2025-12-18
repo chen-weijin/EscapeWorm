@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关卡编辑器 - 蠕虫逃脱</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .header {
+            background: #3F51B5;
+            color: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header h1 {
+            font-size: 24px;
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: white;
+            border-right: 1px solid #ddd;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+        }
+
+        .canvas-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fafafa;
+            padding: 20px;
+            overflow: auto;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #editorCanvas {
+            background: white;
+            border: 2px solid #ddd;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: crosshair;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #3F51B5;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .form-group input[type="number"] {
+            width: 100%;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .color-picker-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="color"] {
+            width: 60px;
+            height: 40px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .worm-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px;
+        }
+
+        .worm-item {
+            padding: 10px;
+            margin: 5px 0;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .worm-item:hover {
+            background: #f0f0f0;
+        }
+
+        .worm-item.selected {
+            border-color: #3F51B5;
+            background: #E3F2FD;
+        }
+
+        .worm-item-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .worm-color-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+
+        .delete-worm-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .delete-worm-btn:hover {
+            background: #d32f2f;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: #3F51B5;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #303F9F;
+        }
+
+        .btn-success {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #45a049;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+
+        .btn-secondary {
+            background: #757575;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #616161;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 8px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            border-color: #3F51B5;
+            background: #E3F2FD;
+            color: #3F51B5;
+            font-weight: bold;
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .status-bar {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>关卡编辑器</h1>
+    </div>
+    
+    <div class="container">
+        <div class="sidebar">
+            <!-- 关卡大小配置 -->
+            <div class="section">
+                <div class="section-title">关卡大小</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>宽度</label>
+                        <input type="number" id="matrixWidth" min="3" max="20" value="8">
+                    </div>
+                    <div class="form-group">
+                        <label>高度</label>
+                        <input type="number" id="matrixHeight" min="3" max="20" value="8">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 编辑模式 -->
+            <div class="section">
+                <div class="section-title">编辑模式</div>
+                <div class="mode-selector">
+                    <div class="mode-btn active" id="modeClick">点击模式</div>
+                    <div class="mode-btn" id="modeDrag">拖拽模式</div>
+                </div>
+                <div class="info-text" id="modeHint">点击网格添加蠕虫段</div>
+            </div>
+
+            <!-- 蠕虫列表 -->
+            <div class="section">
+                <div class="section-title">蠕虫列表</div>
+                <div class="worm-list" id="wormList"></div>
+                <button class="btn btn-primary" id="addWormBtn">添加蠕虫</button>
+            </div>
+
+            <!-- 当前蠕虫属性 -->
+            <div class="section" id="currentWormSection">
+                <div class="section-title">当前蠕虫属性</div>
+                <div class="form-group">
+                    <label>颜色</label>
+                    <div class="color-picker-wrapper">
+                        <input type="color" id="wormColor" value="#FF5733">
+                        <input type="text" id="wormColorText" value="#FF5733" style="flex: 1;">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>方向</label>
+                    <select id="wormDirection">
+                        <option value="up">向上 (↑)</option>
+                        <option value="down">向下 (↓)</option>
+                        <option value="left">向左 (←)</option>
+                        <option value="right">向右 (→)</option>
+                    </select>
+                </div>
+                <button class="btn btn-danger" id="deleteWormBtn">删除当前蠕虫</button>
+            </div>
+
+            <!-- 文件操作 -->
+            <div class="section">
+                <div class="section-title">文件操作</div>
+                <div class="form-group">
+                    <label>关卡ID</label>
+                    <input type="number" id="levelId" min="1" value="1">
+                </div>
+                <input type="file" id="loadFileInput" accept=".json" class="hidden">
+                <button class="btn btn-primary" id="loadBtn">加载关卡</button>
+                <button class="btn btn-success" id="saveBtn">保存关卡</button>
+                <button class="btn btn-secondary" id="exportBtn">导出JSON</button>
+                <div class="status-bar" id="statusBar">就绪</div>
+            </div>
+        </div>
+
+        <div class="canvas-container">
+            <canvas id="editorCanvas"></canvas>
+        </div>
+    </div>
+
+    <script>
+        class LevelEditor {
+            constructor() {
+                this.canvas = document.getElementById('editorCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                
+                // 关卡数据
+                this.levelData = {
+                    levelId: 1,
+                    matrix: { width: 8, height: 8 },
+                    escapePoints: [],
+                    worms: []
+                };
+                
+                // 编辑状态
+                this.editMode = 'click'; // 'click' 或 'drag'
+                this.currentWormId = null;
+                this.isDragging = false;
+                this.dragStartPos = null;
+                this.nextWormId = 1;
+                
+                // 渲染参数
+                this.cellSize = 40;
+                this.offsetX = 0;
+                this.offsetY = 0;
+                
+                this.init();
+            }
+
+            init() {
+                this.setupCanvas();
+                this.setupEventListeners();
+                this.calculateRenderParams();
+                this.render();
+            }
+
+            setupCanvas() {
+                const container = this.canvas.parentElement;
+                const updateCanvasSize = () => {
+                    const maxWidth = container.clientWidth - 40;
+                    const maxHeight = container.clientHeight - 40;
+                    const size = Math.min(maxWidth, maxHeight, 800);
+                    this.canvas.width = size;
+                    this.canvas.height = size;
+                    this.calculateRenderParams();
+                    this.render();
+                };
+                
+                updateCanvasSize();
+                window.addEventListener('resize', updateCanvasSize);
+            }
+
+            setupEventListeners() {
+                // 关卡大小
+                document.getElementById('matrixWidth').addEventListener('input', (e) => {
+                    this.levelData.matrix.width = parseInt(e.target.value) || 8;
+                    this.calculateRenderParams();
+                    this.render();
+                });
+                
+                document.getElementById('matrixHeight').addEventListener('input', (e) => {
+                    this.levelData.matrix.height = parseInt(e.target.value) || 8;
+                    this.calculateRenderParams();
+                    this.render();
+                });
+
+                // 编辑模式
+                document.getElementById('modeClick').addEventListener('click', () => {
+                    this.setEditMode('click');
+                });
+                
+                document.getElementById('modeDrag').addEventListener('click', () => {
+                    this.setEditMode('drag');
+                });
+
+                // 蠕虫管理
+                document.getElementById('addWormBtn').addEventListener('click', () => {
+                    this.addWorm();
+                });
+
+                document.getElementById('deleteWormBtn').addEventListener('click', () => {
+                    this.deleteCurrentWorm();
+                });
+
+                // 蠕虫属性
+                document.getElementById('wormColor').addEventListener('input', (e) => {
+                    const color = e.target.value;
+                    document.getElementById('wormColorText').value = color;
+                    this.updateCurrentWormProperty('color', color);
+                });
+
+                document.getElementById('wormColorText').addEventListener('input', (e) => {
+                    const color = e.target.value;
+                    if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
+                        document.getElementById('wormColor').value = color;
+                        this.updateCurrentWormProperty('color', color);
+                    }
+                });
+
+                document.getElementById('wormDirection').addEventListener('change', (e) => {
+                    this.updateCurrentWormProperty('direction', e.target.value);
+                });
+
+                // 文件操作
+                document.getElementById('loadBtn').addEventListener('click', () => {
+                    document.getElementById('loadFileInput').click();
+                });
+
+                document.getElementById('loadFileInput').addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        this.loadLevelFromFile(file);
+                    }
+                });
+
+                document.getElementById('saveBtn').addEventListener('click', () => {
+                    this.saveLevel();
+                });
+
+                document.getElementById('exportBtn').addEventListener('click', () => {
+                    this.exportJSON();
+                });
+
+                // Canvas事件
+                this.canvas.addEventListener('mousedown', (e) => this.handleMouseDown(e));
+                this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+                this.canvas.addEventListener('mouseup', (e) => this.handleMouseUp(e));
+                this.canvas.addEventListener('mouseleave', () => {
+                    this.isDragging = false;
+                });
+
+                // 更新关卡ID
+                document.getElementById('levelId').addEventListener('input', (e) => {
+                    this.levelData.levelId = parseInt(e.target.value) || 1;
+                });
+            }
+
+            setEditMode(mode) {
+                this.editMode = mode;
+                document.getElementById('modeClick').classList.toggle('active', mode === 'click');
+                document.getElementById('modeDrag').classList.toggle('active', mode === 'drag');
+                document.getElementById('modeHint').textContent = 
+                    mode === 'click' ? '点击网格添加蠕虫段' : '拖拽绘制蠕虫路径';
+            }
+
+            calculateRenderParams() {
+                const canvasWidth = this.canvas.width;
+                const canvasHeight = this.canvas.height;
+                const matrix = this.levelData.matrix;
+                
+                // 计算合适的格子大小
+                const maxCellSizeX = (canvasWidth - 40) / matrix.width;
+                const maxCellSizeY = (canvasHeight - 40) / matrix.height;
+                this.cellSize = Math.min(maxCellSizeX, maxCellSizeY, 50);
+                
+                // 计算偏移量（居中）
+                const totalWidth = matrix.width * this.cellSize;
+                const totalHeight = matrix.height * this.cellSize;
+                this.offsetX = (canvasWidth - totalWidth) / 2;
+                this.offsetY = (canvasHeight - totalHeight) / 2;
+            }
+
+            screenToWorld(screenX, screenY) {
+                const x = Math.floor((screenX - this.offsetX) / this.cellSize);
+                const y = Math.floor((screenY - this.offsetY) / this.cellSize);
+                return { x, y };
+            }
+
+            worldToScreen(worldX, worldY) {
+                return {
+                    x: this.offsetX + worldX * this.cellSize,
+                    y: this.offsetY + worldY * this.cellSize
+                };
+            }
+
+            isValidPosition(pos) {
+                const { width, height } = this.levelData.matrix;
+                return pos.x >= 0 && pos.x < width && pos.y >= 0 && pos.y < height;
+            }
+
+            isPositionOccupied(pos, excludeWormId = null) {
+                for (const worm of this.levelData.worms) {
+                    if (worm.id === excludeWormId) continue;
+                    for (const segment of worm.segments) {
+                        if (segment.x === pos.x && segment.y === pos.y) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+            handleMouseDown(e) {
+                const rect = this.canvas.getBoundingClientRect();
+                const screenX = e.clientX - rect.left;
+                const screenY = e.clientY - rect.top;
+                const worldPos = this.screenToWorld(screenX, screenY);
+
+                if (!this.isValidPosition(worldPos)) return;
+
+                if (this.editMode === 'click') {
+                    this.handleClickAddSegment(worldPos);
+                } else if (this.editMode === 'drag') {
+                    this.isDragging = true;
+                    this.dragStartPos = worldPos;
+                    this.handleDragAddSegment(worldPos);
+                }
+            }
+
+            handleMouseMove(e) {
+                if (!this.isDragging || this.editMode !== 'drag') return;
+
+                const rect = this.canvas.getBoundingClientRect();
+                const screenX = e.clientX - rect.left;
+                const screenY = e.clientY - rect.top;
+                const worldPos = this.screenToWorld(screenX, screenY);
+
+                if (this.isValidPosition(worldPos)) {
+                    this.handleDragAddSegment(worldPos);
+                }
+            }
+
+            handleMouseUp(e) {
+                if (this.editMode === 'drag') {
+                    this.isDragging = false;
+                }
+            }
+
+            handleClickAddSegment(pos) {
+                if (!this.currentWormId) {
+                    this.showStatus('请先添加或选择一个蠕虫', 'error');
+                    return;
+                }
+
+                const worm = this.getWormById(this.currentWormId);
+                if (!worm) return;
+
+                // 检查位置是否被占用
+                if (this.isPositionOccupied(pos, worm.id)) {
+                    this.showStatus('该位置已被占用', 'error');
+                    return;
+                }
+
+                // 如果是第一个段，直接添加
+                if (worm.segments.length === 0) {
+                    worm.segments.push({ ...pos });
+                } else {
+                    // 检查是否与最后一个段相邻
+                    const lastSegment = worm.segments[worm.segments.length - 1];
+                    const dx = Math.abs(pos.x - lastSegment.x);
+                    const dy = Math.abs(pos.y - lastSegment.y);
+                    
+                    if ((dx === 1 && dy === 0) || (dx === 0 && dy === 1)) {
+                        worm.segments.push({ ...pos });
+                    } else {
+                        this.showStatus('新段必须与最后一个段相邻', 'error');
+                        return;
+                    }
+                }
+
+                this.updateWormList();
+                this.render();
+            }
+
+            handleDragAddSegment(pos) {
+                if (!this.currentWormId) {
+                    if (!this.dragStartPos) return;
+                    // 如果没有当前蠕虫，创建一个新蠕虫
+                    this.addWorm();
+                    const worm = this.getWormById(this.currentWormId);
+                    if (worm) {
+                        worm.segments.push({ ...this.dragStartPos });
+                    }
+                }
+
+                const worm = this.getWormById(this.currentWormId);
+                if (!worm) return;
+
+                // 检查位置是否被占用
+                if (this.isPositionOccupied(pos, worm.id)) {
+                    return;
+                }
+
+                // 如果位置已存在，忽略
+                for (const segment of worm.segments) {
+                    if (segment.x === pos.x && segment.y === pos.y) {
+                        return;
+                    }
+                }
+
+                // 检查是否与最后一个段相邻
+                if (worm.segments.length > 0) {
+                    const lastSegment = worm.segments[worm.segments.length - 1];
+                    const dx = Math.abs(pos.x - lastSegment.x);
+                    const dy = Math.abs(pos.y - lastSegment.y);
+                    
+                    if ((dx === 1 && dy === 0) || (dx === 0 && dy === 1)) {
+                        worm.segments.push({ ...pos });
+                    } else {
+                        return;
+                    }
+                } else {
+                    worm.segments.push({ ...pos });
+                }
+
+                this.render();
+            }
+
+            addWorm() {
+                const newWorm = {
+                    id: this.nextWormId++,
+                    segments: [],
+                    direction: 'right',
+                    color: '#FF5733'
+                };
+                
+                this.levelData.worms.push(newWorm);
+                this.currentWormId = newWorm.id;
+                this.updateWormList();
+                this.updateCurrentWormUI();
+                this.render();
+            }
+
+            deleteCurrentWorm() {
+                if (!this.currentWormId) {
+                    this.showStatus('请先选择一个蠕虫', 'error');
+                    return;
+                }
+
+                this.levelData.worms = this.levelData.worms.filter(
+                    w => w.id !== this.currentWormId
+                );
+                
+                this.currentWormId = null;
+                this.updateWormList();
+                this.updateCurrentWormUI();
+                this.render();
+            }
+
+            getWormById(id) {
+                return this.levelData.worms.find(w => w.id === id);
+            }
+
+            selectWorm(wormId) {
+                this.currentWormId = wormId;
+                this.updateWormList();
+                this.updateCurrentWormUI();
+                this.render();
+            }
+
+            updateCurrentWormProperty(property, value) {
+                if (!this.currentWormId) return;
+                
+                const worm = this.getWormById(this.currentWormId);
+                if (worm) {
+                    worm[property] = value;
+                    this.updateWormList();
+                    this.render();
+                }
+            }
+
+            updateWormList() {
+                const listEl = document.getElementById('wormList');
+                listEl.innerHTML = '';
+
+                this.levelData.worms.forEach(worm => {
+                    const item = document.createElement('div');
+                    item.className = `worm-item ${worm.id === this.currentWormId ? 'selected' : ''}`;
+                    
+                    const info = document.createElement('div');
+                    info.className = 'worm-item-info';
+                    
+                    const colorIndicator = document.createElement('div');
+                    colorIndicator.className = 'worm-color-indicator';
+                    colorIndicator.style.backgroundColor = worm.color;
+                    
+                    const text = document.createElement('span');
+                    text.textContent = `蠕虫 ${worm.id} (${worm.segments.length}段)`;
+                    
+                    info.appendChild(colorIndicator);
+                    info.appendChild(text);
+                    
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'delete-worm-btn';
+                    deleteBtn.textContent = '删除';
+                    deleteBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        this.levelData.worms = this.levelData.worms.filter(w => w.id !== worm.id);
+                        if (this.currentWormId === worm.id) {
+                            this.currentWormId = null;
+                        }
+                        this.updateWormList();
+                        this.updateCurrentWormUI();
+                        this.render();
+                    };
+                    
+                    item.appendChild(info);
+                    item.appendChild(deleteBtn);
+                    item.onclick = () => this.selectWorm(worm.id);
+                    
+                    listEl.appendChild(item);
+                });
+            }
+
+            updateCurrentWormUI() {
+                const section = document.getElementById('currentWormSection');
+                if (!this.currentWormId) {
+                    section.style.opacity = '0.5';
+                    return;
+                }
+
+                section.style.opacity = '1';
+                const worm = this.getWormById(this.currentWormId);
+                if (worm) {
+                    document.getElementById('wormColor').value = worm.color;
+                    document.getElementById('wormColorText').value = worm.color;
+                    document.getElementById('wormDirection').value = worm.direction;
+                }
+            }
+
+            render() {
+                const ctx = this.ctx;
+                const canvas = this.canvas;
+                
+                // 清空画布
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // 绘制背景
+                ctx.fillStyle = '#fafafa';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                const { width, height } = this.levelData.matrix;
+                
+                // 绘制网格
+                ctx.strokeStyle = '#ddd';
+                ctx.lineWidth = 1;
+                
+                for (let x = 0; x <= width; x++) {
+                    const screenX = this.offsetX + x * this.cellSize;
+                    ctx.beginPath();
+                    ctx.moveTo(screenX, this.offsetY);
+                    ctx.lineTo(screenX, this.offsetY + height * this.cellSize);
+                    ctx.stroke();
+                }
+                
+                for (let y = 0; y <= height; y++) {
+                    const screenY = this.offsetY + y * this.cellSize;
+                    ctx.beginPath();
+                    ctx.moveTo(this.offsetX, screenY);
+                    ctx.lineTo(this.offsetX + width * this.cellSize, screenY);
+                    ctx.stroke();
+                }
+                
+                // 绘制网格坐标
+                ctx.fillStyle = '#999';
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                for (let x = 0; x < width; x++) {
+                    const screenX = this.offsetX + x * this.cellSize + this.cellSize / 2;
+                    ctx.fillText(x, screenX, this.offsetY - 5);
+                }
+                ctx.textAlign = 'left';
+                for (let y = 0; y < height; y++) {
+                    const screenY = this.offsetY + y * this.cellSize + this.cellSize / 2 + 4;
+                    ctx.fillText(y, this.offsetX - 25, screenY);
+                }
+                
+                // 绘制蠕虫
+                this.levelData.worms.forEach(worm => {
+                    this.renderWorm(worm);
+                });
+                
+                // 绘制选中状态
+                if (this.currentWormId) {
+                    const worm = this.getWormById(this.currentWormId);
+                    if (worm && worm.segments.length > 0) {
+                        ctx.strokeStyle = '#3F51B5';
+                        ctx.lineWidth = 3;
+                        const lastSeg = worm.segments[worm.segments.length - 1];
+                        const screenPos = this.worldToScreen(lastSeg.x, lastSeg.y);
+                        ctx.strokeRect(
+                            screenPos.x + 2,
+                            screenPos.y + 2,
+                            this.cellSize - 4,
+                            this.cellSize - 4
+                        );
+                    }
+                }
+            }
+
+            renderWorm(worm) {
+                const ctx = this.ctx;
+                
+                if (worm.segments.length === 0) return;
+                
+                // 绘制身体段
+                worm.segments.forEach((segment, index) => {
+                    const screenPos = this.worldToScreen(segment.x, segment.y);
+                    const isHead = index === 0;
+                    
+                    // 绘制身体
+                    ctx.fillStyle = worm.color;
+                    ctx.fillRect(
+                        screenPos.x + 2,
+                        screenPos.y + 2,
+                        this.cellSize - 4,
+                        this.cellSize - 4
+                    );
+                    
+                    // 绘制边框
+                    ctx.strokeStyle = this.darkenColor(worm.color, 0.2);
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(
+                        screenPos.x + 2,
+                        screenPos.y + 2,
+                        this.cellSize - 4,
+                        this.cellSize - 4
+                    );
+                    
+                    // 绘制头部（眼睛）
+                    if (isHead) {
+                        ctx.fillStyle = 'white';
+                        const centerX = screenPos.x + this.cellSize / 2;
+                        const centerY = screenPos.y + this.cellSize / 2;
+                        const eyeSize = this.cellSize * 0.15;
+                        const eyeOffset = this.cellSize * 0.2;
+                        
+                        // 根据方向确定眼睛位置
+                        let eye1X, eye1Y, eye2X, eye2Y;
+                        switch (worm.direction) {
+                            case 'up':
+                                eye1X = centerX - eyeOffset;
+                                eye1Y = centerY - eyeOffset;
+                                eye2X = centerX + eyeOffset;
+                                eye2Y = centerY - eyeOffset;
+                                break;
+                            case 'down':
+                                eye1X = centerX - eyeOffset;
+                                eye1Y = centerY + eyeOffset;
+                                eye2X = centerX + eyeOffset;
+                                eye2Y = centerY + eyeOffset;
+                                break;
+                            case 'left':
+                                eye1X = centerX - eyeOffset;
+                                eye1Y = centerY - eyeOffset;
+                                eye2X = centerX - eyeOffset;
+                                eye2Y = centerY + eyeOffset;
+                                break;
+                            case 'right':
+                                eye1X = centerX + eyeOffset;
+                                eye1Y = centerY - eyeOffset;
+                                eye2X = centerX + eyeOffset;
+                                eye2Y = centerY + eyeOffset;
+                                break;
+                        }
+                        
+                        ctx.beginPath();
+                        ctx.arc(eye1X, eye1Y, eyeSize, 0, Math.PI * 2);
+                        ctx.arc(eye2X, eye2Y, eyeSize, 0, Math.PI * 2);
+                        ctx.fill();
+                        
+                        ctx.fillStyle = 'black';
+                        ctx.beginPath();
+                        ctx.arc(eye1X, eye1Y, eyeSize * 0.6, 0, Math.PI * 2);
+                        ctx.arc(eye2X, eye2Y, eyeSize * 0.6, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                });
+            }
+
+            darkenColor(color, amount) {
+                const num = parseInt(color.replace("#", ""), 16);
+                const r = Math.max(0, (num >> 16) - (255 * amount));
+                const g = Math.max(0, ((num >> 8) & 0x00FF) - (255 * amount));
+                const b = Math.max(0, (num & 0x0000FF) - (255 * amount));
+                return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
+            }
+
+            validateLevelData() {
+                const errors = [];
+                
+                // 验证蠕虫
+                if (!this.levelData.worms || this.levelData.worms.length === 0) {
+                    errors.push('至少需要一条蠕虫');
+                }
+                
+                // escapePoints可以为空（会在保存时自动生成）
+                
+                if (!this.levelData.worms) return errors;
+                
+                this.levelData.worms.forEach((worm, index) => {
+                    if (worm.segments.length < 2) {
+                        errors.push(`蠕虫 ${worm.id} 至少需要2个段（头部和尾部）`);
+                    }
+                    
+                    // 验证段连续性
+                    for (let i = 1; i < worm.segments.length; i++) {
+                        const prev = worm.segments[i - 1];
+                        const curr = worm.segments[i];
+                        const dx = Math.abs(curr.x - prev.x);
+                        const dy = Math.abs(curr.y - prev.y);
+                        
+                        if (!((dx === 1 && dy === 0) || (dx === 0 && dy === 1))) {
+                            errors.push(`蠕虫 ${worm.id} 的第 ${i + 1} 个段与前一段不相邻`);
+                        }
+                    }
+                    
+                    // 验证坐标范围
+                    worm.segments.forEach((segment, segIndex) => {
+                        if (!this.isValidPosition(segment)) {
+                            errors.push(`蠕虫 ${worm.id} 的第 ${segIndex + 1} 个段超出矩阵范围`);
+                        }
+                    });
+                });
+                
+                // 验证蠕虫重叠
+                const allPositions = new Set();
+                this.levelData.worms.forEach(worm => {
+                    worm.segments.forEach(segment => {
+                        const key = `${segment.x},${segment.y}`;
+                        if (allPositions.has(key)) {
+                            errors.push(`位置 (${segment.x}, ${segment.y}) 被多个蠕虫占用`);
+                        }
+                        allPositions.add(key);
+                    });
+                });
+                
+                return errors;
+            }
+
+            loadLevelFromFile(file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        this.levelData = data;
+                        
+                        // 确保escapePoints存在
+                        if (!this.levelData.escapePoints) {
+                            this.levelData.escapePoints = [];
+                        }
+                        
+                        // 更新UI
+                        document.getElementById('matrixWidth').value = data.matrix.width;
+                        document.getElementById('matrixHeight').value = data.matrix.height;
+                        document.getElementById('levelId').value = data.levelId;
+                        
+                        // 计算下一个蠕虫ID
+                        const maxId = Math.max(0, ...(data.worms || []).map(w => w.id));
+                        this.nextWormId = maxId + 1;
+                        
+                        this.currentWormId = null;
+                        this.calculateRenderParams();
+                        this.updateWormList();
+                        this.updateCurrentWormUI();
+                        this.render();
+                        
+                        this.showStatus('关卡加载成功', 'success');
+                    } catch (err) {
+                        this.showStatus('加载失败: ' + err.message, 'error');
+                    }
+                };
+                reader.readAsText(file);
+            }
+
+            generateDefaultEscapePoints() {
+                const { width, height } = this.levelData.matrix;
+                const escapePoints = [];
+                
+                // 在每条边上生成一些逃脱点
+                // 使用更接近中心的位置，确保至少有一个点
+                const midY = Math.floor(height / 2);
+                const midY1 = Math.max(0, Math.floor(height * 0.4));
+                const midY2 = Math.min(height - 1, Math.floor(height * 0.6));
+                
+                const midX = Math.floor(width / 2);
+                const midX1 = Math.max(0, Math.floor(width * 0.4));
+                const midX2 = Math.min(width - 1, Math.floor(width * 0.6));
+                
+                // 左侧边界 (x = -1)
+                if (midY1 !== midY2) {
+                    escapePoints.push({ x: -1, y: midY1 }, { x: -1, y: midY2 });
+                } else {
+                    escapePoints.push({ x: -1, y: midY });
+                }
+                
+                // 右侧边界 (x = width)
+                if (midY1 !== midY2) {
+                    escapePoints.push({ x: width, y: midY1 }, { x: width, y: midY2 });
+                } else {
+                    escapePoints.push({ x: width, y: midY });
+                }
+                
+                // 顶部边界 (y = -1)
+                if (midX1 !== midX2) {
+                    escapePoints.push({ x: midX1, y: -1 }, { x: midX2, y: -1 });
+                } else {
+                    escapePoints.push({ x: midX, y: -1 });
+                }
+                
+                // 底部边界 (y = height)
+                if (midX1 !== midX2) {
+                    escapePoints.push({ x: midX1, y: height }, { x: midX2, y: height });
+                } else {
+                    escapePoints.push({ x: midX, y: height });
+                }
+                
+                return escapePoints;
+            }
+
+            saveLevel() {
+                const errors = this.validateLevelData();
+                if (errors.length > 0) {
+                    this.showStatus('验证失败: ' + errors.join('; '), 'error');
+                    alert('验证失败:\n' + errors.join('\n'));
+                    return;
+                }
+                
+                // 如果没有escapePoints或为空，自动生成默认的
+                if (!this.levelData.escapePoints || this.levelData.escapePoints.length === 0) {
+                    this.levelData.escapePoints = this.generateDefaultEscapePoints();
+                    this.showStatus('已自动生成默认逃脱点', 'info');
+                }
+                
+                const json = JSON.stringify(this.levelData, null, 2);
+                const blob = new Blob([json], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `level${this.levelData.levelId}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                this.showStatus(`已保存: level${this.levelData.levelId}.json`, 'success');
+            }
+
+            exportJSON() {
+                const errors = this.validateLevelData();
+                if (errors.length > 0) {
+                    this.showStatus('验证失败: ' + errors.join('; '), 'error');
+                    alert('验证失败:\n' + errors.join('\n'));
+                    return;
+                }
+                
+                const json = JSON.stringify(this.levelData, null, 2);
+                
+                // 复制到剪贴板
+                navigator.clipboard.writeText(json).then(() => {
+                    this.showStatus('JSON已复制到剪贴板', 'success');
+                }).catch(() => {
+                    // 降级方案
+                    const textarea = document.createElement('textarea');
+                    textarea.value = json;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    this.showStatus('JSON已复制到剪贴板', 'success');
+                });
+            }
+
+            showStatus(message, type = 'info') {
+                const statusBar = document.getElementById('statusBar');
+                statusBar.textContent = message;
+                statusBar.style.color = type === 'error' ? '#f44336' : 
+                                       type === 'success' ? '#4CAF50' : '#666';
+            }
+        }
+
+        // 初始化编辑器
+        window.addEventListener('DOMContentLoaded', () => {
+            new LevelEditor();
+        });
+    </script>
+</body>
+</html>
