@@ -37,7 +37,7 @@
       "uuid": "7e4ad359-ea8b-4074-ac34-79387e77c87f"
     },
     "G:\\escapeworm\\NewProject\\assets\\prefab": {
-      "time": 1766129294715.9607,
+      "time": 1766134766395.955,
       "uuid": "0d6fc9b1-2bd2-4f77-8910-24ee426a976b"
     },
     "G:\\escapeworm\\NewProject\\assets\\scene": {
@@ -55,11 +55,11 @@
       "uuid": "7e4ad359-ea8b-4074-ac34-79387e77c87f"
     },
     "G:\\escapeworm\\NewProject\\assets\\scene\\GameScene.scene": {
-      "time": 1766129432648.2126,
+      "time": 1766137810726.88,
       "uuid": "0f920c8e-9fcf-435e-a5bc-895b5a714374"
     },
     "G:\\escapeworm\\NewProject\\assets\\scene\\LaunchScene.scene": {
-      "time": 1766123717871.4375,
+      "time": 1766130745641.9058,
       "uuid": "ec0116ea-3bba-4013-a9a1-116bd60499c6"
     },
     "G:\\escapeworm\\NewProject\\assets\\prefab\\SettingLayer.prefab.meta": {
@@ -70,6 +70,209 @@
     },
     "G:\\escapeworm\\NewProject\\assets\\scene\\GameScene.scene.meta": {
       "time": 1766123391487.5366
+    },
+    "G:\\escapeworm\\NewProject\\assets\\resources.meta": {
+      "time": 1766130415092.2998
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts.meta": {
+      "time": 1766130415092.2998
+    },
+    "G:\\escapeworm\\NewProject\\assets\\resources\\images.meta": {
+      "time": 1766130415093.275
+    },
+    "G:\\escapeworm\\NewProject\\assets\\resources\\levels.meta": {
+      "time": 1766130415093.275
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\entities.meta": {
+      "time": 1766130415093.275
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\managers.meta": {
+      "time": 1766130415095.2266
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\ui.meta": {
+      "time": 1766130415095.2266
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\utils.meta": {
+      "time": 1766130415096.2043
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\entities\\Worm.ts.meta": {
+      "time": 1766130415098.156
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\managers\\AudioManager.ts.meta": {
+      "time": 1766130415098.156
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\managers\\EffectManager.ts.meta": {
+      "time": 1766130415098.156
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\managers\\LevelManager.ts.meta": {
+      "time": 1766130415099.1619
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\managers\\StorageManager.ts.meta": {
+      "time": 1766130415099.1619
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\utils\\CollisionDetector.ts.meta": {
+      "time": 1766130415106.3794
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\utils\\PathFinder.ts.meta": {
+      "time": 1766130415108.3318
+    },
+    "G:\\escapeworm\\NewProject\\assets\\resources": {
+      "time": 1766130415084.4385,
+      "uuid": "000cca72-689d-44d2-90fb-5d095cc8d03f"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts": {
+      "time": 1766130676252.8367,
+      "uuid": "73684461-d9c0-4e86-af9d-a9087c568822"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\resources\\images": {
+      "time": 1766130415111.3267,
+      "uuid": "75bd70f8-b392-4735-85cf-2fe12fd53dfb"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\resources\\levels": {
+      "time": 1766130415113.278,
+      "uuid": "ef92a9e1-c880-4a6d-9ab0-9ded5a9acce0"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\entities": {
+      "time": 1766130415086.3909,
+      "uuid": "edf59baa-334f-423c-b0de-8b9d63f3be70"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\managers": {
+      "time": 1766130415088.3428,
+      "uuid": "453d839b-f340-4c6b-9d44-41f2d37e436e"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\ui": {
+      "time": 1766130676254.789,
+      "uuid": "30a04b03-033c-470f-84e3-610f8b8f7546"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\utils": {
+      "time": 1766135766618.6028,
+      "uuid": "7483d8cc-6cfc-444e-8391-e5a5f7448297"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\entities\\Worm.ts": {
+      "time": 1766135790693.3623,
+      "uuid": "a3a48817-743d-4c32-849a-8a3e98a75a27"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\managers\\AudioManager.ts": {
+      "time": 1766135790694.3628,
+      "uuid": "2cef4f0b-c164-454f-b883-a668273c5b23"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\managers\\EffectManager.ts": {
+      "time": 1766130560137.245,
+      "uuid": "fa9594ab-a29a-419c-9253-d5bc9b8a4d2d"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\managers\\LevelManager.ts": {
+      "time": 1766135790694.3628,
+      "uuid": "af40315e-95d5-4115-a81e-4468a8d5d118"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\managers\\StorageManager.ts": {
+      "time": 1766135790694.3628,
+      "uuid": "6b3e33af-a304-4958-84d6-711e9df70c75"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\utils\\CollisionDetector.ts": {
+      "time": 1766130560135.2932,
+      "uuid": "0e09c156-0126-4a9a-b208-087aa4c47c30"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\utils\\PathFinder.ts": {
+      "time": 1766133418113.4578,
+      "uuid": "a98757e6-9e36-40be-acb6-534da67029be"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\resources\\images\\worm_body.png.meta": {
+      "time": 1766130415286.633
+    },
+    "G:\\escapeworm\\NewProject\\assets\\resources\\images\\worm_head.png.meta": {
+      "time": 1766130415285.6562
+    },
+    "G:\\escapeworm\\NewProject\\assets\\resources\\images\\worm_tail.png.meta": {
+      "time": 1766130415282.7285
+    },
+    "G:\\escapeworm\\NewProject\\assets\\resources\\levels\\level1.json.meta": {
+      "time": 1766130415188.9656
+    },
+    "G:\\escapeworm\\NewProject\\assets\\resources\\levels\\level2.json.meta": {
+      "time": 1766130415185.032
+    },
+    "G:\\escapeworm\\NewProject\\assets\\resources\\levels\\level3.json.meta": {
+      "time": 1766130415261.666
+    },
+    "G:\\escapeworm\\NewProject\\assets\\resources\\levels\\level2.json": {
+      "time": 1766051166849.6172,
+      "uuid": "01a4cde9-29c6-46b8-950f-3ae1fe2fad6d"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\resources\\levels\\level1.json": {
+      "time": 1766065239609.8887,
+      "uuid": "94e5611e-dbb8-443c-af14-b1c69f0c864e"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\resources\\levels\\level3.json": {
+      "time": 1766115915050.9153,
+      "uuid": "7d3a5fca-c715-4fcd-80da-e427d40afc79"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\resources\\images\\worm_tail.png": {
+      "time": 1766048921945.4658,
+      "uuid": "33a59cad-c963-4c33-a402-0e9140c9e4a8"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\resources\\images\\worm_head.png": {
+      "time": 1766048921945.4658,
+      "uuid": "8c1b7977-c09d-4d04-a206-026cf1c5e694"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\resources\\images\\worm_body.png": {
+      "time": 1766048921944.4897,
+      "uuid": "ade3a429-8d58-46ab-9fac-37810de1f6c6"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\GameController.ts.meta": {
+      "time": 1766130676256.7415
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\Main.ts.meta": {
+      "time": 1766130676256.7415
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\ui\\GameSceneController.ts.meta": {
+      "time": 1766130676257.7168
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\ui\\LaunchController.ts.meta": {
+      "time": 1766130676257.7168
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\ui\\MenuController.ts.meta": {
+      "time": 1766130676257.7168
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\ui\\ResultController.ts.meta": {
+      "time": 1766130676259.2234
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\GameController.ts": {
+      "time": 1766137819835.8289,
+      "uuid": "55b8990e-70be-4c55-9326-4dd218a2484f"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\Main.ts": {
+      "time": 1766135790696.5686,
+      "uuid": "4b600adb-b669-4712-8188-b0050447215f"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\ui\\GameSceneController.ts": {
+      "time": 1766137886870.7253,
+      "uuid": "7e90627f-8ef1-4210-bf4c-18381dfa8985"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\ui\\LaunchController.ts": {
+      "time": 1766130560138.2207,
+      "uuid": "76096d32-34c4-433f-af93-4a12492b7b11"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\ui\\MenuController.ts": {
+      "time": 1766135790696.5686,
+      "uuid": "dacb862a-65f8-4b94-bbbd-d26bb4dd5acb"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\ui\\ResultController.ts": {
+      "time": 1766135120149.21,
+      "uuid": "932efe37-989e-45ea-88ca-d8d7e0e6ba77"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\prefab\\result_panel.prefab.meta": {
+      "time": 1766134766399.8582
+    },
+    "G:\\escapeworm\\NewProject\\assets\\prefab\\result_panel.prefab": {
+      "time": 1766135456584.3384,
+      "uuid": "48cf6dff-7b33-4281-a195-84327300bc0c"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\utils\\Logger.ts.meta": {
+      "time": 1766135766619.5781
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scripts\\utils\\Logger.ts": {
+      "time": 1766135790693.3623,
+      "uuid": "e559651f-b0ad-4cd2-a8ac-6315c047ca08"
     }
   },
   "missing": {

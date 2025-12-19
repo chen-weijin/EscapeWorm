@@ -1,7 +1,7 @@
 {
   "modules": {
     "cce:/internal/x/cc": {
-      "mTimestamp": 8650.840700000525,
+      "mTimestamp": 8963.720200002193,
       "chunkId": "cee638a986ad8fae09398db255647defcaa6612a",
       "imports": [
         {
@@ -619,8 +619,8 @@
       ]
     },
     "cce:/internal/x/prerequisite-imports": {
-      "mTimestamp": 13603.569899976254,
-      "chunkId": "48925ed89f58b0eff72f0ddf69b47c4b5e8f623a",
+      "mTimestamp": 3279450.8467000127,
+      "chunkId": "c1197de683ea2e6ee3f497b1d6f6b3dda8413386",
       "imports": [
         {
           "value": "file:///C:/ProgramData/cocos/editors/Creator/3.8.0/resources/resources/3d/engine/editor/assets/tools/debug-view-runtime-control.ts",
@@ -635,6 +635,202 @@
               "column": 167
             }
           }
+        },
+        {
+          "value": "file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts",
+          "resolved": "__unresolved_1",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 183
+            },
+            "end": {
+              "line": 5,
+              "column": 250
+            }
+          }
+        },
+        {
+          "value": "file:///G:/escapeworm/NewProject/assets/scripts/Main.ts",
+          "resolved": "__unresolved_2",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 266
+            },
+            "end": {
+              "line": 5,
+              "column": 323
+            }
+          }
+        },
+        {
+          "value": "file:///G:/escapeworm/NewProject/assets/scripts/entities/Worm.ts",
+          "resolved": "__unresolved_3",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 339
+            },
+            "end": {
+              "line": 5,
+              "column": 405
+            }
+          }
+        },
+        {
+          "value": "file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts",
+          "resolved": "__unresolved_4",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 421
+            },
+            "end": {
+              "line": 5,
+              "column": 495
+            }
+          }
+        },
+        {
+          "value": "file:///G:/escapeworm/NewProject/assets/scripts/managers/EffectManager.ts",
+          "resolved": "__unresolved_5",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 511
+            },
+            "end": {
+              "line": 5,
+              "column": 586
+            }
+          }
+        },
+        {
+          "value": "file:///G:/escapeworm/NewProject/assets/scripts/managers/LevelManager.ts",
+          "resolved": "__unresolved_6",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 602
+            },
+            "end": {
+              "line": 5,
+              "column": 676
+            }
+          }
+        },
+        {
+          "value": "file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts",
+          "resolved": "__unresolved_7",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 692
+            },
+            "end": {
+              "line": 5,
+              "column": 768
+            }
+          }
+        },
+        {
+          "value": "file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts",
+          "resolved": "__unresolved_8",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 784
+            },
+            "end": {
+              "line": 5,
+              "column": 859
+            }
+          }
+        },
+        {
+          "value": "file:///G:/escapeworm/NewProject/assets/scripts/ui/LaunchController.ts",
+          "resolved": "__unresolved_9",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 875
+            },
+            "end": {
+              "line": 5,
+              "column": 947
+            }
+          }
+        },
+        {
+          "value": "file:///G:/escapeworm/NewProject/assets/scripts/ui/MenuController.ts",
+          "resolved": "__unresolved_10",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 963
+            },
+            "end": {
+              "line": 5,
+              "column": 1033
+            }
+          }
+        },
+        {
+          "value": "file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts",
+          "resolved": "__unresolved_11",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 1049
+            },
+            "end": {
+              "line": 5,
+              "column": 1121
+            }
+          }
+        },
+        {
+          "value": "file:///G:/escapeworm/NewProject/assets/scripts/utils/CollisionDetector.ts",
+          "resolved": "__unresolved_12",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 1137
+            },
+            "end": {
+              "line": 5,
+              "column": 1213
+            }
+          }
+        },
+        {
+          "value": "file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts",
+          "resolved": "__unresolved_13",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 1229
+            },
+            "end": {
+              "line": 5,
+              "column": 1294
+            }
+          }
+        },
+        {
+          "value": "file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts",
+          "resolved": "__unresolved_14",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 1310
+            },
+            "end": {
+              "line": 5,
+              "column": 1379
+            }
+          }
         }
       ],
       "type": "esm",
@@ -643,6 +839,104 @@
           "resolved": {
             "type": "module",
             "url": "file:///C:/ProgramData/cocos/editors/Creator/3.8.0/resources/resources/3d/engine/editor/assets/tools/debug-view-runtime-control.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/Main.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/entities/Worm.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/managers/EffectManager.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/managers/LevelManager.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/ui/LaunchController.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/ui/MenuController.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/utils/CollisionDetector.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts"
           },
           "messages": []
         }
@@ -691,6 +985,1357 @@
           },
           "messages": []
         },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        }
+      ]
+    },
+    "file:///G:/escapeworm/NewProject/assets/scripts/entities/Worm.ts": {
+      "mTimestamp": {
+        "mtime": 1766135790693.3623,
+        "uuid": "a3a48817-743d-4c32-849a-8a3e98a75a27"
+      },
+      "chunkId": "6c69038232d2c8f4c8f3cf07b332bab88cde1413",
+      "imports": [
+        {
+          "value": "cce:/internal/code-quality/cr.mjs",
+          "resolved": "__unresolved_0"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc",
+          "loc": {
+            "start": {
+              "line": 4,
+              "column": 104
+            },
+            "end": {
+              "line": 4,
+              "column": 108
+            }
+          }
+        },
+        {
+          "value": "../utils/Logger",
+          "resolved": "__unresolved_1",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 23
+            },
+            "end": {
+              "line": 5,
+              "column": 40
+            }
+          }
+        }
+      ],
+      "type": "esm",
+      "resolutions": [
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/code-quality/cr.mjs"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts"
+          },
+          "messages": []
+        }
+      ]
+    },
+    "file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts": {
+      "mTimestamp": {
+        "mtime": 1766135790694.3628,
+        "uuid": "2cef4f0b-c164-454f-b883-a668273c5b23"
+      },
+      "chunkId": "59fdf689299342ec6d0ae53266b83ce08ff22edd",
+      "imports": [
+        {
+          "value": "cce:/internal/code-quality/cr.mjs",
+          "resolved": "__unresolved_0"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc",
+          "loc": {
+            "start": {
+              "line": 4,
+              "column": 73
+            },
+            "end": {
+              "line": 4,
+              "column": 77
+            }
+          }
+        },
+        {
+          "value": "../utils/Logger",
+          "resolved": "__unresolved_1",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 23
+            },
+            "end": {
+              "line": 5,
+              "column": 40
+            }
+          }
+        }
+      ],
+      "type": "esm",
+      "resolutions": [
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/code-quality/cr.mjs"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts"
+          },
+          "messages": []
+        }
+      ]
+    },
+    "file:///G:/escapeworm/NewProject/assets/scripts/managers/EffectManager.ts": {
+      "mTimestamp": {
+        "mtime": 1766130560137.245,
+        "uuid": "fa9594ab-a29a-419c-9253-d5bc9b8a4d2d"
+      },
+      "chunkId": "20e1587d917db46b21c12f2f575981c4d01a28b5",
+      "imports": [
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 87
+            },
+            "end": {
+              "line": 5,
+              "column": 91
+            }
+          }
+        }
+      ],
+      "type": "esm",
+      "resolutions": [
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        }
+      ]
+    },
+    "file:///G:/escapeworm/NewProject/assets/scripts/managers/LevelManager.ts": {
+      "mTimestamp": {
+        "mtime": 1766135790694.3628,
+        "uuid": "af40315e-95d5-4115-a81e-4468a8d5d118"
+      },
+      "chunkId": "424e9b65dba486e85af73572d65400e6bf7ea10e",
+      "imports": [
+        {
+          "value": "cce:/internal/code-quality/cr.mjs",
+          "resolved": "__unresolved_0"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc",
+          "loc": {
+            "start": {
+              "line": 4,
+              "column": 60
+            },
+            "end": {
+              "line": 4,
+              "column": 64
+            }
+          }
+        },
+        {
+          "value": "../utils/Logger",
+          "resolved": "__unresolved_1",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 23
+            },
+            "end": {
+              "line": 5,
+              "column": 40
+            }
+          }
+        }
+      ],
+      "type": "esm",
+      "resolutions": [
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/code-quality/cr.mjs"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts"
+          },
+          "messages": []
+        }
+      ]
+    },
+    "file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts": {
+      "mTimestamp": {
+        "mtime": 1766135790694.3628,
+        "uuid": "6b3e33af-a304-4958-84d6-711e9df70c75"
+      },
+      "chunkId": "cfc9b2176b96f8f0e1561b6bf52d18542dd0d054",
+      "imports": [
+        {
+          "value": "cce:/internal/code-quality/cr.mjs",
+          "resolved": "__unresolved_0"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 43
+            },
+            "end": {
+              "line": 5,
+              "column": 47
+            }
+          }
+        },
+        {
+          "value": "../utils/Logger",
+          "resolved": "__unresolved_1",
+          "loc": {
+            "start": {
+              "line": 6,
+              "column": 23
+            },
+            "end": {
+              "line": 6,
+              "column": 40
+            }
+          }
+        }
+      ],
+      "type": "esm",
+      "resolutions": [
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/code-quality/cr.mjs"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts"
+          },
+          "messages": []
+        }
+      ]
+    },
+    "file:///G:/escapeworm/NewProject/assets/scripts/utils/CollisionDetector.ts": {
+      "mTimestamp": {
+        "mtime": 1766130560135.2932,
+        "uuid": "0e09c156-0126-4a9a-b208-087aa4c47c30"
+      },
+      "chunkId": "7c0707377faf757d5134d6927c905091322efca2",
+      "imports": [
+        {
+          "value": "cce:/internal/code-quality/cr.mjs",
+          "resolved": "__unresolved_0"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc",
+          "loc": {
+            "start": {
+              "line": 4,
+              "column": 21
+            },
+            "end": {
+              "line": 4,
+              "column": 25
+            }
+          }
+        },
+        {
+          "value": "./PathFinder",
+          "resolved": "__unresolved_1",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 27
+            },
+            "end": {
+              "line": 5,
+              "column": 41
+            }
+          }
+        }
+      ],
+      "type": "esm",
+      "resolutions": [
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/code-quality/cr.mjs"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts"
+          },
+          "messages": []
+        }
+      ]
+    },
+    "cce:/internal/code-quality/cr.mjs": {
+      "mTimestamp": 1766134609589,
+      "chunkId": "be027f973d8ff1c6fe3dcfebbc993118a793ec1b",
+      "imports": [],
+      "type": "esm",
+      "resolutions": []
+    },
+    "file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts": {
+      "mTimestamp": {
+        "mtime": 1766133418113.4578,
+        "uuid": "a98757e6-9e36-40be-acb6-534da67029be"
+      },
+      "chunkId": "2371396047ae372c65d35f19cbf7e6a47ceda6e9",
+      "imports": [
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 21
+            },
+            "end": {
+              "line": 5,
+              "column": 25
+            }
+          }
+        }
+      ],
+      "type": "esm",
+      "resolutions": [
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        }
+      ]
+    },
+    "file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts": {
+      "mTimestamp": {
+        "mtime": 1766137819835.8289,
+        "uuid": "55b8990e-70be-4c55-9326-4dd218a2484f"
+      },
+      "chunkId": "a9c5cab3125a2a08c688f12712781896ddcffded",
+      "imports": [
+        {
+          "value": "cce:/internal/code-quality/cr.mjs",
+          "resolved": "__unresolved_0"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc",
+          "loc": {
+            "start": {
+              "line": 6,
+              "column": 56
+            },
+            "end": {
+              "line": 6,
+              "column": 60
+            }
+          }
+        },
+        {
+          "value": "./entities/Worm",
+          "resolved": "__unresolved_1",
+          "loc": {
+            "start": {
+              "line": 7,
+              "column": 33
+            },
+            "end": {
+              "line": 7,
+              "column": 50
+            }
+          }
+        },
+        {
+          "value": "./utils/PathFinder",
+          "resolved": "__unresolved_2",
+          "loc": {
+            "start": {
+              "line": 8,
+              "column": 27
+            },
+            "end": {
+              "line": 8,
+              "column": 47
+            }
+          }
+        },
+        {
+          "value": "./utils/CollisionDetector",
+          "resolved": "__unresolved_3",
+          "loc": {
+            "start": {
+              "line": 9,
+              "column": 44
+            },
+            "end": {
+              "line": 9,
+              "column": 71
+            }
+          }
+        },
+        {
+          "value": "./managers/LevelManager",
+          "resolved": "__unresolved_4",
+          "loc": {
+            "start": {
+              "line": 10,
+              "column": 40
+            },
+            "end": {
+              "line": 10,
+              "column": 65
+            }
+          }
+        },
+        {
+          "value": "./managers/StorageManager",
+          "resolved": "__unresolved_5",
+          "loc": {
+            "start": {
+              "line": 11,
+              "column": 31
+            },
+            "end": {
+              "line": 11,
+              "column": 58
+            }
+          }
+        },
+        {
+          "value": "./managers/AudioManager",
+          "resolved": "__unresolved_6",
+          "loc": {
+            "start": {
+              "line": 12,
+              "column": 29
+            },
+            "end": {
+              "line": 12,
+              "column": 54
+            }
+          }
+        },
+        {
+          "value": "./managers/EffectManager",
+          "resolved": "__unresolved_7",
+          "loc": {
+            "start": {
+              "line": 13,
+              "column": 30
+            },
+            "end": {
+              "line": 13,
+              "column": 56
+            }
+          }
+        },
+        {
+          "value": "./utils/Logger",
+          "resolved": "__unresolved_8",
+          "loc": {
+            "start": {
+              "line": 14,
+              "column": 23
+            },
+            "end": {
+              "line": 14,
+              "column": 39
+            }
+          }
+        }
+      ],
+      "type": "esm",
+      "resolutions": [
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/code-quality/cr.mjs"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/entities/Worm.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/utils/CollisionDetector.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/managers/LevelManager.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/managers/EffectManager.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts"
+          },
+          "messages": []
+        }
+      ]
+    },
+    "file:///G:/escapeworm/NewProject/assets/scripts/Main.ts": {
+      "mTimestamp": {
+        "mtime": 1766135790696.5686,
+        "uuid": "4b600adb-b669-4712-8188-b0050447215f"
+      },
+      "chunkId": "9e2f6fec680789d7ff4aee0e754df12423bbf7dd",
+      "imports": [
+        {
+          "value": "cce:/internal/code-quality/cr.mjs",
+          "resolved": "__unresolved_0"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 76
+            },
+            "end": {
+              "line": 5,
+              "column": 80
+            }
+          }
+        },
+        {
+          "value": "./managers/StorageManager",
+          "resolved": "__unresolved_1",
+          "loc": {
+            "start": {
+              "line": 6,
+              "column": 31
+            },
+            "end": {
+              "line": 6,
+              "column": 58
+            }
+          }
+        },
+        {
+          "value": "./utils/Logger",
+          "resolved": "__unresolved_2",
+          "loc": {
+            "start": {
+              "line": 7,
+              "column": 23
+            },
+            "end": {
+              "line": 7,
+              "column": 39
+            }
+          }
+        }
+      ],
+      "type": "esm",
+      "resolutions": [
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/code-quality/cr.mjs"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts"
+          },
+          "messages": []
+        }
+      ]
+    },
+    "file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts": {
+      "mTimestamp": {
+        "mtime": 1766137886870.7253,
+        "uuid": "7e90627f-8ef1-4210-bf4c-18381dfa8985"
+      },
+      "chunkId": "0cb98739c2dfeb1b15f99d8627f0b2f75ceac166",
+      "imports": [
+        {
+          "value": "cce:/internal/code-quality/cr.mjs",
+          "resolved": "__unresolved_0"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc",
+          "loc": {
+            "start": {
+              "line": 6,
+              "column": 46
+            },
+            "end": {
+              "line": 6,
+              "column": 50
+            }
+          }
+        },
+        {
+          "value": "../GameController",
+          "resolved": "__unresolved_1",
+          "loc": {
+            "start": {
+              "line": 7,
+              "column": 31
+            },
+            "end": {
+              "line": 7,
+              "column": 50
+            }
+          }
+        },
+        {
+          "value": "../managers/StorageManager",
+          "resolved": "__unresolved_2",
+          "loc": {
+            "start": {
+              "line": 8,
+              "column": 31
+            },
+            "end": {
+              "line": 8,
+              "column": 59
+            }
+          }
+        },
+        {
+          "value": "./ResultController",
+          "resolved": "__unresolved_3",
+          "loc": {
+            "start": {
+              "line": 9,
+              "column": 33
+            },
+            "end": {
+              "line": 9,
+              "column": 53
+            }
+          }
+        },
+        {
+          "value": "../utils/Logger",
+          "resolved": "__unresolved_4",
+          "loc": {
+            "start": {
+              "line": 10,
+              "column": 23
+            },
+            "end": {
+              "line": 10,
+              "column": 40
+            }
+          }
+        }
+      ],
+      "type": "esm",
+      "resolutions": [
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/code-quality/cr.mjs"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts"
+          },
+          "messages": []
+        }
+      ]
+    },
+    "file:///G:/escapeworm/NewProject/assets/scripts/ui/LaunchController.ts": {
+      "mTimestamp": {
+        "mtime": 1766130560138.2207,
+        "uuid": "76096d32-34c4-433f-af93-4a12492b7b11"
+      },
+      "chunkId": "577d2803b0aac5ce7f9aca6c7240fcd3d0946e29",
+      "imports": [
+        {
+          "value": "cce:/internal/code-quality/cr.mjs",
+          "resolved": "__unresolved_0"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc",
+          "loc": {
+            "start": {
+              "line": 4,
+              "column": 61
+            },
+            "end": {
+              "line": 4,
+              "column": 65
+            }
+          }
+        },
+        {
+          "value": "../managers/StorageManager",
+          "resolved": "__unresolved_1",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 31
+            },
+            "end": {
+              "line": 5,
+              "column": 59
+            }
+          }
+        }
+      ],
+      "type": "esm",
+      "resolutions": [
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/code-quality/cr.mjs"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts"
+          },
+          "messages": []
+        }
+      ]
+    },
+    "file:///G:/escapeworm/NewProject/assets/scripts/ui/MenuController.ts": {
+      "mTimestamp": {
+        "mtime": 1766135790696.5686,
+        "uuid": "dacb862a-65f8-4b94-bbbd-d26bb4dd5acb"
+      },
+      "chunkId": "8a860bf26b2d0055aa2a279fe05e86ce06f76aa3",
+      "imports": [
+        {
+          "value": "cce:/internal/code-quality/cr.mjs",
+          "resolved": "__unresolved_0"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 52
+            },
+            "end": {
+              "line": 5,
+              "column": 56
+            }
+          }
+        },
+        {
+          "value": "../managers/StorageManager",
+          "resolved": "__unresolved_1",
+          "loc": {
+            "start": {
+              "line": 6,
+              "column": 31
+            },
+            "end": {
+              "line": 6,
+              "column": 59
+            }
+          }
+        },
+        {
+          "value": "../managers/AudioManager",
+          "resolved": "__unresolved_2",
+          "loc": {
+            "start": {
+              "line": 7,
+              "column": 29
+            },
+            "end": {
+              "line": 7,
+              "column": 55
+            }
+          }
+        },
+        {
+          "value": "../utils/Logger",
+          "resolved": "__unresolved_3",
+          "loc": {
+            "start": {
+              "line": 8,
+              "column": 23
+            },
+            "end": {
+              "line": 8,
+              "column": 40
+            }
+          }
+        }
+      ],
+      "type": "esm",
+      "resolutions": [
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/code-quality/cr.mjs"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts"
+          },
+          "messages": []
+        }
+      ]
+    },
+    "file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts": {
+      "mTimestamp": {
+        "mtime": 1766135120149.21,
+        "uuid": "932efe37-989e-45ea-88ca-d8d7e0e6ba77"
+      },
+      "chunkId": "4b8be3569ed6f3f632cfbc1e412a4cca53ec8d7c",
+      "imports": [
+        {
+          "value": "cce:/internal/code-quality/cr.mjs",
+          "resolved": "__unresolved_0"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc"
+        },
+        {
+          "value": "cc",
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 60
+            },
+            "end": {
+              "line": 5,
+              "column": 64
+            }
+          }
+        },
+        {
+          "value": "../managers/StorageManager",
+          "resolved": "__unresolved_1",
+          "loc": {
+            "start": {
+              "line": 6,
+              "column": 31
+            },
+            "end": {
+              "line": 6,
+              "column": 59
+            }
+          }
+        },
+        {
+          "value": "../managers/AudioManager",
+          "resolved": "__unresolved_2",
+          "loc": {
+            "start": {
+              "line": 7,
+              "column": 29
+            },
+            "end": {
+              "line": 7,
+              "column": 55
+            }
+          }
+        }
+      ],
+      "type": "esm",
+      "resolutions": [
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/code-quality/cr.mjs"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "cce:/internal/x/cc"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts"
+          },
+          "messages": []
+        },
+        {
+          "resolved": {
+            "type": "module",
+            "url": "file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts"
+          },
+          "messages": []
+        }
+      ]
+    },
+    "file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts": {
+      "mTimestamp": {
+        "mtime": 1766135790693.3623,
+        "uuid": "e559651f-b0ad-4cd2-a8ac-6315c047ca08"
+      },
+      "chunkId": "a9cc08077075435005b4861f696cf3252b4b4575",
+      "imports": [
+        {
+          "value": "cc"
+        }
+      ],
+      "type": "esm",
+      "resolutions": [
         {
           "resolved": {
             "type": "module",

@@ -1,0 +1,12 @@
+{
+    "systemInfo": {
+        "arch": "x64",
+        "cpu": "Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz",
+        "version": "Windows 10 Pro for Workstations"
+    },
+    "sceneListMap": {
+        "ec0116ea-3bba-4013-a9a1-116bd60499c6": "E:\\NewProject\\assets\\scene\\GameScene.scene",
+        "0f920c8e-9fcf-435e-a5bc-895b5a714374": "E:\\NewProject\\assets\\scene\\GameScene.scene"
+    },
+    "deviceMd5": "65a1c61b637546aeaf073c153a02a61e"
+}
