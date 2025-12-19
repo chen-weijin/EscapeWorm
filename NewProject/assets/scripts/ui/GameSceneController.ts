@@ -3,7 +3,7 @@
  * 用于管理 GameScene 中的 UI 和游戏逻辑初始化
  */
 import { _decorator, Component, Node, Label, Sprite, Color, director, Button, 
-    Graphics, UITransform, Vec3, tween } from 'cc';
+    Graphics, UITransform, Vec3, tween, Slider } from 'cc';
 import { GameController } from '../GameController';
 import { StorageManager } from '../managers/StorageManager';
 import { ResultController } from './ResultController';
@@ -40,9 +40,16 @@ export class GameSceneController extends Component {
     @property(Node)
     public nextButton: Node | null = null;
 
+    @property(Slider)
+    public zoomSlider: Slider | null = null;
+
+    @property(Label)
+    public zoomLabel: Label | null = null;
+
     private gameController: GameController | null = null;
     private storageManager: StorageManager | null = null;
     private currentLevelId: number = 1;
+    private lastZoomProgress: number = -1; // 记录上次的滑块值
 
     protected onLoad() {
         // 初始化存储管理器获取当前关卡
@@ -57,6 +64,9 @@ export class GameSceneController extends Component {
 
         // 设置按钮事件
         this.setupButtons();
+
+        // 设置缩放滑块
+        this.setupZoomSlider();
 
         // 初始化游戏控制器
         this.initGameController();
@@ -108,6 +118,63 @@ export class GameSceneController extends Component {
         }
         if (this.nextButton) {
             this.nextButton.on(Node.EventType.TOUCH_END, this.onNextClick, this);
+        }
+    }
+
+    /**
+     * 设置缩放滑块
+     */
+    private setupZoomSlider() {
+        if (this.zoomSlider) {
+            // 设置初始值（1.0 = 100%）
+            this.zoomSlider.progress = 0.5; // 默认50%，对应缩放比例0.5到1.5之间
+            this.lastZoomProgress = this.zoomSlider.progress;
+            
+            // 使用 update 方法定期检查滑块值变化
+            // 这样更可靠，不依赖特定的事件系统
+            
+            // 更新标签显示
+            this.updateZoomLabel();
+        }
+    }
+
+    /**
+     * 更新方法，检查滑块值变化
+     */
+    protected update(dt: number) {
+        if (this.zoomSlider && this.lastZoomProgress !== this.zoomSlider.progress) {
+            this.lastZoomProgress = this.zoomSlider.progress;
+            this.onZoomSliderChange();
+        }
+    }
+
+    /**
+     * 缩放滑块值变化回调
+     */
+    private onZoomSliderChange() {
+        if (!this.zoomSlider) return;
+        
+        // 将滑块进度值（0-1）转换为缩放比例（0.5-1.5）
+        const zoomScale = 0.5 + this.zoomSlider.progress * 1.0; // 范围：0.5 到 1.5
+        
+        // 应用缩放
+        if (this.gameController) {
+            this.gameController.setZoomScale(zoomScale);
+        }
+        
+        // 更新标签显示
+        this.updateZoomLabel(zoomScale);
+    }
+
+    /**
+     * 更新缩放标签显示
+     */
+    private updateZoomLabel(zoomScale?: number) {
+        if (this.zoomLabel && this.zoomSlider) {
+            if (zoomScale === undefined) {
+                zoomScale = 0.5 + this.zoomSlider.progress * 1.0;
+            }
+            this.zoomLabel.string = `${Math.round(zoomScale * 100)}%`;
         }
     }
 

@@ -55,7 +55,7 @@
       "uuid": "7e4ad359-ea8b-4074-ac34-79387e77c87f"
     },
     "G:\\escapeworm\\NewProject\\assets\\scene\\GameScene.scene": {
-      "time": 1766137810726.88,
+      "time": 1766138345262.172,
       "uuid": "0f920c8e-9fcf-435e-a5bc-895b5a714374"
     },
     "G:\\escapeworm\\NewProject\\assets\\scene\\LaunchScene.scene": {
@@ -237,7 +237,7 @@
       "time": 1766130676259.2234
     },
     "G:\\escapeworm\\NewProject\\assets\\scripts\\GameController.ts": {
-      "time": 1766137819835.8289,
+      "time": 1766138497742.0764,
       "uuid": "55b8990e-70be-4c55-9326-4dd218a2484f"
     },
     "G:\\escapeworm\\NewProject\\assets\\scripts\\Main.ts": {
@@ -245,7 +245,7 @@
       "uuid": "4b600adb-b669-4712-8188-b0050447215f"
     },
     "G:\\escapeworm\\NewProject\\assets\\scripts\\ui\\GameSceneController.ts": {
-      "time": 1766137886870.7253,
+      "time": 1766138233621.9585,
       "uuid": "7e90627f-8ef1-4210-bf4c-18381dfa8985"
     },
     "G:\\escapeworm\\NewProject\\assets\\scripts\\ui\\LaunchController.ts": {

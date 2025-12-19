@@ -452,7 +452,7 @@
       },
       "timestamp": 1766135858888
     },
-    "ca856e1bed837b851daf6fe051d4c22b5a37efb1": {
+    "4757491ddc64b4ba53f01eeddc94a178b3585158": {
       "imports": {
         "__unresolved_0": {
           "resolved": {
@@ -464,53 +464,25 @@
         "__unresolved_1": {
           "resolved": {
             "type": "chunk",
-            "id": "5f0d43e7b0d0c01abddd6907ee144b2b2b14ef1b"
+            "id": "5f4199a5bda92cd199bcc633dd27c59227f86dba"
           },
           "messages": []
         },
         "__unresolved_2": {
           "resolved": {
             "type": "chunk",
-            "id": "5097dfd7a62660219eb035223f70e8a0b53bb796"
+            "id": "30669376c2a3bcafe80d5e53b35a81a482294bd9"
           },
           "messages": []
         },
         "__unresolved_3": {
           "resolved": {
             "type": "chunk",
-            "id": "a232c631bc8370bfde05a10ecdc3739e389766f9"
+            "id": "283aa30d5d0a06a7776c4f100b99994d6777c0f3"
           },
           "messages": []
         },
         "__unresolved_4": {
-          "resolved": {
-            "type": "chunk",
-            "id": "856580c4ffd25012e150da757e845c9944c1bdba"
-          },
-          "messages": []
-        },
-        "__unresolved_5": {
-          "resolved": {
-            "type": "chunk",
-            "id": "30669376c2a3bcafe80d5e53b35a81a482294bd9"
-          },
-          "messages": []
-        },
-        "__unresolved_6": {
-          "resolved": {
-            "type": "chunk",
-            "id": "708d5f73a5a9c1ddd833b8be01d5f4388d5b9375"
-          },
-          "messages": []
-        },
-        "__unresolved_7": {
-          "resolved": {
-            "type": "chunk",
-            "id": "4db1fb815ffb34e694aa1026c936bb6df6ef4585"
-          },
-          "messages": []
-        },
-        "__unresolved_8": {
           "resolved": {
             "type": "chunk",
             "id": "109888d491cfe727c67ce135e44ee1f68d127c54"
@@ -525,7 +497,7 @@
           "messages": []
         }
       },
-      "timestamp": 1766137851682
+      "timestamp": 1766138362413
     },
     "c647b27fbc0e92e1b206abb59a1ced4aefd3fd83": {
       "imports": {
@@ -539,7 +511,7 @@
         "__unresolved_1": {
           "resolved": {
             "type": "chunk",
-            "id": "ca856e1bed837b851daf6fe051d4c22b5a37efb1"
+            "id": "5f4199a5bda92cd199bcc633dd27c59227f86dba"
           },
           "messages": []
         },
@@ -623,7 +595,7 @@
         "__unresolved_8": {
           "resolved": {
             "type": "chunk",
-            "id": "d6f6f311c61e06dcab37b684f6a71c8297acbff1"
+            "id": "4757491ddc64b4ba53f01eeddc94a178b3585158"
           },
           "messages": []
         },
@@ -635,9 +607,9 @@
           "messages": []
         }
       },
-      "timestamp": 1766137889092
+      "timestamp": 1766138541991
     },
-    "d6f6f311c61e06dcab37b684f6a71c8297acbff1": {
+    "5f4199a5bda92cd199bcc633dd27c59227f86dba": {
       "imports": {
         "__unresolved_0": {
           "resolved": {
@@ -649,25 +621,53 @@
         "__unresolved_1": {
           "resolved": {
             "type": "chunk",
-            "id": "ca856e1bed837b851daf6fe051d4c22b5a37efb1"
+            "id": "5f0d43e7b0d0c01abddd6907ee144b2b2b14ef1b"
           },
           "messages": []
         },
         "__unresolved_2": {
           "resolved": {
             "type": "chunk",
-            "id": "30669376c2a3bcafe80d5e53b35a81a482294bd9"
+            "id": "5097dfd7a62660219eb035223f70e8a0b53bb796"
           },
           "messages": []
         },
         "__unresolved_3": {
           "resolved": {
             "type": "chunk",
-            "id": "283aa30d5d0a06a7776c4f100b99994d6777c0f3"
+            "id": "a232c631bc8370bfde05a10ecdc3739e389766f9"
           },
           "messages": []
         },
         "__unresolved_4": {
+          "resolved": {
+            "type": "chunk",
+            "id": "856580c4ffd25012e150da757e845c9944c1bdba"
+          },
+          "messages": []
+        },
+        "__unresolved_5": {
+          "resolved": {
+            "type": "chunk",
+            "id": "30669376c2a3bcafe80d5e53b35a81a482294bd9"
+          },
+          "messages": []
+        },
+        "__unresolved_6": {
+          "resolved": {
+            "type": "chunk",
+            "id": "708d5f73a5a9c1ddd833b8be01d5f4388d5b9375"
+          },
+          "messages": []
+        },
+        "__unresolved_7": {
+          "resolved": {
+            "type": "chunk",
+            "id": "4db1fb815ffb34e694aa1026c936bb6df6ef4585"
+          },
+          "messages": []
+        },
+        "__unresolved_8": {
           "resolved": {
             "type": "chunk",
             "id": "109888d491cfe727c67ce135e44ee1f68d127c54"
@@ -682,21 +682,21 @@
           "messages": []
         }
       },
-      "timestamp": 1766137889152
+      "timestamp": 1766138542303
     }
   },
   "entries": {
     "cce:/internal/x/cc": "909f786ffe128f06f5aa1b4e1e3fbbd65262915e",
     "cce:/internal/x/prerequisite-imports": "c647b27fbc0e92e1b206abb59a1ced4aefd3fd83",
     "file:///C:/ProgramData/cocos/editors/Creator/3.8.0/resources/resources/3d/engine/editor/assets/tools/debug-view-runtime-control.ts": "7bae9f92c0730c6e0b6a461b4415dee46192b655",
-    "file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts": "ca856e1bed837b851daf6fe051d4c22b5a37efb1",
+    "file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts": "5f4199a5bda92cd199bcc633dd27c59227f86dba",
     "file:///G:/escapeworm/NewProject/assets/scripts/Main.ts": "b7d6dd44d49382f632ded2ea28d84154b4203d96",
     "file:///G:/escapeworm/NewProject/assets/scripts/entities/Worm.ts": "5f0d43e7b0d0c01abddd6907ee144b2b2b14ef1b",
     "file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts": "708d5f73a5a9c1ddd833b8be01d5f4388d5b9375",
     "file:///G:/escapeworm/NewProject/assets/scripts/managers/EffectManager.ts": "4db1fb815ffb34e694aa1026c936bb6df6ef4585",
     "file:///G:/escapeworm/NewProject/assets/scripts/managers/LevelManager.ts": "856580c4ffd25012e150da757e845c9944c1bdba",
     "file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts": "30669376c2a3bcafe80d5e53b35a81a482294bd9",
-    "file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts": "d6f6f311c61e06dcab37b684f6a71c8297acbff1",
+    "file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts": "4757491ddc64b4ba53f01eeddc94a178b3585158",
     "file:///G:/escapeworm/NewProject/assets/scripts/ui/LaunchController.ts": "a8622edaa6e35ec0a342696399268c24a77fd265",
     "file:///G:/escapeworm/NewProject/assets/scripts/ui/MenuController.ts": "e6a8b7de9fcf90dbfcfa20c97568c7d443e99527",
     "file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts": "283aa30d5d0a06a7776c4f100b99994d6777c0f3",

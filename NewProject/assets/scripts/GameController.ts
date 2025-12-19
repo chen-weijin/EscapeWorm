@@ -57,6 +57,14 @@ export class GameController extends Component {
     private offsetX: number = 0;
     private offsetY: number = 0;
     private graphics: Graphics | null = null;
+    private zoomScale: number = 1.0; // 缩放比例，默认1.0（100%）
+    
+    // 拖动相关
+    private isDragging: boolean = false;
+    private dragStartPos: Vec2 = new Vec2();
+    private dragStartOffset: Vec2 = new Vec2();
+    private mapOffsetX: number = 0; // 地图偏移量 X
+    private mapOffsetY: number = 0; // 地图偏移量 Y
 
     // 图片资源
     private wormHeadSprite: SpriteFrame | null = null;
@@ -113,7 +121,10 @@ export class GameController extends Component {
         }
 
         // 注册触摸事件
+        this.gameArea.on(Input.EventType.TOUCH_START, this.onTouchStart, this);
+        this.gameArea.on(Input.EventType.TOUCH_MOVE, this.onTouchMove, this);
         this.gameArea.on(Input.EventType.TOUCH_END, this.onTouchEnd, this);
+        this.gameArea.on(Input.EventType.TOUCH_CANCEL, this.onTouchCancel, this);
         
         Logger.log('触摸事件已注册到 gameArea, size=', uiTransform.width, 'x', uiTransform.height);
         
@@ -218,19 +229,68 @@ export class GameController extends Component {
         const areaWidth = transform.width;
         const areaHeight = transform.height;
 
-        // 计算合适的 cellSize
-        const cellSizeX = areaWidth / this.matrix.width;
-        const cellSizeY = areaHeight / this.matrix.height;
-        this.cellSize = Math.min(cellSizeX, cellSizeY) * 0.9;
+        // 计算基础 cellSize（不考虑缩放）
+        const baseCellSizeX = areaWidth / this.matrix.width;
+        const baseCellSizeY = areaHeight / this.matrix.height;
+        const baseCellSize = Math.min(baseCellSizeX, baseCellSizeY) * 0.9;
 
-        // 计算偏移量使网格居中
+        // 应用缩放比例
+        this.cellSize = baseCellSize * this.zoomScale;
+
+        // 计算偏移量使网格居中，并加上拖动偏移
         const gridWidth = this.matrix.width * this.cellSize;
         const gridHeight = this.matrix.height * this.cellSize;
-        this.offsetX = (areaWidth - gridWidth) / 2 - areaWidth / 2;
-        this.offsetY = (areaHeight - gridHeight) / 2 - areaHeight / 2;
+        const centerOffsetX = (areaWidth - gridWidth) / 2 - areaWidth / 2;
+        const centerOffsetY = (areaHeight - gridHeight) / 2 - areaHeight / 2;
+        this.offsetX = centerOffsetX + this.mapOffsetX;
+        this.offsetY = centerOffsetY + this.mapOffsetY;
         
         Logger.log('渲染参数: areaSize=', areaWidth, 'x', areaHeight, 
-            ' cellSize=', this.cellSize, ' offset=', this.offsetX, this.offsetY);
+            ' cellSize=', this.cellSize, ' zoomScale=', this.zoomScale, ' offset=', this.offsetX, this.offsetY);
+    }
+
+    /**
+     * 设置缩放比例
+     * @param scale 缩放比例（0.5-1.5）
+     */
+    public setZoomScale(scale: number) {
+        // 限制缩放范围
+        this.zoomScale = Math.max(0.5, Math.min(1.5, scale));
+        
+        // 重新计算渲染参数
+        this.calculateRenderParams();
+        
+        // 限制拖动范围（缩放后可能需要调整）
+        this.limitDragRange();
+        this.calculateRenderParams(); // 重新计算一次以确保偏移正确
+        
+        // 重新绘制网格
+        if (this.matrix) {
+            this.drawGrid();
+        }
+        
+        // 更新蠕虫显示
+        this.updateWormVisuals();
+    }
+
+    /**
+     * 重置地图位置（居中显示）
+     */
+    public resetMapPosition() {
+        this.mapOffsetX = 0;
+        this.mapOffsetY = 0;
+        this.calculateRenderParams();
+        if (this.matrix) {
+            this.drawGrid();
+        }
+        this.updateWormVisuals();
+    }
+
+    /**
+     * 获取当前缩放比例
+     */
+    public getZoomScale(): number {
+        return this.zoomScale;
     }
 
     /**
@@ -552,11 +612,64 @@ export class GameController extends Component {
     }
 
     /**
-     * 处理触摸事件
+     * 处理触摸开始事件
+     */
+    private onTouchStart(event: EventTouch) {
+        if (this.isGameOver || this.isVictory || this.isWormsAppearing) {
+            return;
+        }
+
+        const location = event.getUILocation();
+        this.dragStartPos = new Vec2(location.x, location.y);
+        this.dragStartOffset = new Vec2(this.mapOffsetX, this.mapOffsetY);
+        this.isDragging = false;
+    }
+
+    /**
+     * 处理触摸移动事件
+     */
+    private onTouchMove(event: EventTouch) {
+        if (this.isGameOver || this.isVictory || this.isWormsAppearing) {
+            return;
+        }
+
+        const location = event.getUILocation();
+        const deltaX = location.x - this.dragStartPos.x;
+        const deltaY = location.y - this.dragStartPos.y;
+        
+        // 如果移动距离超过阈值，认为是拖动
+        const dragThreshold = 10; // 拖动阈值（像素）
+        if (Math.abs(deltaX) > dragThreshold || Math.abs(deltaY) > dragThreshold) {
+            this.isDragging = true;
+            
+            // 更新地图偏移量
+            this.mapOffsetX = this.dragStartOffset.x + deltaX;
+            this.mapOffsetY = this.dragStartOffset.y - deltaY; // Y轴需要反转
+            
+            // 限制拖动范围（可选，根据实际需求调整）
+            this.limitDragRange();
+            
+            // 重新计算渲染参数并更新显示
+            this.calculateRenderParams();
+            if (this.matrix) {
+                this.drawGrid();
+            }
+            this.updateWormVisuals();
+        }
+    }
+
+    /**
+     * 处理触摸结束事件
      */
     private onTouchEnd(event: EventTouch) {
         if (this.isGameOver || this.isVictory || this.isWormsAppearing) {
             Logger.log('触摸被忽略: isGameOver=', this.isGameOver, 'isVictory=', this.isVictory, 'isWormsAppearing=', this.isWormsAppearing);
+            return;
+        }
+
+        // 如果是拖动，不处理点击
+        if (this.isDragging) {
+            this.isDragging = false;
             return;
         }
 
@@ -567,7 +680,7 @@ export class GameController extends Component {
             return;
         }
 
-        // 转换为节点本地坐标
+        // 转换为节点本地坐标（考虑地图偏移）
         const localPos = transform.convertToNodeSpaceAR(new Vec3(location.x, location.y, 0));
         Logger.log('触摸位置: UI=', location.x, location.y, ' Local=', localPos.x, localPos.y);
         
@@ -581,6 +694,37 @@ export class GameController extends Component {
         } else {
             Logger.log('没有找到蠕虫');
         }
+    }
+
+    /**
+     * 处理触摸取消事件
+     */
+    private onTouchCancel(event: EventTouch) {
+        this.isDragging = false;
+    }
+
+    /**
+     * 限制拖动范围
+     */
+    private limitDragRange() {
+        if (!this.matrix || !this.gameArea) return;
+
+        const transform = this.gameArea.getComponent(UITransform);
+        if (!transform) return;
+
+        const areaWidth = transform.width;
+        const areaHeight = transform.height;
+
+        // 计算网格的实际尺寸
+        const gridWidth = this.matrix.width * this.cellSize;
+        const gridHeight = this.matrix.height * this.cellSize;
+
+        // 限制拖动范围，确保地图不会移出屏幕太远
+        const maxOffsetX = Math.max(0, (gridWidth - areaWidth) / 2);
+        const maxOffsetY = Math.max(0, (gridHeight - areaHeight) / 2);
+
+        this.mapOffsetX = Math.max(-maxOffsetX, Math.min(maxOffsetX, this.mapOffsetX));
+        this.mapOffsetY = Math.max(-maxOffsetY, Math.min(maxOffsetY, this.mapOffsetY));
     }
 
     /**

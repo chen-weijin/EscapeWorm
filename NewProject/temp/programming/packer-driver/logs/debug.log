@@ -1465,3 +1465,279 @@ debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/CollisionDe
 debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts.
 debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts.
 debug: Target(preview) ends with cost 85.73870000243187ms.
+debug: Dispatch build request for time accumulated 1 asset changes.
+debug: Build iteration starts.
+Number of accumulated asset changes: 1
+Feature changed: false
+debug: Target(editor) build started.
+debug: Detected change: cce:/internal/x/prerequisite-imports. Last mtime: Thu Jan 01 1970 08:54:22 GMT+0800 (中国标准时间), Current mtime: Thu Jan 01 1970 08:54:39 GMT+0800 (中国标准时间)
+debug: Inspect cce:/internal/x/prerequisite-imports
+debug: Resolve file:///C:/ProgramData/cocos/editors/Creator/3.8.0/resources/resources/3d/engine/editor/assets/tools/debug-view-runtime-control.ts from cce:/internal/x/prerequisite-imports as file:///C:/ProgramData/cocos/editors/Creator/3.8.0/resources/resources/3d/engine/editor/assets/tools/debug-view-runtime-control.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/Main.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/Main.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/entities/Worm.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/entities/Worm.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/EffectManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/EffectManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/LevelManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/LevelManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts.
+debug: Detected change: file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts. Last mtime: Fri Dec 19 2025 17:51:04 GMT+0800 (中国标准时间)@7e90627f-8ef1-4210-bf4c-18381dfa8985, Current mtime: Fri Dec 19 2025 17:51:26 GMT+0800 (中国标准时间)@7e90627f-8ef1-4210-bf4c-18381dfa8985
+debug: Inspect file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts
+debug: Resolve cce:/internal/code-quality/cr.mjs from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/code-quality/cr.mjs.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve ../GameController from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts.
+debug: Resolve ../managers/StorageManager from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts.
+debug: Resolve ./ResultController from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts.
+debug: Resolve ../utils/Logger from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/LaunchController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/LaunchController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/MenuController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/MenuController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/CollisionDetector.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/CollisionDetector.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts.
+debug: Target(editor) ends with cost 80.55400002002716ms.
+debug: Target(preview) build started.
+debug: Detected change: cce:/internal/x/prerequisite-imports. Last mtime: Thu Jan 01 1970 08:54:22 GMT+0800 (中国标准时间), Current mtime: Thu Jan 01 1970 08:54:39 GMT+0800 (中国标准时间)
+debug: Inspect cce:/internal/x/prerequisite-imports
+debug: Resolve file:///C:/ProgramData/cocos/editors/Creator/3.8.0/resources/resources/3d/engine/editor/assets/tools/debug-view-runtime-control.ts from cce:/internal/x/prerequisite-imports as file:///C:/ProgramData/cocos/editors/Creator/3.8.0/resources/resources/3d/engine/editor/assets/tools/debug-view-runtime-control.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/Main.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/Main.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/entities/Worm.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/entities/Worm.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/EffectManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/EffectManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/LevelManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/LevelManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts.
+debug: Detected change: file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts. Last mtime: Fri Dec 19 2025 17:51:04 GMT+0800 (中国标准时间)@7e90627f-8ef1-4210-bf4c-18381dfa8985, Current mtime: Fri Dec 19 2025 17:51:26 GMT+0800 (中国标准时间)@7e90627f-8ef1-4210-bf4c-18381dfa8985
+debug: Inspect file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts
+debug: Resolve cce:/internal/code-quality/cr.mjs from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/code-quality/cr.mjs.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve ../GameController from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts.
+debug: Resolve ../managers/StorageManager from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts.
+debug: Resolve ./ResultController from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts.
+debug: Resolve ../utils/Logger from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/LaunchController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/LaunchController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/MenuController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/MenuController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/CollisionDetector.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/CollisionDetector.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts.
+debug: Target(preview) ends with cost 88.24070000648499ms.
+debug: Dispatch build request for time accumulated 1 asset changes.
+debug: Build iteration starts.
+Number of accumulated asset changes: 1
+Feature changed: false
+debug: Target(editor) build started.
+debug: Detected change: cce:/internal/x/prerequisite-imports. Last mtime: Thu Jan 01 1970 08:54:39 GMT+0800 (中国标准时间), Current mtime: Thu Jan 01 1970 08:57:33 GMT+0800 (中国标准时间)
+debug: Inspect cce:/internal/x/prerequisite-imports
+debug: Resolve file:///C:/ProgramData/cocos/editors/Creator/3.8.0/resources/resources/3d/engine/editor/assets/tools/debug-view-runtime-control.ts from cce:/internal/x/prerequisite-imports as file:///C:/ProgramData/cocos/editors/Creator/3.8.0/resources/resources/3d/engine/editor/assets/tools/debug-view-runtime-control.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/Main.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/Main.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/entities/Worm.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/entities/Worm.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/EffectManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/EffectManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/LevelManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/LevelManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts.
+debug: Detected change: file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts. Last mtime: Fri Dec 19 2025 17:51:26 GMT+0800 (中国标准时间)@7e90627f-8ef1-4210-bf4c-18381dfa8985, Current mtime: Fri Dec 19 2025 17:53:18 GMT+0800 (中国标准时间)@7e90627f-8ef1-4210-bf4c-18381dfa8985
+debug: Inspect file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts
+debug: Resolve cce:/internal/code-quality/cr.mjs from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/code-quality/cr.mjs.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve ../GameController from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts.
+debug: Resolve ../managers/StorageManager from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts.
+debug: Resolve ./ResultController from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts.
+debug: Resolve ../utils/Logger from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/LaunchController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/LaunchController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/MenuController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/MenuController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/CollisionDetector.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/CollisionDetector.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts.
+debug: Target(editor) ends with cost 75.0392000079155ms.
+debug: Target(preview) build started.
+debug: Detected change: cce:/internal/x/prerequisite-imports. Last mtime: Thu Jan 01 1970 08:54:39 GMT+0800 (中国标准时间), Current mtime: Thu Jan 01 1970 08:57:33 GMT+0800 (中国标准时间)
+debug: Inspect cce:/internal/x/prerequisite-imports
+debug: Resolve file:///C:/ProgramData/cocos/editors/Creator/3.8.0/resources/resources/3d/engine/editor/assets/tools/debug-view-runtime-control.ts from cce:/internal/x/prerequisite-imports as file:///C:/ProgramData/cocos/editors/Creator/3.8.0/resources/resources/3d/engine/editor/assets/tools/debug-view-runtime-control.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/Main.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/Main.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/entities/Worm.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/entities/Worm.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/EffectManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/EffectManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/LevelManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/LevelManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts.
+debug: Detected change: file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts. Last mtime: Fri Dec 19 2025 17:51:26 GMT+0800 (中国标准时间)@7e90627f-8ef1-4210-bf4c-18381dfa8985, Current mtime: Fri Dec 19 2025 17:53:18 GMT+0800 (中国标准时间)@7e90627f-8ef1-4210-bf4c-18381dfa8985
+debug: Inspect file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts
+debug: Resolve cce:/internal/code-quality/cr.mjs from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/code-quality/cr.mjs.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve ../GameController from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts.
+debug: Resolve ../managers/StorageManager from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts.
+debug: Resolve ./ResultController from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts.
+debug: Resolve ../utils/Logger from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/LaunchController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/LaunchController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/MenuController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/MenuController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/CollisionDetector.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/CollisionDetector.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts.
+debug: Target(preview) ends with cost 127.30139997601509ms.
+debug: Dispatch build request for time accumulated 1 asset changes.
+debug: Build iteration starts.
+Number of accumulated asset changes: 1
+Feature changed: false
+debug: Target(editor) build started.
+debug: Detected change: cce:/internal/x/prerequisite-imports. Last mtime: Thu Jan 01 1970 08:57:33 GMT+0800 (中国标准时间), Current mtime: Thu Jan 01 1970 08:58:38 GMT+0800 (中国标准时间)
+debug: Inspect cce:/internal/x/prerequisite-imports
+debug: Resolve file:///C:/ProgramData/cocos/editors/Creator/3.8.0/resources/resources/3d/engine/editor/assets/tools/debug-view-runtime-control.ts from cce:/internal/x/prerequisite-imports as file:///C:/ProgramData/cocos/editors/Creator/3.8.0/resources/resources/3d/engine/editor/assets/tools/debug-view-runtime-control.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/Main.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/Main.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/entities/Worm.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/entities/Worm.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/EffectManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/EffectManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/LevelManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/LevelManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts.
+debug: Detected change: file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts. Last mtime: Fri Dec 19 2025 17:53:18 GMT+0800 (中国标准时间)@7e90627f-8ef1-4210-bf4c-18381dfa8985, Current mtime: Fri Dec 19 2025 17:55:26 GMT+0800 (中国标准时间)@7e90627f-8ef1-4210-bf4c-18381dfa8985
+debug: Inspect file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts
+debug: Resolve cce:/internal/code-quality/cr.mjs from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/code-quality/cr.mjs.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve ../GameController from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts.
+debug: Resolve ../managers/StorageManager from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts.
+debug: Resolve ./ResultController from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts.
+debug: Resolve ../utils/Logger from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/LaunchController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/LaunchController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/MenuController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/MenuController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/CollisionDetector.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/CollisionDetector.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts.
+debug: Target(editor) ends with cost 179.4196000099182ms.
+debug: Target(preview) build started.
+debug: Detected change: cce:/internal/x/prerequisite-imports. Last mtime: Thu Jan 01 1970 08:57:33 GMT+0800 (中国标准时间), Current mtime: Thu Jan 01 1970 08:58:38 GMT+0800 (中国标准时间)
+debug: Inspect cce:/internal/x/prerequisite-imports
+debug: Resolve file:///C:/ProgramData/cocos/editors/Creator/3.8.0/resources/resources/3d/engine/editor/assets/tools/debug-view-runtime-control.ts from cce:/internal/x/prerequisite-imports as file:///C:/ProgramData/cocos/editors/Creator/3.8.0/resources/resources/3d/engine/editor/assets/tools/debug-view-runtime-control.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/Main.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/Main.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/entities/Worm.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/entities/Worm.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/EffectManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/EffectManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/LevelManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/LevelManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts.
+debug: Detected change: file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts. Last mtime: Fri Dec 19 2025 17:53:18 GMT+0800 (中国标准时间)@7e90627f-8ef1-4210-bf4c-18381dfa8985, Current mtime: Fri Dec 19 2025 17:55:26 GMT+0800 (中国标准时间)@7e90627f-8ef1-4210-bf4c-18381dfa8985
+debug: Inspect file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts
+debug: Resolve cce:/internal/code-quality/cr.mjs from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/code-quality/cr.mjs.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve ../GameController from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts.
+debug: Resolve ../managers/StorageManager from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts.
+debug: Resolve ./ResultController from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts.
+debug: Resolve ../utils/Logger from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/LaunchController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/LaunchController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/MenuController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/MenuController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/CollisionDetector.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/CollisionDetector.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts.
+debug: Target(preview) ends with cost 136.72069999575615ms.
+debug: Dispatch build request for time accumulated 2 asset changes.
+debug: Build iteration starts.
+Number of accumulated asset changes: 2
+Feature changed: false
+debug: Target(editor) build started.
+debug: Detected change: cce:/internal/x/prerequisite-imports. Last mtime: Thu Jan 01 1970 08:58:38 GMT+0800 (中国标准时间), Current mtime: Thu Jan 01 1970 09:02:31 GMT+0800 (中国标准时间)
+debug: Inspect cce:/internal/x/prerequisite-imports
+debug: Resolve file:///C:/ProgramData/cocos/editors/Creator/3.8.0/resources/resources/3d/engine/editor/assets/tools/debug-view-runtime-control.ts from cce:/internal/x/prerequisite-imports as file:///C:/ProgramData/cocos/editors/Creator/3.8.0/resources/resources/3d/engine/editor/assets/tools/debug-view-runtime-control.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts.
+debug: Detected change: file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts. Last mtime: Fri Dec 19 2025 17:50:19 GMT+0800 (中国标准时间)@55b8990e-70be-4c55-9326-4dd218a2484f, Current mtime: Fri Dec 19 2025 17:57:13 GMT+0800 (中国标准时间)@55b8990e-70be-4c55-9326-4dd218a2484f
+debug: Inspect file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts
+debug: Resolve cce:/internal/code-quality/cr.mjs from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as cce:/internal/code-quality/cr.mjs.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as cce:/internal/x/cc.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as cce:/internal/x/cc.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as cce:/internal/x/cc.
+debug: Resolve ./entities/Worm from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as file:///G:/escapeworm/NewProject/assets/scripts/entities/Worm.ts.
+debug: Resolve ./utils/PathFinder from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts.
+debug: Resolve ./utils/CollisionDetector from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as file:///G:/escapeworm/NewProject/assets/scripts/utils/CollisionDetector.ts.
+debug: Resolve ./managers/LevelManager from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as file:///G:/escapeworm/NewProject/assets/scripts/managers/LevelManager.ts.
+debug: Resolve ./managers/StorageManager from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts.
+debug: Resolve ./managers/AudioManager from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts.
+debug: Resolve ./managers/EffectManager from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as file:///G:/escapeworm/NewProject/assets/scripts/managers/EffectManager.ts.
+debug: Resolve ./utils/Logger from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/Main.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/Main.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/entities/Worm.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/entities/Worm.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/EffectManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/EffectManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/LevelManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/LevelManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts.
+debug: Detected change: file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts. Last mtime: Fri Dec 19 2025 17:55:26 GMT+0800 (中国标准时间)@7e90627f-8ef1-4210-bf4c-18381dfa8985, Current mtime: Fri Dec 19 2025 17:57:13 GMT+0800 (中国标准时间)@7e90627f-8ef1-4210-bf4c-18381dfa8985
+debug: Inspect file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts
+debug: Resolve cce:/internal/code-quality/cr.mjs from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/code-quality/cr.mjs.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve ../GameController from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts.
+debug: Resolve ../managers/StorageManager from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts.
+debug: Resolve ./ResultController from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts.
+debug: Resolve ../utils/Logger from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/LaunchController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/LaunchController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/MenuController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/MenuController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/CollisionDetector.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/CollisionDetector.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts.
+debug: Target(editor) ends with cost 382.66780000925064ms.
+debug: Target(preview) build started.
+debug: Detected change: cce:/internal/x/prerequisite-imports. Last mtime: Thu Jan 01 1970 08:58:38 GMT+0800 (中国标准时间), Current mtime: Thu Jan 01 1970 09:02:32 GMT+0800 (中国标准时间)
+debug: Inspect cce:/internal/x/prerequisite-imports
+debug: Resolve file:///C:/ProgramData/cocos/editors/Creator/3.8.0/resources/resources/3d/engine/editor/assets/tools/debug-view-runtime-control.ts from cce:/internal/x/prerequisite-imports as file:///C:/ProgramData/cocos/editors/Creator/3.8.0/resources/resources/3d/engine/editor/assets/tools/debug-view-runtime-control.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts.
+debug: Detected change: file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts. Last mtime: Fri Dec 19 2025 17:50:19 GMT+0800 (中国标准时间)@55b8990e-70be-4c55-9326-4dd218a2484f, Current mtime: Fri Dec 19 2025 17:57:13 GMT+0800 (中国标准时间)@55b8990e-70be-4c55-9326-4dd218a2484f
+debug: Inspect file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts
+debug: Resolve cce:/internal/code-quality/cr.mjs from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as cce:/internal/code-quality/cr.mjs.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as cce:/internal/x/cc.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as cce:/internal/x/cc.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as cce:/internal/x/cc.
+debug: Resolve ./entities/Worm from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as file:///G:/escapeworm/NewProject/assets/scripts/entities/Worm.ts.
+debug: Resolve ./utils/PathFinder from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts.
+debug: Resolve ./utils/CollisionDetector from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as file:///G:/escapeworm/NewProject/assets/scripts/utils/CollisionDetector.ts.
+debug: Resolve ./managers/LevelManager from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as file:///G:/escapeworm/NewProject/assets/scripts/managers/LevelManager.ts.
+debug: Resolve ./managers/StorageManager from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts.
+debug: Resolve ./managers/AudioManager from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts.
+debug: Resolve ./managers/EffectManager from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as file:///G:/escapeworm/NewProject/assets/scripts/managers/EffectManager.ts.
+debug: Resolve ./utils/Logger from file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts as file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/Main.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/Main.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/entities/Worm.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/entities/Worm.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/AudioManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/EffectManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/EffectManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/LevelManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/LevelManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts.
+debug: Detected change: file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts. Last mtime: Fri Dec 19 2025 17:55:26 GMT+0800 (中国标准时间)@7e90627f-8ef1-4210-bf4c-18381dfa8985, Current mtime: Fri Dec 19 2025 17:57:13 GMT+0800 (中国标准时间)@7e90627f-8ef1-4210-bf4c-18381dfa8985
+debug: Inspect file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts
+debug: Resolve cce:/internal/code-quality/cr.mjs from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/code-quality/cr.mjs.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve cc from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as cce:/internal/x/cc.
+debug: Resolve ../GameController from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts.
+debug: Resolve ../managers/StorageManager from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/managers/StorageManager.ts.
+debug: Resolve ./ResultController from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts.
+debug: Resolve ../utils/Logger from file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts as file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/LaunchController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/LaunchController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/MenuController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/MenuController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/ui/ResultController.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/CollisionDetector.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/CollisionDetector.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/Logger.ts.
+debug: Resolve file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts from cce:/internal/x/prerequisite-imports as file:///G:/escapeworm/NewProject/assets/scripts/utils/PathFinder.ts.
+debug: Target(preview) ends with cost 540.8575000166893ms.

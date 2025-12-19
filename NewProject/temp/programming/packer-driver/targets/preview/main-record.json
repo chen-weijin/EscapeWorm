@@ -409,7 +409,7 @@
       ]
     },
     "cce:/internal/x/prerequisite-imports": {
-      "mTimestamp": 3279531.6558000147,
+      "mTimestamp": 3932428.8666999936,
       "chunkId": "c647b27fbc0e92e1b206abb59a1ced4aefd3fd83",
       "imports": [
         {
@@ -1317,10 +1317,10 @@
     },
     "file:///G:/escapeworm/NewProject/assets/scripts/GameController.ts": {
       "mTimestamp": {
-        "mtime": 1766137819835.8289,
+        "mtime": 1766138497742.0764,
         "uuid": "55b8990e-70be-4c55-9326-4dd218a2484f"
       },
-      "chunkId": "ca856e1bed837b851daf6fe051d4c22b5a37efb1",
+      "chunkId": "5f4199a5bda92cd199bcc633dd27c59227f86dba",
       "imports": [
         {
           "value": "cce:/internal/code-quality/cr.mjs",
@@ -1653,10 +1653,10 @@
     },
     "file:///G:/escapeworm/NewProject/assets/scripts/ui/GameSceneController.ts": {
       "mTimestamp": {
-        "mtime": 1766137886870.7253,
+        "mtime": 1766138233621.9585,
         "uuid": "7e90627f-8ef1-4210-bf4c-18381dfa8985"
       },
-      "chunkId": "d6f6f311c61e06dcab37b684f6a71c8297acbff1",
+      "chunkId": "4757491ddc64b4ba53f01eeddc94a178b3585158",
       "imports": [
         {
           "value": "cce:/internal/code-quality/cr.mjs",
@@ -1673,11 +1673,11 @@
           "loc": {
             "start": {
               "line": 6,
-              "column": 46
+              "column": 54
             },
             "end": {
               "line": 6,
-              "column": 50
+              "column": 58
             }
           }
         },
