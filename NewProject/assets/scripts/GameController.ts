@@ -35,6 +35,15 @@ export class GameController extends Component {
     @property
     public cellSize: number = 60;
 
+    @property(Prefab)
+    public wormHeadPrefab: Prefab | null = null;
+
+    @property(Prefab)
+    public wormBodyPrefab: Prefab | null = null;
+
+    @property(Prefab)
+    public wormTailPrefab: Prefab | null = null;
+
     // 管理器
     private levelManager: LevelManager | null = null;
     private storageManager: StorageManager | null = null;
@@ -66,7 +75,7 @@ export class GameController extends Component {
     private mapOffsetX: number = 0; // 地图偏移量 X
     private mapOffsetY: number = 0; // 地图偏移量 Y
 
-    // 图片资源
+    // 图片资源（作为后备方案）
     private wormHeadSprite: SpriteFrame | null = null;
     private wormBodySprite: SpriteFrame | null = null;
     private wormTailSprite: SpriteFrame | null = null;
@@ -81,7 +90,7 @@ export class GameController extends Component {
         this.storageManager.init();
         this.audioManager.init(this.storageManager.getSettings());
 
-        // 加载蠕虫图片资源
+        // 加载蠕虫图片资源（作为后备方案）
         this.loadWormImages();
     }
     
@@ -149,10 +158,13 @@ export class GameController extends Component {
      */
     private loadSpriteFrame(path: string): Promise<SpriteFrame> {
         return new Promise((resolve, reject) => {
-            resources.load(path + '/spriteFrame', SpriteFrame, (err, spriteFrame) => {
+            // 在 Cocos Creator 中，直接加载路径即可，会自动找到对应的 SpriteFrame
+            resources.load(path, SpriteFrame, (err, spriteFrame) => {
                 if (err) {
+                    Logger.warn(`加载图片失败: ${path}`, err);
                     reject(err);
                 } else {
+                    Logger.log(`成功加载图片: ${path}`);
                     resolve(spriteFrame);
                 }
             });
@@ -189,6 +201,12 @@ export class GameController extends Component {
 
             // 计算渲染参数
             this.calculateRenderParams();
+
+            // 确保图片资源已加载
+            if (!this.wormHeadSprite || !this.wormBodySprite || !this.wormTailSprite) {
+                Logger.warn('蠕虫图片资源未加载完成，尝试重新加载');
+                await this.loadWormImages();
+            }
 
             // 创建蠕虫对象
             for (const wormConfig of levelData.worms) {
@@ -493,18 +511,41 @@ export class GameController extends Component {
      * 渲染蠕虫段
      */
     private renderWormSegments(wormNode: Node, worm: Worm, segments: Vec2[], visibleCount: number) {
+        // 检查预制体是否可用
+        const prefabsAvailable = this.wormHeadPrefab && this.wormBodyPrefab && this.wormTailPrefab;
+        
         // 确保有足够的子节点
         const currentCount = wormNode.children.length;
         for (let idx = currentCount; idx < segments.length; idx++) {
-            const segmentNode = new Node(`Segment_${idx}`);
+            let segmentNode: Node;
             
-            // 先添加 UITransform
-            const transform = segmentNode.addComponent(UITransform);
-            // 再添加 Graphics 组件用于绘制
-            const graphics = segmentNode.addComponent(Graphics);
-            
-            // 最后设置 parent，避免在设置 parent 时触发额外逻辑
-            segmentNode.parent = wormNode;
+            if (prefabsAvailable) {
+                // 使用预制体创建节点
+                let prefab: Prefab | null = null;
+                if (idx === 0) {
+                    prefab = this.wormHeadPrefab;
+                } else if (idx === segments.length - 1) {
+                    prefab = this.wormTailPrefab;
+                } else {
+                    prefab = this.wormBodyPrefab;
+                }
+                
+                if (prefab) {
+                    segmentNode = instantiate(prefab);
+                    segmentNode.name = `Segment_${idx}`;
+                    segmentNode.parent = wormNode;
+                } else {
+                    // 如果预制体不存在，创建空节点
+                    segmentNode = new Node(`Segment_${idx}`);
+                    segmentNode.addComponent(UITransform);
+                    segmentNode.parent = wormNode;
+                }
+            } else {
+                // 如果没有预制体，创建空节点（将使用图片或 Graphics 作为后备）
+                segmentNode = new Node(`Segment_${idx}`);
+                segmentNode.addComponent(UITransform);
+                segmentNode.parent = wormNode;
+            }
         }
 
         // 更新每个段
@@ -512,11 +553,6 @@ export class GameController extends Component {
             const segmentNode = wormNode.children[i];
             const isVisible = i >= (segments.length - visibleCount);
             segmentNode.active = isVisible;
-            
-            // 调试：如果蠕虫应该可见但被隐藏了
-            if (i === 0 && !isVisible && !worm.hasEscaped()) {
-               // Logger.warn(`警告：蠕虫 ${worm.id} 头部被隐藏！segments.length=${segments.length}, visibleCount=${visibleCount}, isVisible=${isVisible}`);
-            }
 
             if (!isVisible) continue;
 
@@ -524,45 +560,208 @@ export class GameController extends Component {
             const screenPos = this.worldToScreen(segment.x, segment.y);
             segmentNode.setPosition(screenPos);
             
-            // 调试：检查坐标是否在合理范围内
+            // 确定使用哪个预制体
+            let prefab: Prefab | null = null;
             if (i === 0) {
-                const transform = this.gameArea?.getComponent(UITransform);
-                if (transform) {
-                    const halfWidth = transform.width / 2;
-                    const halfHeight = transform.height / 2;
-                    if (Math.abs(screenPos.x) > halfWidth * 2 || Math.abs(screenPos.y) > halfHeight * 2) {
-                        //Logger.warn(`警告：蠕虫 ${worm.id} 头部坐标超出屏幕范围！world=(${segment.x}, ${segment.y}) screen=(${screenPos.x.toFixed(0)}, ${screenPos.y.toFixed(0)}), 屏幕范围=(${halfWidth}, ${halfHeight})`);
-                    }
-                }
+                prefab = this.wormHeadPrefab;
+            } else if (i === segments.length - 1) {
+                prefab = this.wormTailPrefab;
+            } else {
+                prefab = this.wormBodyPrefab;
             }
 
-            // 绘制段
-            const graphics = segmentNode.getComponent(Graphics);
-            if (graphics) {
-                graphics.clear();
-                
-                const radius = this.cellSize * 0.4;
-                const color = this.hexToColor(worm.color);
-                
-                if (worm.isHighlighted) {
-                    graphics.fillColor = new Color(255, 100, 100, 255);
-                } else {
-                    graphics.fillColor = color;
-                }
-                
-                graphics.circle(0, 0, radius);
-                graphics.fill();
-
-                // 绘制眼睛（头部）
-                if (i === 0) {
-                    this.drawEyes(graphics, worm.direction, radius);
-                }
+            // 如果预制体可用，使用预制体
+            if (prefabsAvailable && prefab) {
+                this.setupPrefabSegment(segmentNode, worm, i, segments);
+            } else {
+                // 如果没有预制体，使用图片或 Graphics 作为后备
+                this.renderSegmentFallback(segmentNode, worm, i, segments.length);
             }
         }
 
         // 隐藏多余的节点
         for (let i = segments.length; i < wormNode.children.length; i++) {
             wormNode.children[i].active = false;
+        }
+    }
+
+    /**
+     * 设置预制体段
+     */
+    private setupPrefabSegment(segmentNode: Node, worm: Worm, index: number, segments: Vec2[]) {
+        // 设置大小
+        const size = this.cellSize * 0.8;
+        const transform = segmentNode.getComponent(UITransform);
+        if (transform) {
+            transform.width = size;
+            transform.height = size;
+        }
+
+        // 设置颜色
+        const color = this.hexToColor(worm.color);
+        const targetColor = worm.isHighlighted ? new Color(255, 100, 100, 255) : color;
+        
+        // 递归设置所有子节点的颜色（包括 Sprite 组件）
+        this.setNodeColor(segmentNode, targetColor);
+
+        // 根据方向旋转
+        if (index === 0) {
+            // 头部根据蠕虫方向
+            const angle = this.getDirectionAngle(worm.direction);
+            segmentNode.setRotationFromEuler(0, 0, angle);
+        } else {
+            // 身体和尾巴根据前后段的方向
+            if (index < segments.length - 1) {
+                const angle = this.calculateSegmentAngle(segments[index - 1], segments[index], segments[index + 1]);
+                segmentNode.setRotationFromEuler(0, 0, angle);
+            } else {
+                // 尾巴根据前一段的方向
+                const angle = this.calculateSegmentAngle(segments[index - 1], segments[index], null);
+                segmentNode.setRotationFromEuler(0, 0, angle);
+            }
+        }
+    }
+
+    /**
+     * 递归设置节点及其子节点的颜色
+     */
+    private setNodeColor(node: Node, color: Color) {
+        // 设置节点本身的颜色（如果有 Sprite 组件）
+        const sprite = node.getComponent(Sprite);
+        if (sprite) {
+            sprite.color = color;
+        }
+        
+        // 递归设置子节点
+        for (const child of node.children) {
+            this.setNodeColor(child, color);
+        }
+    }
+
+    /**
+     * 使用后备方案渲染段（图片或 Graphics）
+     */
+    private renderSegmentFallback(segmentNode: Node, worm: Worm, index: number, totalSegments: number) {
+        // 确定使用哪个图片
+        let spriteFrame: SpriteFrame | null = null;
+        if (index === 0) {
+            spriteFrame = this.wormHeadSprite;
+        } else if (index === totalSegments - 1) {
+            spriteFrame = this.wormTailSprite;
+        } else {
+            spriteFrame = this.wormBodySprite;
+        }
+
+        // 如果图片已加载，使用 Sprite
+        if (spriteFrame) {
+            let sprite = segmentNode.getComponent(Sprite);
+            if (!sprite) {
+                const graphics = segmentNode.getComponent(Graphics);
+                if (graphics) {
+                    segmentNode.removeComponent(graphics);
+                }
+                sprite = segmentNode.addComponent(Sprite);
+            }
+            
+            const graphics = segmentNode.getComponent(Graphics);
+            if (graphics) {
+                segmentNode.removeComponent(graphics);
+            }
+            
+            sprite.spriteFrame = spriteFrame;
+            sprite.enabled = true;
+            
+            const size = this.cellSize * 0.8;
+            const transform = segmentNode.getComponent(UITransform);
+            if (transform) {
+                transform.width = size;
+                transform.height = size;
+            }
+
+            const color = this.hexToColor(worm.color);
+            if (worm.isHighlighted) {
+                sprite.color = new Color(255, 100, 100, 255);
+            } else {
+                sprite.color = color;
+            }
+
+            if (index === 0) {
+                const angle = this.getDirectionAngle(worm.direction);
+                segmentNode.setRotationFromEuler(0, 0, angle);
+            } else {
+                const segments = worm.getInterpolatedSegments();
+                if (index < segments.length - 1) {
+                    const angle = this.calculateSegmentAngle(segments[index - 1], segments[index], segments[index + 1]);
+                    segmentNode.setRotationFromEuler(0, 0, angle);
+                } else {
+                    const angle = this.calculateSegmentAngle(segments[index - 1], segments[index], null);
+                    segmentNode.setRotationFromEuler(0, 0, angle);
+                }
+            }
+        } else {
+            // 使用 Graphics 作为最后的后备方案
+            this.renderSegmentWithGraphics(segmentNode, worm, index, totalSegments);
+        }
+    }
+
+    /**
+     * 获取方向的旋转角度（度）
+     */
+    private getDirectionAngle(direction: string): number {
+        switch (direction) {
+            case 'right': return 0;
+            case 'down': return 90;
+            case 'left': return 180;
+            case 'up': return -90;
+            default: return 0;
+        }
+    }
+
+    /**
+     * 计算段的旋转角度（根据前后段的位置）
+     */
+    private calculateSegmentAngle(prev: Vec2, current: Vec2, next: Vec2 | null): number {
+        if (next) {
+            // 有下一段，计算从当前到下一段的方向
+            const dx = next.x - current.x;
+            const dy = next.y - current.y;
+            return Math.atan2(dy, dx) * 180 / Math.PI;
+        } else {
+            // 没有下一段（尾巴），计算从前一段到当前的方向
+            const dx = current.x - prev.x;
+            const dy = current.y - prev.y;
+            return Math.atan2(dy, dx) * 180 / Math.PI;
+        }
+    }
+
+    /**
+     * 使用 Graphics 绘制段（后备方案，当图片未加载时使用）
+     */
+    private renderSegmentWithGraphics(segmentNode: Node, worm: Worm, index: number, totalSegments: number) {
+        // 获取 Graphics 组件（应该已经存在，因为我们在创建节点时已经添加了）
+        const graphics = segmentNode.getComponent(Graphics);
+        if (!graphics) {
+            Logger.warn('Graphics 组件不存在，无法绘制段');
+            return;
+        }
+        
+        graphics.clear();
+        
+        const radius = this.cellSize * 0.4;
+        const color = this.hexToColor(worm.color);
+        
+        if (worm.isHighlighted) {
+            graphics.fillColor = new Color(255, 100, 100, 255);
+        } else {
+            graphics.fillColor = color;
+        }
+        
+        graphics.circle(0, 0, radius);
+        graphics.fill();
+
+        // 绘制眼睛（头部）
+        if (index === 0) {
+            this.drawEyes(graphics, worm.direction, radius);
         }
     }
 
