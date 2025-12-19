@@ -1,0 +1,102 @@
+{
+  "version": "1.0.0",
+  "map": {
+    "E:\\NewProject\\assets\\scene.meta": {
+      "time": 1766120655558.5833
+    },
+    "E:\\NewProject\\assets\\scene": {
+      "time": 1766123717870.461,
+      "uuid": "ba8b39ba-2b17-486a-a21b-9386f49f336d"
+    },
+    "E:\\NewProject\\assets\\scene\\GameScene.scene.meta": {
+      "time": 1766123391487.5366
+    },
+    "E:\\NewProject\\assets\\scene\\GameScene.scene": {
+      "time": 1766124451824.995,
+      "uuid": "0f920c8e-9fcf-435e-a5bc-895b5a714374"
+    },
+    "E:\\NewProject\\assets\\prefab.meta": {
+      "time": 1766123615894.4658
+    },
+    "E:\\NewProject\\assets\\prefab": {
+      "time": 1766123778295.2292,
+      "uuid": "0d6fc9b1-2bd2-4f77-8910-24ee426a976b"
+    },
+    "E:\\NewProject\\assets\\scene\\LaunchScene.scene.meta": {
+      "time": 1766120668208.3499
+    },
+    "E:\\NewProject\\assets\\scene\\LaunchScene.scene": {
+      "time": 1766123717871.4375,
+      "uuid": "ec0116ea-3bba-4013-a9a1-116bd60499c6"
+    },
+    "E:\\NewProject\\assets\\prefab\\SettingLayer.prefab.meta": {
+      "time": 1766123778297.182
+    },
+    "E:\\NewProject\\assets\\prefab\\SettingLayer.prefab": {
+      "time": 1766127942891.117,
+      "uuid": "7e4ad359-ea8b-4074-ac34-79387e77c87f"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\prefab": {
+      "time": 1766129294715.9607,
+      "uuid": "0d6fc9b1-2bd2-4f77-8910-24ee426a976b"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scene": {
+      "time": 1766129294724.1262,
+      "uuid": "ba8b39ba-2b17-486a-a21b-9386f49f336d"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\prefab.meta": {
+      "time": 1766123615894.4658
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scene.meta": {
+      "time": 1766120655558.5833
+    },
+    "G:\\escapeworm\\NewProject\\assets\\prefab\\SettingLayer.prefab": {
+      "time": 1766127942891.117,
+      "uuid": "7e4ad359-ea8b-4074-ac34-79387e77c87f"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scene\\GameScene.scene": {
+      "time": 1766129432648.2126,
+      "uuid": "0f920c8e-9fcf-435e-a5bc-895b5a714374"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scene\\LaunchScene.scene": {
+      "time": 1766123717871.4375,
+      "uuid": "ec0116ea-3bba-4013-a9a1-116bd60499c6"
+    },
+    "G:\\escapeworm\\NewProject\\assets\\prefab\\SettingLayer.prefab.meta": {
+      "time": 1766123778297.182
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scene\\LaunchScene.scene.meta": {
+      "time": 1766120668208.3499
+    },
+    "G:\\escapeworm\\NewProject\\assets\\scene\\GameScene.scene.meta": {
+      "time": 1766123391487.5366
+    }
+  },
+  "missing": {
+    "ec0116ea-3bba-4013-a9a1-116bd60499c6": {
+      "path": "E:\\NewProject\\assets\\scene\\MenuScene.scene",
+      "time": 1766123412548.479,
+      "removeTime": 1766123717870
+    },
+    "0f920c8e-9fcf-435e-a5bc-895b5a714374": {
+      "path": "E:\\NewProject\\assets\\scene\\scene-2d.scene",
+      "time": 1766123391486.5603,
+      "removeTime": 1766123421814
+    },
+    "074c839e-7cb0-4c99-a10e-78f3aeb22766": {
+      "path": "E:\\NewProject\\assets\\pre\\folder",
+      "time": 1766123630511.1418,
+      "removeTime": 1766123636167
+    },
+    "0d6fc9b1-2bd2-4f77-8910-24ee426a976b": {
+      "path": "E:\\NewProject\\assets\\pre",
+      "time": 1766123636143.2502,
+      "removeTime": 1766123643041
+    },
+    "51b17bb6-a31a-4f3d-b78e-b1862aedd519": {
+      "path": "E:\\NewProject\\assets\\prefab\\Node.prefab",
+      "time": 1766123648762.1443,
+      "removeTime": 1766123753175
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "ba8b39ba-2b17-486a-a21b-9386f49f336d": {
+    "url": "db://assets/scene",
+    "value": {}
+  },
+  "ec0116ea-3bba-4013-a9a1-116bd60499c6": {
+    "url": "db://assets/scene/LaunchScene.scene",
+    "value": {
+      "depends": [
+        "ec0116ea-3bba-4013-a9a1-116bd60499c6",
+        "7d8f9b89-4fd1-4c9f-a3ab-38ec7cded7ca@f9941",
+        "20835ba4-6145-4fbc-a58a-051ce700aa3e@f9941",
+        "544e49d6-3f05-4fa8-9a9e-091f98fc2ce8@f9941",
+        "951249e0-9f16-456d-8b85-a6ca954da16b@f9941"
+      ],
+      "dependScripts": []
+    }
+  },
+  "0f920c8e-9fcf-435e-a5bc-895b5a714374": {
+    "url": "db://assets/scene/GameScene.scene",
+    "value": {
+      "depends": [
+        "0f920c8e-9fcf-435e-a5bc-895b5a714374",
+        "7d8f9b89-4fd1-4c9f-a3ab-38ec7cded7ca@f9941"
+      ],
+      "dependScripts": []
+    }
+  },
+  "0d6fc9b1-2bd2-4f77-8910-24ee426a976b": {
+    "url": "db://assets/prefab",
+    "value": {}
+  },
+  "074c839e-7cb0-4c99-a10e-78f3aeb22766": {
+    "url": "db://assets/pre/folder",
+    "value": {}
+  },
+  "51b17bb6-a31a-4f3d-b78e-b1862aedd519": {
+    "url": "db://assets/prefab/Node.prefab",
+    "value": {}
+  },
+  "7e4ad359-ea8b-4074-ac34-79387e77c87f": {
+    "url": "db://assets/prefab/SettingLayer.prefab",
+    "value": {
+      "depends": [
+        "7d8f9b89-4fd1-4c9f-a3ab-38ec7cded7ca@f9941",
+        "f12a23c4-b924-4322-a260-3d982428f1e8@f9941",
+        "28765e2f-040a-4c65-8e8c-f9d0bb79d863@f9941",
+        "20835ba4-6145-4fbc-a58a-051ce700aa3e@f9941",
+        "544e49d6-3f05-4fa8-9a9e-091f98fc2ce8@f9941",
+        "951249e0-9f16-456d-8b85-a6ca954da16b@f9941"
+      ],
+      "dependScripts": []
+    }
+  }
+}
